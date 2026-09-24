@@ -1,0 +1,41 @@
+-- ============================================================
+-- Fan Hub Plus — Database Schema (MySQL 8+)
+-- ============================================================
+-- STATUS: Placeholder. Tables will be written during the build phase.
+--
+-- Planned tables (mirrors src/types/models.ts):
+--   users                  — user_id (PK), name, email, password_hash, avatar_url,
+--                            created_at, is_verified
+--   roles                  — role_id (PK), name (Visitor | Registered | Admin)
+--   user_roles             — user_id (FK), role_id (FK)
+--   categories             — category_id (PK), name (Anime, Gaming, Movies, TV Shows,
+--                            K-Pop, Comics, Manga, Cosplay), description
+--   user_favorite_categories — user_id (FK), category_id (FK)   [many-to-many]
+--   contents               — content_id (PK), category_id (FK), title,
+--                            type (article | video | audio | image), description,
+--                            release_date, popularity_score, view_count, created_at
+--   media_ratings          — rating_id (PK), content_id (FK), user_id (FK), stars/thumbs
+--   character_profiles     — character_id (PK), category_id (FK), name, bio, image_url
+--   merchandise_items      — item_id (PK), category_id (FK), name, image_url, tag,
+--                            is_upcoming, view_count
+--   upcoming_releases      — release_id (PK), category_id (FK), title, release_date, url
+--   bookmarks              — bookmark_id (PK), user_id (FK), content_id (FK),
+--                            note, created_at
+--   feedback               — feedback_id (PK), user_id (FK), type (bug|suggestion|query),
+--                            message, status, created_at
+--   fan_events             — event_id (PK), title, city, latitude, longitude,
+--                            starts_at, ticket_url, category_id (FK)
+--   fan_submissions        — submission_id (PK), user_id (FK), title, body,
+--                            status (pending|approved|rejected), created_at
+--   chatbot_queries        — query_id (PK), user_id (FK), message, response, created_at
+--   activity_logs          — log_id (PK), user_id (FK), action, target_id, created_at
+--   password_reset_tokens  — token_id (PK), user_id (FK), token, expires_at, used_at
+--
+-- Conventions:
+--   * Every PK named <entity>_id
+--   * Foreign keys named <referenced_table>_id with ON DELETE RESTRICT/CASCADE
+--   * Timestamps default to CURRENT_TIMESTAMP
+--   * All queries against these tables must be parameterized (no string concatenation)
+-- ============================================================
+
+-- Schema DDL will be added here during the build phase.

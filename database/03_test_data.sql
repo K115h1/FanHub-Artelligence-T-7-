@@ -1,0 +1,23 @@
+-- ============================================================
+-- Fan Hub Plus — Test Data
+-- ============================================================
+-- STATUS: Placeholder. Required submission deliverable:
+--         "Test Data Used in the Project".
+--
+-- Planned contents:
+--   * Bulk content rows spanning different categories, genres, release years,
+--     popularity scores, and content types — to exercise multi-level
+--     filtering and sorting in the Fandom Content Explorer.
+--   * Edge cases:
+--       - content with empty descriptions (empty-state UI)
+--       - items with very long titles (truncation)
+--       - future-dated upcoming releases
+--       - users with zero bookmarks (empty dashboard state)
+--       - feedback in all three types (bug / suggestion / query)
+--   * Bookmark, rating, and feedback rows for multiple users so the
+--     admin statistics page has meaningful numbers.
+--
+-- This file is loaded after 02_seed_data.sql.
+-- ============================================================
+
+-- Test INSERTs will be added here during the build phase.

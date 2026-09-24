@@ -1,0 +1,3 @@
+// Reset Password page (scaffold placeholder) — route: /reset-password?token=…
+// Validates token, enforces password rules, handles expired/used tokens gracefully.
+export {}
