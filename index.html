@@ -5,7 +5,15 @@
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>artelligence-techwiz</title>
+  <title>Fan Hub Plus</title>
+  <script>
+    // Apply the saved dark-mode choice BEFORE the app loads,
+    // so the page doesn't flash white for dark-mode users.
+    var saved = null;
+    try { saved = localStorage.getItem('fanhub-theme'); } catch (e) { /* storage blocked */ }
+    var isDark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (isDark) document.documentElement.classList.add('dark');
+  </script>
 </head>
 
 <body>

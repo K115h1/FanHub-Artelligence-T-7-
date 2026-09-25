@@ -28,8 +28,12 @@ export const router = createBrowserRouter([
     path: '/',
     element: <RootLayout />,
     children: [
-      // Landing page — includes the SRS-mandated sitemap section.
-      { index: true, ...placeholder('Home') },
+      // Landing page — real homepage (hero carousel, categories, content).
+      {
+        index: true,
+        lazy: async () => ({ Component: (await import('../pages/Home')).default }),
+        handle: { title: 'Home' },
+      },
 
       // Auth (guest-oriented)
       { path: 'login', ...placeholder('Login') },
@@ -39,6 +43,9 @@ export const router = createBrowserRouter([
 
       // Public browsing
       { path: 'explorer', ...placeholder('Explorer') },
+      // Paths used by the sidebar nav (Explore + category pages).
+      { path: 'explore', ...placeholder('Explorer') },
+      { path: 'category/:slug', ...placeholder('Category') },
       { path: 'content/:id', ...placeholder('Content Detail') },
       { path: 'characters', ...placeholder('Characters') },
       { path: 'characters/:id', ...placeholder('Character Detail') },
@@ -49,7 +56,7 @@ export const router = createBrowserRouter([
       { path: 'feedback', ...placeholder('Feedback') },
 
       // Authenticated — TODO(auth phase): wrap each in RequireAuth guard.
-      { path: 'dashboard', ...placeholder('Dashboard') },
+      { path: 'dashboard', lazy: async () => ({ Component: (await import('../pages/Dashboard')).default }), handle: { title: 'Dashboard' } },
       { path: 'bookmarks', ...placeholder('Bookmarks') },
       { path: 'profile', ...placeholder('Profile') },
 

@@ -5,3 +5,30 @@
    and every `dark:` style in the app — header included — follows along.
    Until then, the app always renders in light mode. */
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* ---- Page base colours ----
+   Light mode = white page / black text.
+   Dark mode  = near-black page / white text.
+   `color-scheme` also tells the browser to draw native bits
+   (scrollbars, input fields) in the matching theme. */
+html {
+  color-scheme: light;
+  background-color: #ffffff;
+  color: #000000;
+}
+
+html.dark {
+  color-scheme: dark;
+  background-color: #0a0a0a;
+  color: #ffffff;
+}
+
+/* ---- scrollbar-hide ----
+   Used by the sidebar: the panel still scrolls, but no scrollbar shows. */
+.scrollbar-hide {
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

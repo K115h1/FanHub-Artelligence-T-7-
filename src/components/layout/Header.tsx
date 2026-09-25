@@ -59,28 +59,33 @@ export default function Header() {
           Fan Hub <span className="text-purple-600 dark:text-purple-400">Plus</span>
         </a>
 
-        {/* Right-hand controls */}
-        <div className="flex flex-shrink-0 items-center gap-2 sm:gap-3">
+        {/* Right-hand controls — min-w-0 lets the search box SHRINK on
+            mid-size screens instead of pushing the header sideways. */}
+        <div className="flex min-w-0 items-center gap-2 sm:gap-3">
           {/* Search */}
-          <div className="lg:w-4xl flex items-center justify-center border border-purple-500/80 px-4 hover:border-purple-500 hover:text-purple-600 dark:text-white/60 dark:hover:border-purple-400 dark:hover:text-purple-400 rounded-4xl">
-            <input type="text" className="w-full border-0" />
+          <div className="flex min-w-0 items-center justify-center rounded-4xl border border-purple-500/80 px-4 transition hover:border-purple-500 hover:text-purple-600 focus-within:border-purple-500 dark:text-white/60 dark:hover:border-purple-400 dark:hover:text-purple-400 lg:w-4xl">
+            <input
+              type="text"
+              placeholder="Search…"
+              className="w-full min-w-0 border-0 bg-transparent text-black outline-none placeholder:text-black/40 dark:text-white dark:placeholder:text-white/40"
+            />
             <button
               aria-label="Search"
-              className="flex h-8 w-8 items-center justify-center rounded-full text-black/60 transition sm:h-9 sm:w-9"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-black/60 transition hover:text-purple-600 sm:h-9 sm:w-9 dark:text-white/60 dark:hover:text-purple-400"
             >
               <Search size={16} />
             </button>
           </div>
 
           {/* Font-size control (wired up in a later phase) */}
-          <div className="hidden items-center gap-1 rounded-full border border-purple-500/30 px-2 py-1.5 transition hover:border-purple-500 sm:flex">
+          <div className="hidden shrink-0 items-center gap-1 rounded-full border border-purple-500/30 px-2 py-1.5 transition hover:border-purple-500 sm:flex">
             <span className="px-1 text-xs text-black/70 dark:text-white/70">A-</span>
             <span className="h-5 w-px bg-purple-500/30" />
             <span className="px-1 text-base font-medium text-black/70 dark:text-white/70">A+</span>
           </div>
 
           {/* Login */}
-          <button className="rounded-xl bg-gradient-to-r from-purple-600 to-purple-500 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-purple-600/30 transition hover:from-purple-500 hover:to-purple-400 sm:text-base">
+          <button className="shrink-0 rounded-xl bg-gradient-to-r from-purple-600 to-purple-500 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-purple-600/30 transition hover:from-purple-500 hover:to-purple-400 sm:text-base">
             Login
           </button>
         </div>

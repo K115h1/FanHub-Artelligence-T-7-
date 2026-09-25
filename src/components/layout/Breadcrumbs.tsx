@@ -17,7 +17,7 @@ export default function Breadcrumbs() {
   if (trail.length < 2) return null
 
   return (
-    <nav aria-label="Breadcrumb" data-slot="breadcrumbs" className="px-4 py-2 text-sm text-gray-500">
+    <nav aria-label="Breadcrumb" data-slot="breadcrumbs" className="px-4 py-2 text-sm text-gray-500 dark:text-white/50">
       {trail.join(' / ')}
     </nav>
   )
