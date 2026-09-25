@@ -1,10 +1,7 @@
-import Header from './components/layout/Header'
+// App root — mounting point created by src/main.tsx.
+// Everything (providers + routes) is wired in src/app/AppProviders.tsx.
+import AppProviders from './app/AppProviders'
 
-function App(){
-  return(
-    <>
-    <Header/>
-    </>
-  )
+export default function App() {
+  return <AppProviders />
 }
-export default App

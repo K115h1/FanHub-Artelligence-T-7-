@@ -1,3 +1,10 @@
-// App wiring (scaffold placeholder).
-// Will contain: RouterProvider setup — routes are defined in src/app/router.tsx.
-export {}
+// App wiring — providers mounted around the router.
+// Future slots (added later, no router changes needed):
+//   TODO(theme phase): <ThemeProvider>
+//   TODO(auth phase):  <AuthProvider>
+import { RouterProvider } from 'react-router-dom'
+import { router } from './router'
+
+export default function AppProviders() {
+  return <RouterProvider router={router} />
+}

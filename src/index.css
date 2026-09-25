@@ -1,1 +1,7 @@
 @import "tailwindcss";
+
+/* Dark mode is driven by a `.dark` class on <html> (NOT the OS setting).
+   The ThemeProvider (built in the theme phase) adds/removes that class,
+   and every `dark:` style in the app — header included — follows along.
+   Until then, the app always renders in light mode. */
+@custom-variant dark (&:where(.dark, .dark *));
