@@ -1,19 +1,4 @@
-﻿// fetchMoviePosters.mjs
-//
-// Reads movies.json (genre -> array of titles), queries TMDB's search
-// endpoint for each unique title, and writes out:
-//   - movies-with-posters.json  (same genre structure, posters attached)
-//   - movies-not-found.json     (titles TMDB couldn't match, for manual fixing)
-//
-// Setup:
-//   1. npm install dotenv
-//   2. Create a .env file next to this script:
-//        TMDB_API_KEY=your_key_here
-//   3. Put your movies.json (the file you uploaded) in the same folder
-//   4. Run: node fetchMoviePosters.mjs
-//
-// Requires Node 18+ (uses the built-in fetch).
-
+﻿
 import { readFileSync, writeFileSync } from "fs";
 import "dotenv/config";
 
