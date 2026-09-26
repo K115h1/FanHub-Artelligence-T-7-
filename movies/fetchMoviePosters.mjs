@@ -15,8 +15,7 @@ function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-// Strips a trailing "(Something)" UNLESS that something is a 4-digit year.
-// "Seven (Mystery)" -> "Seven"     |     "It (2017)" -> "It (2017)"
+
 function cleanTitle(rawTitle) {
     const match = rawTitle.match(/^(.*?)\s*\(([^)]+)\)\s*$/);
     if (!match) return { searchTitle: rawTitle, year: null };
