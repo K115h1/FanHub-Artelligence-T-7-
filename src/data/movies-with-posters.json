@@ -1,0 +1,3278 @@
+{
+  "Action": [
+    {
+      "title": "Die Hard",
+      "tmdbId": 562,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/7Bjd8kfmDSOzpmhySpEhkUyK2oH.jpg",
+      "releaseYear": "1988"
+    },
+    {
+      "title": "The Matrix",
+      "tmdbId": 603,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/dXNAPwY7VrqMAo51EKhhCJfaGb5.jpg",
+      "releaseYear": "1999"
+    },
+    {
+      "title": "Mad Max: Fury Road",
+      "tmdbId": 76341,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/ulcAi4dKpAjHwYGS08vNyx9H6I9.jpg",
+      "releaseYear": "2015"
+    },
+    {
+      "title": "John Wick",
+      "tmdbId": 245891,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/wXqWR7dHncNRbxoEGybEy7QTe9h.jpg",
+      "releaseYear": "2014"
+    },
+    {
+      "title": "Terminator 2: Judgment Day",
+      "tmdbId": 280,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/jFTVD4XoWQTcg7wdyJKa8PEds5q.jpg",
+      "releaseYear": "1991"
+    },
+    {
+      "title": "Raiders of the Lost Ark",
+      "tmdbId": 85,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/ceG9VzoRAVGwivFU403Wc3AHRys.jpg",
+      "releaseYear": "1981"
+    },
+    {
+      "title": "The Dark Knight",
+      "tmdbId": 155,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
+      "releaseYear": "2008"
+    },
+    {
+      "title": "Speed",
+      "tmdbId": 1637,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/82PkCE4R95KhHICUDF7G4Ly2z3l.jpg",
+      "releaseYear": "1994"
+    },
+    {
+      "title": "Gladiator",
+      "tmdbId": 98,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/wN2xWp1eIwCKOD0BHTcErTBv1Uq.jpg",
+      "releaseYear": "2000"
+    },
+    {
+      "title": "Heat",
+      "tmdbId": 949,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/umSVjVdbVwtx5ryCA2QXL44Durm.jpg",
+      "releaseYear": "1995"
+    },
+    {
+      "title": "Mission: Impossible - Fallout",
+      "tmdbId": 353081,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/AkJQpZp9WoNdj7pLYSj1L0RcMMN.jpg",
+      "releaseYear": "2018"
+    },
+    {
+      "title": "The Bourne Identity",
+      "tmdbId": 2501,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/aP8swke3gmowbkfZ6lmNidu0y9p.jpg",
+      "releaseYear": "2002"
+    },
+    {
+      "title": "Kill Bill: Vol. 1",
+      "tmdbId": 24,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/v7TaX8kXMXs5yFFGR41guUDNcnB.jpg",
+      "releaseYear": "2003"
+    },
+    {
+      "title": "Face/Off",
+      "tmdbId": 754,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/69Xzn8UdPbVnmqSChKz2RTpoNfB.jpg",
+      "releaseYear": "1997"
+    },
+    {
+      "title": "Lethal Weapon",
+      "tmdbId": 941,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/6gt44oqb4nE8vflPElffeGwsHVl.jpg",
+      "releaseYear": "1987"
+    },
+    {
+      "title": "Point Break",
+      "tmdbId": 1089,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/tlbERIghrQ4oofqlbF7H0K0EYnx.jpg",
+      "releaseYear": "1991"
+    },
+    {
+      "title": "Top Gun: Maverick",
+      "tmdbId": 361743,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/n0YuM4f5lvGAP6MAW2kBIzugXnc.jpg",
+      "releaseYear": "2022"
+    },
+    {
+      "title": "Casino Royale",
+      "tmdbId": 36557,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/lMrxYKKhd4lqRzwUHAy5gcx9PSO.jpg",
+      "releaseYear": "2006"
+    },
+    {
+      "title": "The Raid: Redemption",
+      "tmdbId": 94329,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/Abnm1Ws3JH0ReCfEhLMPwPcMcGO.jpg",
+      "releaseYear": "2012"
+    },
+    {
+      "title": "Con Air",
+      "tmdbId": 1701,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/kOKjgrEzGOP92rVQ6srA9jtp60l.jpg",
+      "releaseYear": "1997"
+    },
+    {
+      "title": "True Lies",
+      "tmdbId": 36955,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/pqdvCBDThAOjlA0XBzbNm7GvwpU.jpg",
+      "releaseYear": "1994"
+    },
+    {
+      "title": "Predator",
+      "tmdbId": 106,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/k3mW4qfJo6SKqe6laRyNGnbB9n5.jpg",
+      "releaseYear": "1987"
+    },
+    {
+      "title": "RoboCop",
+      "tmdbId": 5548,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/hHtOgGb3NihlyRATHlKPaFApbrd.jpg",
+      "releaseYear": "1987"
+    },
+    {
+      "title": "Aliens",
+      "tmdbId": 679,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/r1x5JGpyqZU8PYhbs4UcrO1Xb6x.jpg",
+      "releaseYear": "1986"
+    },
+    {
+      "title": "Commando",
+      "tmdbId": 10999,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/ollPAAAgZ7euU8VisfqU3cuXhZ6.jpg",
+      "releaseYear": "1985"
+    },
+    {
+      "title": "The Rock",
+      "tmdbId": 9802,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/eBcoxveWzzXQrCrwWMGAROcqgpP.jpg",
+      "releaseYear": "1996"
+    },
+    {
+      "title": "Bad Boys",
+      "tmdbId": 9737,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/x1ygBecKHfXX4M2kRhmFKWfWbJc.jpg",
+      "releaseYear": "1995"
+    },
+    {
+      "title": "Rambo: First Blood",
+      "tmdbId": 1369,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/fVwRtWqEPdsCH21BVDGqgkAQcff.jpg",
+      "releaseYear": "1985"
+    },
+    {
+      "title": "Enter the Dragon",
+      "tmdbId": 9461,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/fyrh2ULEcmLpGTVLPQqFW45hqr5.jpg",
+      "releaseYear": "1973"
+    },
+    {
+      "title": "Extraction",
+      "tmdbId": 545609,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/nygOUcBKPHFTbxsYRFZVePqgPK6.jpg",
+      "releaseYear": "2020"
+    }
+  ],
+  "Adventure": [
+    {
+      "title": "Indiana Jones and the Last Crusade",
+      "tmdbId": 89,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/sizg1AU8f8JDZX4QIgE4pjUMBvx.jpg",
+      "releaseYear": "1989"
+    },
+    {
+      "title": "The Goonies",
+      "tmdbId": 9340,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/eBU7gCjTCj9n2LTxvCSIXXOvHkD.jpg",
+      "releaseYear": "1985"
+    },
+    {
+      "title": "Jurassic Park",
+      "tmdbId": 329,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/d9mtMGQDLANKieb9PbD3yK7xxzo.jpg",
+      "releaseYear": "1993"
+    },
+    {
+      "title": "The Lord of the Rings: The Fellowship of the Ring",
+      "tmdbId": 120,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/6oom5QYQ2yQTMJIbnvbkBL9cHo6.jpg",
+      "releaseYear": "2001"
+    },
+    {
+      "title": "Pirates of the Caribbean: The Curse of the Black Pearl",
+      "tmdbId": 22,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/poHwCZeWzJCShH7tOjg8RIoyjcw.jpg",
+      "releaseYear": "2003"
+    },
+    {
+      "title": "National Treasure",
+      "tmdbId": 2059,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/jKbZBMRFpF2EfFuvrsDZ2uQYsEQ.jpg",
+      "releaseYear": "2004"
+    },
+    {
+      "title": "King Kong",
+      "tmdbId": 254,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/6a2HY6UmD7XiDD3NokgaBAXEsD2.jpg",
+      "releaseYear": "2005"
+    },
+    {
+      "title": "The Jungle Book",
+      "tmdbId": 278927,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/2Epx7F9X7DrFptn4seqn4mzBVks.jpg",
+      "releaseYear": "2016"
+    },
+    {
+      "title": "Life of Pi",
+      "tmdbId": 87827,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/iLgRu4hhSr6V1uManX6ukDriiSc.jpg",
+      "releaseYear": "2012"
+    },
+    {
+      "title": "Into the Wild",
+      "tmdbId": 5915,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/jnLnLYP5pGDfri04gxtAqAvkHMw.jpg",
+      "releaseYear": "2007"
+    },
+    {
+      "title": "The Mummy",
+      "tmdbId": 564,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/yhIsVvcUm7QxzLfT6HW2wLf5ajY.jpg",
+      "releaseYear": "1999"
+    },
+    {
+      "title": "Romancing the Stone",
+      "tmdbId": 9326,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/qfIlVOYZH5RiZ0ndFKUpr5Zn2Bx.jpg",
+      "releaseYear": "1984"
+    },
+    {
+      "title": "The Princess Bride",
+      "tmdbId": 2493,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/2FC9L9MrjBoGHYjYZjdWQdopVYb.jpg",
+      "releaseYear": "1987"
+    },
+    {
+      "title": "Journey to the Center of the Earth",
+      "tmdbId": 88751,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/kL55wY0s2H9JdwfjoWIp9plvYnl.jpg",
+      "releaseYear": "2008"
+    },
+    {
+      "title": "Apocalypto",
+      "tmdbId": 1579,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/cRY25Q32kDNPFDkFkxAs6bgCq3L.jpg",
+      "releaseYear": "2006"
+    },
+    {
+      "title": "Master and Commander",
+      "tmdbId": 8619,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/7ZUHF6P0vcA5v1Gm8NbRYyd9w4N.jpg",
+      "releaseYear": "2003"
+    },
+    {
+      "title": "The Revenant",
+      "tmdbId": 281957,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/ji3ecJphATlVgWNY0B0RVXZizdf.jpg",
+      "releaseYear": "2015"
+    },
+    {
+      "title": "127 Hours",
+      "tmdbId": 44115,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/h0RMdn0rfl9l5hWXz3tUh6QVkhi.jpg",
+      "releaseYear": "2010"
+    },
+    {
+      "title": "Cast Away",
+      "tmdbId": 8358,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/7lLJgKnAicAcR5UEuo8xhSMj18w.jpg",
+      "releaseYear": "2000"
+    },
+    {
+      "title": "The Lost City",
+      "tmdbId": 752623,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/rnheO8cFvCYcmZsDrBoabJbKLFE.jpg",
+      "releaseYear": "2022"
+    },
+    {
+      "title": "Uncharted",
+      "tmdbId": 335787,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/rJHC1RUORuUhtfNb4Npclx0xnOf.jpg",
+      "releaseYear": "2022"
+    },
+    {
+      "title": "Tomb Raider",
+      "tmdbId": 338970,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/s4Qn5LF6OwK4rIifmthIDtbqDSs.jpg",
+      "releaseYear": "2018"
+    },
+    {
+      "title": "Around the World in 80 Days",
+      "tmdbId": 2897,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/kk6Rrwh0toMz9tjuUHdS4O3v2Rk.jpg",
+      "releaseYear": "1956"
+    },
+    {
+      "title": "The Man Who Would Be King",
+      "tmdbId": 983,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/1FCpHiZSez9iaLpDmvyrNt9lBua.jpg",
+      "releaseYear": "1975"
+    },
+    {
+      "title": "Zathura",
+      "tmdbId": 6795,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/gDb5BW2NLqZ9cvg9nyzkZVvmgze.jpg",
+      "releaseYear": "2005"
+    },
+    {
+      "title": "Jumanji",
+      "tmdbId": 512200,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/jyw8VKYEiM1UDzPB7NsisUgBeJ8.jpg",
+      "releaseYear": "2019"
+    },
+    {
+      "title": "The Water Horse",
+      "tmdbId": 54318,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/h9DV6KItNutJmrPzT1xrAO6fIzy.jpg",
+      "releaseYear": "2007"
+    },
+    {
+      "title": "Hidalgo",
+      "tmdbId": 2023,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/iGzENlBPYJEFWZnye4t3nqWSSp1.jpg",
+      "releaseYear": "2004"
+    },
+    {
+      "title": "Nim's Island",
+      "tmdbId": 10488,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/vhNoXDpc7T5OdmAuu8DMHLB39uo.jpg",
+      "releaseYear": "2008"
+    },
+    {
+      "title": "Adventures of Tintin",
+      "tmdbId": 17578,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/fQZ3sLR1Fi63NMsNRbjm9q5qODJ.jpg",
+      "releaseYear": "2011"
+    }
+  ],
+  "Comedy": [
+    {
+      "title": "Airplane!",
+      "tmdbId": 813,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/7Q3efxd3AF1vQjlSxnlerSA7RzN.jpg",
+      "releaseYear": "1980"
+    },
+    {
+      "title": "Groundhog Day",
+      "tmdbId": 137,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/gCgt1WARPZaXnq523ySQEUKinCs.jpg",
+      "releaseYear": "1993"
+    },
+    {
+      "title": "Superbad",
+      "tmdbId": 8363,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/ek8e8txUyUwd2BNqj6lFEerJfbq.jpg",
+      "releaseYear": "2007"
+    },
+    {
+      "title": "Bridesmaids",
+      "tmdbId": 55721,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/gJtA7hYsBMQ7EM3sPBMUdBfU7a0.jpg",
+      "releaseYear": "2011"
+    },
+    {
+      "title": "The Hangover",
+      "tmdbId": 18785,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/A0uS9rHR56FeBtpjVki16M5xxSW.jpg",
+      "releaseYear": "2009"
+    },
+    {
+      "title": "Anchorman: The Legend of Ron Burgundy",
+      "tmdbId": 8699,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/mhZIcRePT7U8viFQVjt1ZjYIsR4.jpg",
+      "releaseYear": "2004"
+    },
+    {
+      "title": "Dumb and Dumber",
+      "tmdbId": 8467,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/4LdpBXiCyGKkR8FGHgjKlphrfUc.jpg",
+      "releaseYear": "1994"
+    },
+    {
+      "title": "Meet the Parents",
+      "tmdbId": 1597,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/5tXJ9ctuyEOMUFLaeqRisbXowWs.jpg",
+      "releaseYear": "2000"
+    },
+    {
+      "title": "Ghostbusters",
+      "tmdbId": 620,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/7E8nLijS9AwwUEPu2oFYOVKhdFA.jpg",
+      "releaseYear": "1984"
+    },
+    {
+      "title": "Some Like It Hot",
+      "tmdbId": 239,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/hVIKyTK13AvOGv7ICmJjK44DTzp.jpg",
+      "releaseYear": "1959"
+    },
+    {
+      "title": "Monty Python and the Holy Grail",
+      "tmdbId": 762,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/7nTkHjETdGMYK1phHwDbPsrzbYl.jpg",
+      "releaseYear": "1975"
+    },
+    {
+      "title": "Tropic Thunder",
+      "tmdbId": 7446,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/zAurB9mNxfYRoVrVjAJJwGV3sPg.jpg",
+      "releaseYear": "2008"
+    },
+    {
+      "title": "Zoolander",
+      "tmdbId": 9398,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/qdrbSneHZjJG2Dj0hhBxzzAo4HB.jpg",
+      "releaseYear": "2001"
+    },
+    {
+      "title": "Step Brothers",
+      "tmdbId": 12133,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/nvggBbEraUTAVR6ffP3AaBUWSHs.jpg",
+      "releaseYear": "2008"
+    },
+    {
+      "title": "Knocked Up",
+      "tmdbId": 4964,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/b4OaXw2MW97VvIiZE0Sbn1NfxSh.jpg",
+      "releaseYear": "2007"
+    },
+    {
+      "title": "The 40-Year-Old Virgin",
+      "tmdbId": 6957,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/mVeoqL37gzhMXQVpONi9DGOQ3tZ.jpg",
+      "releaseYear": "2005"
+    },
+    {
+      "title": "Shaun of the Dead",
+      "tmdbId": 747,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/dgXPhzNJH8HFTBjXPB177yNx6RI.jpg",
+      "releaseYear": "2004"
+    },
+    {
+      "title": "Borat",
+      "tmdbId": 496,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/7g9kBHMN2KTr5KUf8aen187Mdn.jpg",
+      "releaseYear": "2006"
+    },
+    {
+      "title": "There's Something About Mary",
+      "tmdbId": 544,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/slJD1Dvnsf15LoeqhERsyzisAdn.jpg",
+      "releaseYear": "1998"
+    },
+    {
+      "title": "Elf",
+      "tmdbId": 10719,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/oOleziEempUPu96jkGs0Pj6tKxj.jpg",
+      "releaseYear": "2003"
+    },
+    {
+      "title": "Napoleon Dynamite",
+      "tmdbId": 8193,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/6Iv6Uwa2SBLN0dSGM00rdrwN4MJ.jpg",
+      "releaseYear": "2004"
+    },
+    {
+      "title": "Office Space",
+      "tmdbId": 1542,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/iEmTwOkUaLziMQCUZii5wPQBIAO.jpg",
+      "releaseYear": "1999"
+    },
+    {
+      "title": "Mean Girls",
+      "tmdbId": 10625,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/2ZkuQXvVhh45uSvkBej4S7Ix1NJ.jpg",
+      "releaseYear": "2004"
+    },
+    {
+      "title": "Legally Blonde",
+      "tmdbId": 8835,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/9ohlMrJHQqKhfUKh7Zr3JQqHNLZ.jpg",
+      "releaseYear": "2001"
+    },
+    {
+      "title": "The Grand Budapest Hotel",
+      "tmdbId": 120467,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/eWdyYQreja6JGCzqHWXpWHDrrPo.jpg",
+      "releaseYear": "2014"
+    },
+    {
+      "title": "Bringing Up Baby",
+      "tmdbId": 900,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/vTNNOtemaYmtx3k2NpsLMRJKEwZ.jpg",
+      "releaseYear": "1938"
+    },
+    {
+      "title": "This Is Spinal Tap",
+      "tmdbId": 11031,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/b3lllDltoBws5uKZzBYVSjpjjJx.jpg",
+      "releaseYear": "1984"
+    },
+    {
+      "title": "Coming to America",
+      "tmdbId": 9602,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/djRAvxyvvN2yqlJKDbT3uy4vOBw.jpg",
+      "releaseYear": "1988"
+    },
+    {
+      "title": "Wayne's World",
+      "tmdbId": 8872,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/fHwZnFNWR7PaS9t5EBwTvGPeoYQ.jpg",
+      "releaseYear": "1992"
+    },
+    {
+      "title": "Deadpool",
+      "tmdbId": 533535,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg",
+      "releaseYear": "2024"
+    }
+  ],
+  "Drama": [
+    {
+      "title": "The Shawshank Redemption",
+      "tmdbId": 278,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg",
+      "releaseYear": "1994"
+    },
+    {
+      "title": "Forrest Gump",
+      "tmdbId": 13,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/Cw4hIUIAmSYfK9QfaUW5igp9La.jpg",
+      "releaseYear": "1994"
+    },
+    {
+      "title": "The Godfather",
+      "tmdbId": 238,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg",
+      "releaseYear": "1972"
+    },
+    {
+      "title": "12 Angry Men",
+      "tmdbId": 389,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/zhG3vKWyDRaZYoaww1UVAi29T9h.jpg",
+      "releaseYear": "1957"
+    },
+    {
+      "title": "Schindler's List",
+      "tmdbId": 424,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/sF1U4EUQS8YHUYjNl3pMGNIQyr0.jpg",
+      "releaseYear": "1993"
+    },
+    {
+      "title": "American Beauty",
+      "tmdbId": 14,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/wby9315QzVKdW9BonAefg8jGTTb.jpg",
+      "releaseYear": "1999"
+    },
+    {
+      "title": "A Beautiful Mind",
+      "tmdbId": 453,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/rEIg5yJdNOt9fmX4P8gU9LeNoTQ.jpg",
+      "releaseYear": "2001"
+    },
+    {
+      "title": "The Green Mile",
+      "tmdbId": 497,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/8VG8fDNiy50H4FedGwdSVUPoaJe.jpg",
+      "releaseYear": "1999"
+    },
+    {
+      "title": "Good Will Hunting",
+      "tmdbId": 489,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/z2FnLKpFi1HPO7BEJxdkv6hpJSU.jpg",
+      "releaseYear": "1997"
+    },
+    {
+      "title": "The Pursuit of Happyness",
+      "tmdbId": 1402,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/lBYOKAMcxIvuk9s9hMuecB9dPBV.jpg",
+      "releaseYear": "2006"
+    },
+    {
+      "title": "Boyhood",
+      "tmdbId": 85350,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/2BvtvDUyxiMJ4dmKfiQf4qdOHQN.jpg",
+      "releaseYear": "2014"
+    },
+    {
+      "title": "Manchester by the Sea",
+      "tmdbId": 334541,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/o9VXYOuaJxCEKOxbA86xqtwmqYn.jpg",
+      "releaseYear": "2016"
+    },
+    {
+      "title": "Moonlight",
+      "tmdbId": 376867,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/qLnfEmPrDjJfPyyddLJPkXmshkp.jpg",
+      "releaseYear": "2016"
+    },
+    {
+      "title": "Room",
+      "tmdbId": 264644,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/2hHDMeYyZjbGWn0BeNH1cTMxuM7.jpg",
+      "releaseYear": "2015"
+    },
+    {
+      "title": "The Social Network",
+      "tmdbId": 37799,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/n0ybibhJtQ5icDqTp8eRytcIHJx.jpg",
+      "releaseYear": "2010"
+    },
+    {
+      "title": "There Will Be Blood",
+      "tmdbId": 7345,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/fa0RDkAlCec0STeMNAhPaF89q6U.jpg",
+      "releaseYear": "2007"
+    },
+    {
+      "title": "No Country for Old Men",
+      "tmdbId": 6977,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/6d5XOczc226jECq0LIX0siKtgHR.jpg",
+      "releaseYear": "2007"
+    },
+    {
+      "title": "Requiem for a Dream",
+      "tmdbId": 641,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/9BTwsLaMVHOGFlmsSlx5QYCaXb.jpg",
+      "releaseYear": "2000"
+    },
+    {
+      "title": "American History X",
+      "tmdbId": 73,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/x2drgoXYZ8484lqyDj7L1CEVR4T.jpg",
+      "releaseYear": "1998"
+    },
+    {
+      "title": "The Fighter",
+      "tmdbId": 45317,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/xfsFerGhO1h6rLk8vwLgMyQ8WVJ.jpg",
+      "releaseYear": "2010"
+    },
+    {
+      "title": "Dallas Buyers Club",
+      "tmdbId": 152532,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/7Fdh7gUq3plvQqxRbNYhWvDABXA.jpg",
+      "releaseYear": "2013"
+    },
+    {
+      "title": "Spotlight",
+      "tmdbId": 314365,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/8DPGG400FgaFWaqcv11n8mRd2NG.jpg",
+      "releaseYear": "2015"
+    },
+    {
+      "title": "12 Years a Slave",
+      "tmdbId": 76203,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/xdANQijuNrJaw1HA61rDccME4Tm.jpg",
+      "releaseYear": "2013"
+    },
+    {
+      "title": "The King's Speech",
+      "tmdbId": 45269,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/pVNKXVQFukBaCz6ML7GH3kiPlQP.jpg",
+      "releaseYear": "2010"
+    },
+    {
+      "title": "Nomadland",
+      "tmdbId": 581734,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/8Vc5EOUEIF1EUXuX9eLFf7BvN3P.jpg",
+      "releaseYear": "2021"
+    },
+    {
+      "title": "CODA",
+      "tmdbId": 776503,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/BzVjmm8l23rPsijLiNLUzuQtyd.jpg",
+      "releaseYear": "2021"
+    },
+    {
+      "title": "Marriage Story",
+      "tmdbId": 492188,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/2JRyCKaRKyJAVpsIHeLvPw5nHmw.jpg",
+      "releaseYear": "2019"
+    },
+    {
+      "title": "Little Women",
+      "tmdbId": 331482,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/yn5ihODtZ7ofn8pDYfxCmxh8AXI.jpg",
+      "releaseYear": "2019"
+    },
+    {
+      "title": "Ordinary People",
+      "tmdbId": 16619,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/5gQLGRmBV8XoqWgkxuRFwe3jZV7.jpg",
+      "releaseYear": "1980"
+    },
+    {
+      "title": "A Star Is Born",
+      "tmdbId": 332562,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/wrFpXMNBRj2PBiN4Z5kix51XaIZ.jpg",
+      "releaseYear": "2018"
+    }
+  ],
+  "Horror": [
+    {
+      "title": "The Exorcist",
+      "tmdbId": 9552,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/5x0CeVHJI8tcDx8tUUwYHQSNILq.jpg",
+      "releaseYear": "1973"
+    },
+    {
+      "title": "Halloween",
+      "tmdbId": 948,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/wijlZ3HaYMvlDTPqJoTCWKFkCPU.jpg",
+      "releaseYear": "1978"
+    },
+    {
+      "title": "A Nightmare on Elm Street",
+      "tmdbId": 377,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/tI0RQFYevX97NSdDSYmn0Z19i3r.jpg",
+      "releaseYear": "1984"
+    },
+    {
+      "title": "The Shining",
+      "tmdbId": 694,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/uAR0AWqhQL1hQa69UDEbb2rE5Wx.jpg",
+      "releaseYear": "1980"
+    },
+    {
+      "title": "Psycho",
+      "tmdbId": 539,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/yz4QVqPx3h1hD1DfqqQkCq3rmxW.jpg",
+      "releaseYear": "1960"
+    },
+    {
+      "title": "Get Out",
+      "tmdbId": 419430,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/tFXcEccSQMf3lfhfXKSU9iRBpa3.jpg",
+      "releaseYear": "2017"
+    },
+    {
+      "title": "Hereditary",
+      "tmdbId": 493922,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/4GFPuL14eXi66V96xBWY73Y9PfR.jpg",
+      "releaseYear": "2018"
+    },
+    {
+      "title": "The Conjuring",
+      "tmdbId": 138843,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/wVYREutTvI2tmxr6ujrHT704wGF.jpg",
+      "releaseYear": "2013"
+    },
+    {
+      "title": "It (2017)",
+      "tmdbId": 460846,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/9FN5n8wGYrfSJaKGF9uObdKimIh.jpg",
+      "releaseYear": "2017"
+    },
+    {
+      "title": "The Texas Chain Saw Massacre",
+      "tmdbId": 30497,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/mpgkRPH1GNkMCgdPk2OMyHzAks7.jpg",
+      "releaseYear": "1974"
+    },
+    {
+      "title": "Rosemary's Baby",
+      "tmdbId": 805,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/uYgvlHceRFjAFbsNeMInYcLZLUb.jpg",
+      "releaseYear": "1968"
+    },
+    {
+      "title": "The Babadook",
+      "tmdbId": 242224,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/qt3fqapeo94TfvMyld8P7gkpXLz.jpg",
+      "releaseYear": "2014"
+    },
+    {
+      "title": "Midsommar",
+      "tmdbId": 530385,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/7LEI8ulZzO5gy9Ww2NVCrKmHeDZ.jpg",
+      "releaseYear": "2019"
+    },
+    {
+      "title": "A Quiet Place",
+      "tmdbId": 447332,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/nAU74GmpUk7t5iklEp3bufwDq4n.jpg",
+      "releaseYear": "2018"
+    },
+    {
+      "title": "Scream",
+      "tmdbId": 646385,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/nD4M4Bx457ryLuKYpxFwQ2IBJ5w.jpg",
+      "releaseYear": "2022"
+    },
+    {
+      "title": "Saw",
+      "tmdbId": 176,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/rLNSOudrayDBo1uqXjrhxcjODIC.jpg",
+      "releaseYear": "2004"
+    },
+    {
+      "title": "Insidious",
+      "tmdbId": 49018,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/tmlDFIUpGRKiuWm9Ixc6CYDk4y0.jpg",
+      "releaseYear": "2011"
+    },
+    {
+      "title": "Sinister",
+      "tmdbId": 82507,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/nzx10sca3arCeYBAomHan4Q6wa1.jpg",
+      "releaseYear": "2012"
+    },
+    {
+      "title": "The Witch",
+      "tmdbId": 310131,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/zap5hpFCWSvdWSuPGAQyjUv2wAC.jpg",
+      "releaseYear": "2016"
+    },
+    {
+      "title": "Poltergeist",
+      "tmdbId": 609,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/4eMN3GANH5GG4kXdHkrTZEUuQ9M.jpg",
+      "releaseYear": "1982"
+    },
+    {
+      "title": "The Ring",
+      "tmdbId": 120,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/6oom5QYQ2yQTMJIbnvbkBL9cHo6.jpg",
+      "releaseYear": "2001"
+    },
+    {
+      "title": "28 Days Later",
+      "tmdbId": 170,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/sQckQRt17VaWbo39GIu0TMOiszq.jpg",
+      "releaseYear": "2002"
+    },
+    {
+      "title": "Jaws",
+      "tmdbId": 578,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/lxM6kqilAdpdhqUl2biYp5frUxE.jpg",
+      "releaseYear": "1975"
+    },
+    {
+      "title": "Alien",
+      "tmdbId": 348,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/vfrQk5IPloGg1v9Rzbh2Eg3VGyM.jpg",
+      "releaseYear": "1979"
+    },
+    {
+      "title": "It Follows",
+      "tmdbId": 270303,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/iwnQ1JH1wdWrGYkgWySptJ5284A.jpg",
+      "releaseYear": "2015"
+    },
+    {
+      "title": "Suspiria",
+      "tmdbId": 361292,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/bRpKFPb8CWKRQxVo9NzOuPPlO3Q.jpg",
+      "releaseYear": "2018"
+    },
+    {
+      "title": "The Blair Witch Project",
+      "tmdbId": 2667,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/9050VGrYjYrEjpOvDZVAngLbg1f.jpg",
+      "releaseYear": "1999"
+    },
+    {
+      "title": "Carrie",
+      "tmdbId": 7340,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/bJJ3xK4pMnfao0wfzySfC47dp8G.jpg",
+      "releaseYear": "1976"
+    },
+    {
+      "title": "Talk to Me",
+      "tmdbId": 1008042,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/kdPMUMJzyYAc4roD52qavX0nLIC.jpg",
+      "releaseYear": "2023"
+    },
+    {
+      "title": "Smile",
+      "tmdbId": 882598,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/aPqcQwu4VGEewPhagWNncDbJ9Xp.jpg",
+      "releaseYear": "2022"
+    }
+  ],
+  "Sci-Fi": [
+    {
+      "title": "2001: A Space Odyssey",
+      "tmdbId": 62,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/ve72VxNqjGM69Uky4WTo2bK6rfq.jpg",
+      "releaseYear": "1968"
+    },
+    {
+      "title": "Blade Runner",
+      "tmdbId": 335984,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg",
+      "releaseYear": "2017"
+    },
+    {
+      "title": "Blade Runner 2049",
+      "tmdbId": 335984,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg",
+      "releaseYear": "2017"
+    },
+    {
+      "title": "Inception",
+      "tmdbId": 27205,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/xlaY2zyzMfkhk0HSC5VUwzoZPU1.jpg",
+      "releaseYear": "2010"
+    },
+    {
+      "title": "Interstellar",
+      "tmdbId": 157336,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/yQvGrMoipbRoddT0ZR8tPoR7NfX.jpg",
+      "releaseYear": "2014"
+    },
+    {
+      "title": "Star Wars: A New Hope",
+      "tmdbId": 11,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/fai0rspsNeJCS69wHNjOdWxcI7P.jpg",
+      "releaseYear": "1977"
+    },
+    {
+      "title": "The Terminator",
+      "tmdbId": 218,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/qvktm0BHcnmDpul4Hz01GIazWPr.jpg",
+      "releaseYear": "1984"
+    },
+    {
+      "title": "E.T. the Extra-Terrestrial",
+      "tmdbId": 601,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/an0nD6uq6byfxXCfk6lQBzdL2J1.jpg",
+      "releaseYear": "1982"
+    },
+    {
+      "title": "Arrival",
+      "tmdbId": 329865,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/pEzNVQfdzYDzVK0XqxERIw2x2se.jpg",
+      "releaseYear": "2016"
+    },
+    {
+      "title": "Ex Machina",
+      "tmdbId": 264660,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/dmJW8IAKHKxFNiUnoDR7JfsK7Rp.jpg",
+      "releaseYear": "2015"
+    },
+    {
+      "title": "District 9",
+      "tmdbId": 17654,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/tuGlQkqLxnodDSk6mp5c2wvxUEd.jpg",
+      "releaseYear": "2009"
+    },
+    {
+      "title": "Children of Men",
+      "tmdbId": 9693,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/k9IAS4TehZFcKi4HVByxZNPfqex.jpg",
+      "releaseYear": "2006"
+    },
+    {
+      "title": "Minority Report",
+      "tmdbId": 180,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/ccqpHq5tk5W4ymbSbuoy4uYOxFI.jpg",
+      "releaseYear": "2002"
+    },
+    {
+      "title": "The Fifth Element",
+      "tmdbId": 18,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/fPtlCO1yQtnoLHOwKtWz7db6RGU.jpg",
+      "releaseYear": "1997"
+    },
+    {
+      "title": "Star Trek",
+      "tmdbId": 13475,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/lV5OpzAss1z06YNagOVap1I35mH.jpg",
+      "releaseYear": "2009"
+    },
+    {
+      "title": "Dune",
+      "tmdbId": 438631,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/v1tRXZ4JtD2Iv6fjkPvT4GiwslV.jpg",
+      "releaseYear": "2021"
+    },
+    {
+      "title": "Dune: Part Two",
+      "tmdbId": 693134,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/6izwz7rsy95ARzTR3poZ8H6c5pp.jpg",
+      "releaseYear": "2024"
+    },
+    {
+      "title": "Edge of Tomorrow",
+      "tmdbId": 137113,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/nBM9MMa2WCwvMG4IJ3eiGUdbPe6.jpg",
+      "releaseYear": "2014"
+    },
+    {
+      "title": "Gravity",
+      "tmdbId": 49047,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/kZ2nZw8D681aphje8NJi8EfbL1U.jpg",
+      "releaseYear": "2013"
+    },
+    {
+      "title": "The Martian",
+      "tmdbId": 286217,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/5BHuvQ6p9kfc091Z8RiFNhCwL4b.jpg",
+      "releaseYear": "2015"
+    },
+    {
+      "title": "Looper",
+      "tmdbId": 59967,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/sNjL6SqErDBE8OUZlrDLkexfsCj.jpg",
+      "releaseYear": "2012"
+    },
+    {
+      "title": "Back to the Future",
+      "tmdbId": 105,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/vN5B5WgYscRGcQpVhHl6p9DDTP0.jpg",
+      "releaseYear": "1985"
+    },
+    {
+      "title": "Close Encounters of the Third Kind",
+      "tmdbId": 840,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/yaPx3cK9zGFX3SbcKwxWM1QIbUh.jpg",
+      "releaseYear": "1977"
+    },
+    {
+      "title": "A Clockwork Orange",
+      "tmdbId": 185,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/4sHeTAp65WrSSuc05nRBKddhBxO.jpg",
+      "releaseYear": "1971"
+    },
+    {
+      "title": "Total Recall",
+      "tmdbId": 861,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/wVbeL6fkbTKSmNfalj4VoAUUqJv.jpg",
+      "releaseYear": "1990"
+    },
+    {
+      "title": "Snowpiercer",
+      "tmdbId": 110415,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/kw6YQudA0TMcNmGUGy5XIw7zbnV.jpg",
+      "releaseYear": "2013"
+    },
+    {
+      "title": "Elysium",
+      "tmdbId": 68724,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/aRjuJuPXHtVs6YegfeeQWXGRs1E.jpg",
+      "releaseYear": "2013"
+    },
+    {
+      "title": "Ready Player One",
+      "tmdbId": 333339,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/pU1ULUq8D3iRxl1fdX2lZIzdHuI.jpg",
+      "releaseYear": "2018"
+    },
+    {
+      "title": "Tenet",
+      "tmdbId": 577922,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/aCIFMriQh8rvhxpN1IWGgvH0Tlg.jpg",
+      "releaseYear": "2020"
+    },
+    {
+      "title": "Everything Everywhere All at Once",
+      "tmdbId": 545611,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/u68AjlvlutfEIcpmbYpKcdi09ut.jpg",
+      "releaseYear": "2022"
+    }
+  ],
+  "Fantasy": [
+    {
+      "title": "The Lord of the Rings: The Two Towers",
+      "tmdbId": 121,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/5VTN0pR8gcqV3EPUHHfMGnJYN9L.jpg",
+      "releaseYear": "2002"
+    },
+    {
+      "title": "The Lord of the Rings: The Return of the King",
+      "tmdbId": 122,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/rCzpDGLbOoPwLjy3OAm5NUPOTrC.jpg",
+      "releaseYear": "2003"
+    },
+    {
+      "title": "Harry Potter and the Sorcerer's Stone",
+      "tmdbId": 671,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/wuMc08IPKEatf9rnMNXvIDxqP4W.jpg",
+      "releaseYear": "2001"
+    },
+    {
+      "title": "Harry Potter and the Prisoner of Azkaban",
+      "tmdbId": 673,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/aWxwnYoe8p2d2fcxOqtvAtJ72Rw.jpg",
+      "releaseYear": "2004"
+    },
+    {
+      "title": "Pan's Labyrinth",
+      "tmdbId": 1417,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/7wb2Ldp0oAx1lcZvffq9RfWoI2h.jpg",
+      "releaseYear": "2006"
+    },
+    {
+      "title": "The Chronicles of Narnia: The Lion, the Witch and the Wardrobe",
+      "tmdbId": 411,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/iREd0rNCjYdf5Ar0vfaW32yrkm.jpg",
+      "releaseYear": "2005"
+    },
+    {
+      "title": "Big Fish",
+      "tmdbId": 587,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/tjK063yCgaBAluVU72rZ6PKPH2l.jpg",
+      "releaseYear": "2003"
+    },
+    {
+      "title": "Edward Scissorhands",
+      "tmdbId": 162,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/e0FqKFvGPdQNWG8tF9cZBtev9Em.jpg",
+      "releaseYear": "1990"
+    },
+    {
+      "title": "The NeverEnding Story",
+      "tmdbId": 34584,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/ddYCa91iDXfJCxaqSYzwi2fjfnl.jpg",
+      "releaseYear": "1984"
+    },
+    {
+      "title": "Stardust",
+      "tmdbId": 2270,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/le1gPiqeWrCj5FkjBtcF9clFmdX.jpg",
+      "releaseYear": "2007"
+    },
+    {
+      "title": "The Shape of Water",
+      "tmdbId": 399055,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/9zfwPffUXpBrEP26yp0q1ckXDcj.jpg",
+      "releaseYear": "2017"
+    },
+    {
+      "title": "Willow",
+      "tmdbId": 847,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/pAIRGMIdN7ZdZhflazdV2ezuJ9f.jpg",
+      "releaseYear": "1988"
+    },
+    {
+      "title": "Labyrinth",
+      "tmdbId": 13597,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/pejayhTVBEL4w8YKSfrhOjjWVlH.jpg",
+      "releaseYear": "1986"
+    },
+    {
+      "title": "Legend",
+      "tmdbId": 11976,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/6n3PQSYpZRK5YPk2w8JEwED7AZk.jpg",
+      "releaseYear": "1985"
+    },
+    {
+      "title": "Beetlejuice",
+      "tmdbId": 917496,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/kKgQzkUCnQmeTPkyIwHly2t6ZFI.jpg",
+      "releaseYear": "2024"
+    },
+    {
+      "title": "The Green Knight",
+      "tmdbId": 559907,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/if4hw3Ou5Sav9Em7WWHj66mnywp.jpg",
+      "releaseYear": "2021"
+    },
+    {
+      "title": "Coraline",
+      "tmdbId": 14836,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/4jeFXQYytChdZYE9JYO7Un87IlW.jpg",
+      "releaseYear": "2009"
+    },
+    {
+      "title": "Spirited Away",
+      "tmdbId": 129,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/39wmItIWsg5sZMyRUHLkWBcuVCM.jpg",
+      "releaseYear": "2001"
+    },
+    {
+      "title": "Howl's Moving Castle",
+      "tmdbId": 4935,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/13kOl2v0nD2OLbVSHnHk8GUFEhO.jpg",
+      "releaseYear": "2004"
+    },
+    {
+      "title": "Crouching Tiger, Hidden Dragon",
+      "tmdbId": 146,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/iNDVBFNz4XyYzM9Lwip6atSTFqf.jpg",
+      "releaseYear": "2000"
+    },
+    {
+      "title": "The Witches",
+      "tmdbId": 10166,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/mPYBjVkeHakkPGY7WaKyyNU4RWm.jpg",
+      "releaseYear": "1990"
+    },
+    {
+      "title": "MirrorMask",
+      "tmdbId": 14517,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/itIJU3NKbdgScA1WPIxXzOlm0Uj.jpg",
+      "releaseYear": "2005"
+    },
+    {
+      "title": "Doctor Strange",
+      "tmdbId": 284052,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/uGBVj3bEbCoZbDjjl9wTxcygko1.jpg",
+      "releaseYear": "2016"
+    },
+    {
+      "title": "Fantastic Beasts and Where to Find Them",
+      "tmdbId": 259316,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/h6NYfVUyM6CDURtZSnBpz647Ldd.jpg",
+      "releaseYear": "2016"
+    },
+    {
+      "title": "The Golden Compass",
+      "tmdbId": 2268,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/6DTH9poR8RAw859L6OuokT7z993.jpg",
+      "releaseYear": "2007"
+    },
+    {
+      "title": "Peter Pan",
+      "tmdbId": 10601,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/6QdU3TZZrIvXFzoHOwafZAynFjB.jpg",
+      "releaseYear": "2003"
+    },
+    {
+      "title": "Alice in Wonderland",
+      "tmdbId": 12155,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/o0kre9wRCZz3jjSjaru7QU0UtFz.jpg",
+      "releaseYear": "2010"
+    },
+    {
+      "title": "Maleficent",
+      "tmdbId": 102651,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/ik8PugpL41s137RAWEGTAWu0dPo.jpg",
+      "releaseYear": "2014"
+    },
+    {
+      "title": "The Wizard of Oz",
+      "tmdbId": 630,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/uCC3j4pV9eOZwzDUWp2ilbcTf1f.jpg",
+      "releaseYear": "1939"
+    },
+    {
+      "title": "Constantine",
+      "tmdbId": 561,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/vPYgvd2MwHlxTamAOjwVQp4qs1W.jpg",
+      "releaseYear": "2005"
+    }
+  ],
+  "Thriller": [
+    {
+      "title": "Se7en",
+      "tmdbId": 807,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/191nKfP0ehp3uIvWqgPbFmI4lv9.jpg",
+      "releaseYear": "1995"
+    },
+    {
+      "title": "Gone Girl",
+      "tmdbId": 210577,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/ts996lKsxvjkO2yiYG0ht4qAicO.jpg",
+      "releaseYear": "2014"
+    },
+    {
+      "title": "Zodiac",
+      "tmdbId": 1949,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/6YmeO4pB7XTh8P8F960O1uA14JO.jpg",
+      "releaseYear": "2007"
+    },
+    {
+      "title": "The Silence of the Lambs",
+      "tmdbId": 274,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/uS9m8OBk1A8eM9I042bx8XXpqAq.jpg",
+      "releaseYear": "1991"
+    },
+    {
+      "title": "Shutter Island",
+      "tmdbId": 11324,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/nrmXQ0zcZUL8jFLrakWc90IR8z9.jpg",
+      "releaseYear": "2010"
+    },
+    {
+      "title": "Prisoners",
+      "tmdbId": 146233,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/uhviyknTT5cEQXbn6vWIqfM4vGm.jpg",
+      "releaseYear": "2013"
+    },
+    {
+      "title": "Memento",
+      "tmdbId": 77,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/nzlv62aC0octS5AklAiWpXLX9Z0.jpg",
+      "releaseYear": "2000"
+    },
+    {
+      "title": "The Usual Suspects",
+      "tmdbId": 629,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/99X2SgyFunJFXGAYnDv3sb9pnUD.jpg",
+      "releaseYear": "1995"
+    },
+    {
+      "title": "Fight Club",
+      "tmdbId": 550,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/jSziioSwPVrOy9Yow3XhWIBDjq1.jpg",
+      "releaseYear": "1999"
+    },
+    {
+      "title": "North by Northwest",
+      "tmdbId": 213,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/kNOFPQrel9YFCVzI0DF8FnCEpCw.jpg",
+      "releaseYear": "1959"
+    },
+    {
+      "title": "Rear Window",
+      "tmdbId": 567,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/ILVF0eJxHMddjxeQhswFtpMtqx.jpg",
+      "releaseYear": "1954"
+    },
+    {
+      "title": "Vertigo",
+      "tmdbId": 426,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/15uOEfqBNTVtDUT7hGBVCka0rZz.jpg",
+      "releaseYear": "1958"
+    },
+    {
+      "title": "Nightcrawler",
+      "tmdbId": 242582,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/j9HrX8f7GbZQm1BrBiR40uFQZSb.jpg",
+      "releaseYear": "2014"
+    },
+    {
+      "title": "Uncut Gems",
+      "tmdbId": 473033,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/6XN1vxHc7kUSqNWtaQKN45J5x2v.jpg",
+      "releaseYear": "2019"
+    },
+    {
+      "title": "Parasite",
+      "tmdbId": 496243,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg",
+      "releaseYear": "2019"
+    },
+    {
+      "title": "The Girl with the Dragon Tattoo",
+      "tmdbId": 65754,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/8bokS83zGdhaXgN9tjidUKmAftW.jpg",
+      "releaseYear": "2011"
+    },
+    {
+      "title": "Wind River",
+      "tmdbId": 395834,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/pySivdR845Hom4u4T2WNkJxe6Ad.jpg",
+      "releaseYear": "2017"
+    },
+    {
+      "title": "Collateral",
+      "tmdbId": 1538,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/nV5316WUsVij8sVXLCF1g7TFitg.jpg",
+      "releaseYear": "2004"
+    },
+    {
+      "title": "Taken",
+      "tmdbId": 8681,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/ognkaUSNgJe1a2pjB4UNdzEo5jT.jpg",
+      "releaseYear": "2008"
+    },
+    {
+      "title": "Enemy of the State",
+      "tmdbId": 9798,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/x9pXrMKLsBGGOFyyZ0Gwt9YpVub.jpg",
+      "releaseYear": "1998"
+    },
+    {
+      "title": "The Manchurian Candidate",
+      "tmdbId": 14462,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/4xEWtEbKK2EXMZ8UPff8hDCSiVW.jpg",
+      "releaseYear": "2004"
+    },
+    {
+      "title": "Cape Fear",
+      "tmdbId": 1598,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/meJZAAuVcjic2ipvbOPz5UlE4P9.jpg",
+      "releaseYear": "1991"
+    },
+    {
+      "title": "Misery",
+      "tmdbId": 1700,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/klPO5oh1LOxiPpdDXZo1ADgpKcw.jpg",
+      "releaseYear": "1990"
+    },
+    {
+      "title": "Jagged Edge",
+      "tmdbId": 12235,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/wHYjo3NLc293ZEXVSGhRIUr3Iqi.jpg",
+      "releaseYear": "1985"
+    },
+    {
+      "title": "The Talented Mr. Ripley",
+      "tmdbId": 1213,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/6ojHgqtIR41O2qLKa7LFUVj0cZa.jpg",
+      "releaseYear": "1999"
+    },
+    {
+      "title": "A Simple Favor",
+      "tmdbId": 484247,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/aIYsjQM0piKc0ibPBCTWv3sqshj.jpg",
+      "releaseYear": "2018"
+    },
+    {
+      "title": "Knives Out",
+      "tmdbId": 546554,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/pThyQovXQrw2m0s9x82twj48Jq4.jpg",
+      "releaseYear": "2019"
+    },
+    {
+      "title": "Glass Onion",
+      "tmdbId": 661374,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/vDGr1YdrlfbU9wxTOdpf3zChmv9.jpg",
+      "releaseYear": "2022"
+    },
+    {
+      "title": "The Invisible Man",
+      "tmdbId": 570670,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/5EufsDwXdY2CVttYOk2WtYhgKpa.jpg",
+      "releaseYear": "2020"
+    },
+    {
+      "title": "Basic Instinct",
+      "tmdbId": 402,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/76Ts0yoHk8kVQj9MMnoMixhRWoh.jpg",
+      "releaseYear": "1992"
+    }
+  ],
+  "Mystery": [
+    {
+      "title": "Knives Out (Mystery)",
+      "tmdbId": 546554,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/pThyQovXQrw2m0s9x82twj48Jq4.jpg",
+      "releaseYear": "2019"
+    },
+    {
+      "title": "Murder on the Orient Express",
+      "tmdbId": 392044,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/7GtdJU6iAg6fjQu3E3zta3bIAQh.jpg",
+      "releaseYear": "2017"
+    },
+    {
+      "title": "Clue",
+      "tmdbId": 15196,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/aRxbYOYHS8T73nzR8hsLousoplR.jpg",
+      "releaseYear": "1985"
+    },
+    {
+      "title": "The Nice Guys",
+      "tmdbId": 290250,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/clq4So9spa9cXk3MZy2iMdqkxP2.jpg",
+      "releaseYear": "2016"
+    },
+    {
+      "title": "Chinatown",
+      "tmdbId": 829,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/kZRSP3FmOcq0xnBulqpUQngJUXY.jpg",
+      "releaseYear": "1974"
+    },
+    {
+      "title": "L.A. Confidential",
+      "tmdbId": 2118,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/lWCgf5sD5FpMljjpkRhcC8pXcch.jpg",
+      "releaseYear": "1997"
+    },
+    {
+      "title": "Gone Baby Gone",
+      "tmdbId": 4771,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/5BXDhjKZ4AL9VPxcygdG3oL60GP.jpg",
+      "releaseYear": "2007"
+    },
+    {
+      "title": "Mystic River",
+      "tmdbId": 322,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/hCHVDbo6XJGj3r2i4hVjKhE0GKF.jpg",
+      "releaseYear": "2003"
+    },
+    {
+      "title": "The Prestige",
+      "tmdbId": 1124,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/Ag2B2KHKQPukjH7WutmgnnSNurZ.jpg",
+      "releaseYear": "2006"
+    },
+    {
+      "title": "Sherlock Holmes",
+      "tmdbId": 10528,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/momkKuWburNTqKBF6ez7rvhYVhE.jpg",
+      "releaseYear": "2009"
+    },
+    {
+      "title": "Rebecca",
+      "tmdbId": 223,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/1qz3qUOHnVy7dL7M7G8jSErxE4b.jpg",
+      "releaseYear": "1940"
+    },
+    {
+      "title": "Blow-Up",
+      "tmdbId": 1052,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/jVDVpydUw8Z50naUDAG4NbRCrSa.jpg",
+      "releaseYear": "1966"
+    },
+    {
+      "title": "The Da Vinci Code",
+      "tmdbId": 591,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/9ejKfNk0LBhSI9AahH4f9NJNZNM.jpg",
+      "releaseYear": "2006"
+    },
+    {
+      "title": "Angels & Demons",
+      "tmdbId": 13448,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/tFZQAuulEOtFTp0gHbVdEXwGrYe.jpg",
+      "releaseYear": "2009"
+    },
+    {
+      "title": "And Then There Were None",
+      "tmdbId": 4883,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/JoBZj30v380XBiRrYwIhOoGJ1z.jpg",
+      "releaseYear": "1974"
+    },
+    {
+      "title": "The Sixth Sense",
+      "tmdbId": 745,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/vOyfUXNFSnaTk7Vk5AjpsKTUWsu.jpg",
+      "releaseYear": "1999"
+    },
+    {
+      "title": "Shutter Island (Mystery)",
+      "tmdbId": 11324,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/nrmXQ0zcZUL8jFLrakWc90IR8z9.jpg",
+      "releaseYear": "2010"
+    },
+    {
+      "title": "Identity",
+      "tmdbId": 2832,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/sYgimsiBywqVwJI8H4sETke8m7v.jpg",
+      "releaseYear": "2003"
+    },
+    {
+      "title": "Memento (Mystery)",
+      "tmdbId": 77,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/nzlv62aC0octS5AklAiWpXLX9Z0.jpg",
+      "releaseYear": "2000"
+    },
+    {
+      "title": "Oldboy",
+      "tmdbId": 87516,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/iX93YdBrZA1EpGbphmjf4ARj1Za.jpg",
+      "releaseYear": "2013"
+    },
+    {
+      "title": "Insomnia",
+      "tmdbId": 320,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/riVXh3EimGO0y5dgQxEWPRy5Itg.jpg",
+      "releaseYear": "2002"
+    },
+    {
+      "title": "Zodiac (Mystery)",
+      "tmdbId": 1949,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/6YmeO4pB7XTh8P8F960O1uA14JO.jpg",
+      "releaseYear": "2007"
+    },
+    {
+      "title": "Seven (Mystery)",
+      "tmdbId": 1288341,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/pK6tGCG6UAgUT5FTq3ylGErHxQQ.jpg",
+      "releaseYear": "2026"
+    },
+    {
+      "title": "The Others",
+      "tmdbId": 1933,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/p8g1vlTvpM6nr2hMMiZ1fUlKF0D.jpg",
+      "releaseYear": "2001"
+    },
+    {
+      "title": "A Simple Plan",
+      "tmdbId": 10223,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/wO2gH7DMqpMeHlj5QmDhW4IkgAr.jpg",
+      "releaseYear": "1998"
+    },
+    {
+      "title": "Wind River (Mystery)",
+      "tmdbId": 395834,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/pySivdR845Hom4u4T2WNkJxe6Ad.jpg",
+      "releaseYear": "2017"
+    },
+    {
+      "title": "The Woman in the Window",
+      "tmdbId": 520663,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/wcrjc1uwQaqoqtqi67Su4VCOYo0.jpg",
+      "releaseYear": "2021"
+    },
+    {
+      "title": "Gone Girl (Mystery)",
+      "tmdbId": 210577,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/ts996lKsxvjkO2yiYG0ht4qAicO.jpg",
+      "releaseYear": "2014"
+    },
+    {
+      "title": "Blood Simple",
+      "tmdbId": 11368,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/n8D1gVXUgmW4kkDzUzzoezAmUUa.jpg",
+      "releaseYear": "1985"
+    },
+    {
+      "title": "Fargo",
+      "tmdbId": 275,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/rt7cpEr1uP6RTZykBFhBTcRaKvG.jpg",
+      "releaseYear": "1996"
+    }
+  ],
+  "Romance": [
+    {
+      "title": "Titanic",
+      "tmdbId": 597,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/9xjZS2rlVxm8SFx8kPC3aIGCOYQ.jpg",
+      "releaseYear": "1997"
+    },
+    {
+      "title": "The Notebook",
+      "tmdbId": 11036,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/rNzQyW4f8B8cQeg7Dgj3n6eT5k9.jpg",
+      "releaseYear": "2004"
+    },
+    {
+      "title": "Casablanca",
+      "tmdbId": 289,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/lGCEKlJo2CnWydQj7aamY7s1S7Q.jpg",
+      "releaseYear": "1943"
+    },
+    {
+      "title": "When Harry Met Sally",
+      "tmdbId": 639,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/rFOiFUhTMtDetqCGClC9PIgnC1P.jpg",
+      "releaseYear": "1989"
+    },
+    {
+      "title": "Pride & Prejudice",
+      "tmdbId": 4348,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/o8UhmEbWPHmTUxP0lMuCoqNkbB3.jpg",
+      "releaseYear": "2005"
+    },
+    {
+      "title": "La La Land",
+      "tmdbId": 313369,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/uDO8zWDhfWwoFdKS4fzkUJt0Rf0.jpg",
+      "releaseYear": "2016"
+    },
+    {
+      "title": "Eternal Sunshine of the Spotless Mind",
+      "tmdbId": 38,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/5MwkWH9tYHv3mV9OdYTMR5qreIz.jpg",
+      "releaseYear": "2004"
+    },
+    {
+      "title": "Before Sunrise",
+      "tmdbId": 76,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/kf1Jb1c2JAOqjuzA3H4oDM263uB.jpg",
+      "releaseYear": "1995"
+    },
+    {
+      "title": "Before Sunset",
+      "tmdbId": 80,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/4sW5XH9ZfYXpvFzev00S1IGAEbg.jpg",
+      "releaseYear": "2004"
+    },
+    {
+      "title": "Notting Hill",
+      "tmdbId": 509,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/hHRIf2XHeQMbyRb3HUx19SF5Ujw.jpg",
+      "releaseYear": "1999"
+    },
+    {
+      "title": "Sleepless in Seattle",
+      "tmdbId": 858,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/jAXfku1u1uaLGh4cUmK0ESf1pPu.jpg",
+      "releaseYear": "1993"
+    },
+    {
+      "title": "Roman Holiday",
+      "tmdbId": 804,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/8lI9dmz1RH20FAqltkGelY1v4BE.jpg",
+      "releaseYear": "1953"
+    },
+    {
+      "title": "Dirty Dancing",
+      "tmdbId": 88,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/9Jw6jys7q9gjzVX5zm1z0gC8gY9.jpg",
+      "releaseYear": "1987"
+    },
+    {
+      "title": "Ghost",
+      "tmdbId": 1393326,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/zxcMdx0w5Zmg8yZuuiS7CJ8vOea.jpg",
+      "releaseYear": "2026"
+    },
+    {
+      "title": "Moulin Rouge!",
+      "tmdbId": 824,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/2kjM5CUZRIU5yOANUowrbJcRL9L.jpg",
+      "releaseYear": "2001"
+    },
+    {
+      "title": "The Fault in Our Stars",
+      "tmdbId": 222935,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/kcVuktIlrn9SAN1uBmPDnocTQmF.jpg",
+      "releaseYear": "2014"
+    },
+    {
+      "title": "A Walk to Remember",
+      "tmdbId": 10229,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/8lUYMvWdHA0Q0k5F76RQCeCBUkA.jpg",
+      "releaseYear": "2002"
+    },
+    {
+      "title": "500 Days of Summer",
+      "tmdbId": 19913,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/qXAuQ9hF30sQRsXf40OfRVl0MJZ.jpg",
+      "releaseYear": "2009"
+    },
+    {
+      "title": "Silver Linings Playbook",
+      "tmdbId": 82693,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/fhHB1uvfFKKFbj6bTKE8xdtsjKi.jpg",
+      "releaseYear": "2012"
+    },
+    {
+      "title": "Crazy, Stupid, Love",
+      "tmdbId": 50646,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/p4RafgAPk558muOjnBMHhMArjS2.jpg",
+      "releaseYear": "2011"
+    },
+    {
+      "title": "About Time",
+      "tmdbId": 122906,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/ls6zswrOZVhCXQBh96DlbnLBajM.jpg",
+      "releaseYear": "2013"
+    },
+    {
+      "title": "Amelie",
+      "tmdbId": 194,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/nSxDa3M9aMvGVLoItzWTepQ5h5d.jpg",
+      "releaseYear": "2001"
+    },
+    {
+      "title": "In the Mood for Love",
+      "tmdbId": 843,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/8BgGbbWiLNhPtkMkN0gGTnbtvBv.jpg",
+      "releaseYear": "2000"
+    },
+    {
+      "title": "Brokeback Mountain",
+      "tmdbId": 142,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/aByfQOQBNa4CMFwIgq3QrqY2ZHh.jpg",
+      "releaseYear": "2005"
+    },
+    {
+      "title": "Call Me by Your Name",
+      "tmdbId": 398818,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/gXiE0WveDnT0n5J4sW9TMxXF4oT.jpg",
+      "releaseYear": "2017"
+    },
+    {
+      "title": "The Shape of Water (Romance)",
+      "tmdbId": 399055,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/9zfwPffUXpBrEP26yp0q1ckXDcj.jpg",
+      "releaseYear": "2017"
+    },
+    {
+      "title": "Jerry Maguire",
+      "tmdbId": 9390,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/lABvGN7fDk5ifnwZoxij6G96t2w.jpg",
+      "releaseYear": "1996"
+    },
+    {
+      "title": "Love Actually",
+      "tmdbId": 508,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/7QPeVsr9rcFU9Gl90yg0gTOTpVv.jpg",
+      "releaseYear": "2003"
+    },
+    {
+      "title": "Never Been Kissed",
+      "tmdbId": 11355,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/6BngDhDNfbBjhVFWDT2yMve32vi.jpg",
+      "releaseYear": "1999"
+    },
+    {
+      "title": "Twilight",
+      "tmdbId": 8966,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/3Gkb6jm6962ADUPaCBqzz9CTbn9.jpg",
+      "releaseYear": "2008"
+    }
+  ],
+  "Crime": [
+    {
+      "title": "The Godfather Part II",
+      "tmdbId": 240,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/8a1lJs7mFyGhGhZZDT1azJUoQiZ.jpg",
+      "releaseYear": "1974"
+    },
+    {
+      "title": "Goodfellas",
+      "tmdbId": 769,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/9OkCLM73MIU2CrKZbqiT8Ln1wY2.jpg",
+      "releaseYear": "1990"
+    },
+    {
+      "title": "Pulp Fiction",
+      "tmdbId": 680,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/vQWk5YBFWF4bZaofAbv0tShwBvQ.jpg",
+      "releaseYear": "1994"
+    },
+    {
+      "title": "Scarface",
+      "tmdbId": 111,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/iQ5ztdjvteGeboxtmRdXEChJOHh.jpg",
+      "releaseYear": "1983"
+    },
+    {
+      "title": "Casino",
+      "tmdbId": 524,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/gziIkUSnYuj9ChCi8qOu2ZunpSC.jpg",
+      "releaseYear": "1995"
+    },
+    {
+      "title": "The Departed",
+      "tmdbId": 1422,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/nT97ifVT2J1yMQmeq20Qblg61T.jpg",
+      "releaseYear": "2006"
+    },
+    {
+      "title": "American Gangster",
+      "tmdbId": 4982,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/sX9idXDqRUxE5ffww3n3RV5gL55.jpg",
+      "releaseYear": "2007"
+    },
+    {
+      "title": "Reservoir Dogs",
+      "tmdbId": 500,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/xi8Iu6qyTfyZVDVy60raIOYJJmk.jpg",
+      "releaseYear": "1992"
+    },
+    {
+      "title": "City of God",
+      "tmdbId": 598,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/k7eYdWvhYQyRQoU2TB2A2Xu2TfD.jpg",
+      "releaseYear": "2002"
+    },
+    {
+      "title": "The Irishman",
+      "tmdbId": 398978,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/mbm8k3GFhXS0ROd9AD1gqYbIFbM.jpg",
+      "releaseYear": "2019"
+    },
+    {
+      "title": "Once Upon a Time in America",
+      "tmdbId": 311,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/i0enkzsL5dPeneWnjl1fCWm6L7k.jpg",
+      "releaseYear": "1984"
+    },
+    {
+      "title": "A Bronx Tale",
+      "tmdbId": 1607,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/7Obzc6svsHSR1za0LqzkpwFsEhw.jpg",
+      "releaseYear": "1993"
+    },
+    {
+      "title": "Donnie Brasco",
+      "tmdbId": 9366,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/xtKLvpOfARi1XVm8u2FTdhY5Piq.jpg",
+      "releaseYear": "1997"
+    },
+    {
+      "title": "Training Day",
+      "tmdbId": 2034,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/bUeiwBQdupBLQthMCHKV7zv56uv.jpg",
+      "releaseYear": "2001"
+    },
+    {
+      "title": "Miller's Crossing",
+      "tmdbId": 379,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/mbFUr8hTOzrBCgAekAVRiXYgj2H.jpg",
+      "releaseYear": "1990"
+    },
+    {
+      "title": "The Untouchables",
+      "tmdbId": 117,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/tPq0R4jTO4Ey8ZspFaWK9wGA4Ls.jpg",
+      "releaseYear": "1987"
+    },
+    {
+      "title": "Carlito's Way",
+      "tmdbId": 6075,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/g6D7mjQtndu768cusGmoEQY9fTB.jpg",
+      "releaseYear": "1993"
+    },
+    {
+      "title": "Mean Streets",
+      "tmdbId": 203,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/9msfwOeGc9uL1iRRTBdEf15XonC.jpg",
+      "releaseYear": "1973"
+    },
+    {
+      "title": "Léon: The Professional",
+      "tmdbId": 101,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/bxB2q91nKYp8JNzqE7t7TWBVupB.jpg",
+      "releaseYear": "1994"
+    },
+    {
+      "title": "American History X (Crime)",
+      "tmdbId": 73,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/x2drgoXYZ8484lqyDj7L1CEVR4T.jpg",
+      "releaseYear": "1998"
+    },
+    {
+      "title": "Point Break (Crime)",
+      "tmdbId": 1089,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/tlbERIghrQ4oofqlbF7H0K0EYnx.jpg",
+      "releaseYear": "1991"
+    },
+    {
+      "title": "Heat (Crime)",
+      "tmdbId": 949,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/umSVjVdbVwtx5ryCA2QXL44Durm.jpg",
+      "releaseYear": "1995"
+    },
+    {
+      "title": "Kill the Irishman",
+      "tmdbId": 51209,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/yjDvqAMyFlesBtWNUUZMgglo78y.jpg",
+      "releaseYear": "2011"
+    },
+    {
+      "title": "Public Enemies",
+      "tmdbId": 11322,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/3KgtekisQBrHRsm2cD5UOB6Ce3k.jpg",
+      "releaseYear": "2009"
+    },
+    {
+      "title": "Killing Them Softly",
+      "tmdbId": 64689,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/heaz45kpFa4Oa7iLis0OBas68ls.jpg",
+      "releaseYear": "2012"
+    },
+    {
+      "title": "The Town",
+      "tmdbId": 23168,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/3NIzyXkfylsjflRKSz8Fts3lXzm.jpg",
+      "releaseYear": "2010"
+    },
+    {
+      "title": "Layer Cake",
+      "tmdbId": 4836,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/rDOxXteqxALBaSa3V3zTjGJuyWB.jpg",
+      "releaseYear": "2004"
+    },
+    {
+      "title": "Lock, Stock and Two Smoking Barrels",
+      "tmdbId": 100,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/6pJB2t3MbQUy9m5pFIBHXLqnqNd.jpg",
+      "releaseYear": "1998"
+    },
+    {
+      "title": "Snatch",
+      "tmdbId": 107,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/kJZoAHq1SLDdWjeNGtlHAnGpmFV.jpg",
+      "releaseYear": "2000"
+    },
+    {
+      "title": "In Bruges",
+      "tmdbId": 8321,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/vz3Vd6nfq9YZrVvyYx5RHFaYKV3.jpg",
+      "releaseYear": "2008"
+    }
+  ],
+  "War": [
+    {
+      "title": "Saving Private Ryan",
+      "tmdbId": 857,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/uqx37cS8cpHg8U35f9U5IBlrCV3.jpg",
+      "releaseYear": "1998"
+    },
+    {
+      "title": "Apocalypse Now",
+      "tmdbId": 28,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/gQB8Y5RCMkv2zwzFHbUJX3kAhvA.jpg",
+      "releaseYear": "1979"
+    },
+    {
+      "title": "Platoon",
+      "tmdbId": 792,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/m3mmFkPQKvPZq5exmh0bDuXlD9T.jpg",
+      "releaseYear": "1986"
+    },
+    {
+      "title": "Full Metal Jacket",
+      "tmdbId": 600,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/kMKyx1k8hWWscYFnPbnxxN4Eqo4.jpg",
+      "releaseYear": "1987"
+    },
+    {
+      "title": "Dunkirk",
+      "tmdbId": 374720,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/b4Oe15CGLL61Ped0RAS9JpqdmCt.jpg",
+      "releaseYear": "2017"
+    },
+    {
+      "title": "1917",
+      "tmdbId": 530915,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/iZf0KyrE25z1sage4SYFLCCrMi9.jpg",
+      "releaseYear": "2019"
+    },
+    {
+      "title": "Black Hawk Down",
+      "tmdbId": 855,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/7fU5dSqKRL4XHeEUz62rCKBfYok.jpg",
+      "releaseYear": "2001"
+    },
+    {
+      "title": "The Deer Hunter",
+      "tmdbId": 11778,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/bbGtogDZOg09bm42KIpCXUXICkh.jpg",
+      "releaseYear": "1978"
+    },
+    {
+      "title": "Hacksaw Ridge",
+      "tmdbId": 324786,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/fnOMP6mjmOmZwmlC1n0K7ivrzt1.jpg",
+      "releaseYear": "2016"
+    },
+    {
+      "title": "Fury",
+      "tmdbId": 228150,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/pfte7wdMobMF4CVHuOxyu6oqeeA.jpg",
+      "releaseYear": "2014"
+    },
+    {
+      "title": "The Thin Red Line",
+      "tmdbId": 8741,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/seMydAaoxQP6F0xbE1jOcTmn5Jr.jpg",
+      "releaseYear": "1998"
+    },
+    {
+      "title": "Letters from Iwo Jima",
+      "tmdbId": 1251,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/kZokxQtzMPURvijWYFuvh1fAvnv.jpg",
+      "releaseYear": "2006"
+    },
+    {
+      "title": "Flags of Our Fathers",
+      "tmdbId": 3683,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/2nkPrhf4YIyMFelfe4zdOnGRYz5.jpg",
+      "releaseYear": "2006"
+    },
+    {
+      "title": "Das Boot",
+      "tmdbId": 387,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/u8FhQPncOAkwcei2OI9orPWhV6K.jpg",
+      "releaseYear": "1981"
+    },
+    {
+      "title": "Paths of Glory",
+      "tmdbId": 975,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/hGg1UCQSHlXfv2HI9bDHT2OQBam.jpg",
+      "releaseYear": "1957"
+    },
+    {
+      "title": "Patton",
+      "tmdbId": 11202,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/rLM7jIEPTjj4CF7F1IrzzNjLUCu.jpg",
+      "releaseYear": "1970"
+    },
+    {
+      "title": "Braveheart",
+      "tmdbId": 197,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/or1gBugydmjToAEq7OZY0owwFk.jpg",
+      "releaseYear": "1995"
+    },
+    {
+      "title": "We Were Soldiers",
+      "tmdbId": 10590,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/nzeSYldx7wIrwycLKHKHTTUJNWh.jpg",
+      "releaseYear": "2002"
+    },
+    {
+      "title": "American Sniper",
+      "tmdbId": 190859,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/i1U46OwMc6vlm7OoSUKfqUH615e.jpg",
+      "releaseYear": "2014"
+    },
+    {
+      "title": "The Hurt Locker",
+      "tmdbId": 12162,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/io2dfBJhasvGbgkCX9cCGVOiA99.jpg",
+      "releaseYear": "2008"
+    },
+    {
+      "title": "Jarhead",
+      "tmdbId": 25,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/6vdj47RAWOUZBkeQmqToeZ7eaio.jpg",
+      "releaseYear": "2005"
+    },
+    {
+      "title": "Enemy at the Gates",
+      "tmdbId": 853,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/cHRAbVdsCWFaQrswRsBP7Bn255W.jpg",
+      "releaseYear": "2001"
+    },
+    {
+      "title": "The Bridge on the River Kwai",
+      "tmdbId": 826,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/7paXMt2e3Tr5dLmEZOGgFEn2Vo7.jpg",
+      "releaseYear": "1957"
+    },
+    {
+      "title": "Gallipoli",
+      "tmdbId": 11646,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/un7VCqTmjrq3u75mQ204a8tofD4.jpg",
+      "releaseYear": "1981"
+    },
+    {
+      "title": "Come and See",
+      "tmdbId": 25237,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/qNbMsKVzigERgJUbwf8pKyZogpb.jpg",
+      "releaseYear": "1985"
+    },
+    {
+      "title": "Schindler's List (War)",
+      "tmdbId": 424,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/sF1U4EUQS8YHUYjNl3pMGNIQyr0.jpg",
+      "releaseYear": "1993"
+    },
+    {
+      "title": "Grave of the Fireflies",
+      "tmdbId": 76826,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/im6u58cPa9HlH5DqSnZGy0O37l5.jpg",
+      "releaseYear": "2005"
+    },
+    {
+      "title": "Kelly's Heroes",
+      "tmdbId": 11589,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/hleMxFKSC42yT0TClS4G29HV11n.jpg",
+      "releaseYear": "1970"
+    },
+    {
+      "title": "The Great Escape",
+      "tmdbId": 5925,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/gBH4H8UMFxl139HaLz6lRuvsel8.jpg",
+      "releaseYear": "1963"
+    },
+    {
+      "title": "Master and Commander (War)",
+      "tmdbId": 8619,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/7ZUHF6P0vcA5v1Gm8NbRYyd9w4N.jpg",
+      "releaseYear": "2003"
+    }
+  ],
+  "Western": [
+    {
+      "title": "The Good, the Bad and the Ugly",
+      "tmdbId": 429,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/bX2xnavhMYjWDoZp1VM6VnU1xwe.jpg",
+      "releaseYear": "1966"
+    },
+    {
+      "title": "Unforgiven",
+      "tmdbId": 33,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/54roTwbX9fltg85zjsmrooXAs12.jpg",
+      "releaseYear": "1992"
+    },
+    {
+      "title": "Once Upon a Time in the West",
+      "tmdbId": 335,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/qbYgqOczabWNn2XKwgMtVrntD6P.jpg",
+      "releaseYear": "1968"
+    },
+    {
+      "title": "True Grit",
+      "tmdbId": 17529,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/lmexRC57l39elaIcnxhaHpcaIW2.jpg",
+      "releaseYear": "1969"
+    },
+    {
+      "title": "Django Unchained",
+      "tmdbId": 68718,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/7oWY8VDWW7thTzWh3OKYRkWUlD5.jpg",
+      "releaseYear": "2012"
+    },
+    {
+      "title": "Butch Cassidy and the Sundance Kid",
+      "tmdbId": 642,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/gFmmykF1Ym3OGzENo50nZQaD1dx.jpg",
+      "releaseYear": "1969"
+    },
+    {
+      "title": "The Magnificent Seven",
+      "tmdbId": 966,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/e5ToxOyJwuZD4VOfI0qEn5uIjeJ.jpg",
+      "releaseYear": "1960"
+    },
+    {
+      "title": "High Noon",
+      "tmdbId": 288,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/qETSMQ4IXBSAS409Z9OL0ppXWTW.jpg",
+      "releaseYear": "1952"
+    },
+    {
+      "title": "The Searchers",
+      "tmdbId": 3114,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/jLBmgW0epNzJ1N9uzaVCjbyT94v.jpg",
+      "releaseYear": "1956"
+    },
+    {
+      "title": "Tombstone",
+      "tmdbId": 11969,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/wGFCvylul8iEQhJOKfwZGGvXMzA.jpg",
+      "releaseYear": "1993"
+    },
+    {
+      "title": "3:10 to Yuma",
+      "tmdbId": 5176,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/voMB69AsLnPNmtfbrBl0lbeFKDH.jpg",
+      "releaseYear": "2007"
+    },
+    {
+      "title": "No Country for Old Men (Western)",
+      "tmdbId": 6977,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/6d5XOczc226jECq0LIX0siKtgHR.jpg",
+      "releaseYear": "2007"
+    },
+    {
+      "title": "Stagecoach",
+      "tmdbId": 995,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/zgMnfnwWZ3nkx4t0bUDEKtW24O8.jpg",
+      "releaseYear": "1939"
+    },
+    {
+      "title": "Blazing Saddles",
+      "tmdbId": 11072,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/vNw1gOEDdYTDeNMuuq8OmiEHrfH.jpg",
+      "releaseYear": "1974"
+    },
+    {
+      "title": "The Wild Bunch",
+      "tmdbId": 576,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/8j9yEC3xjy1PJDSizIbaxcHaSph.jpg",
+      "releaseYear": "1969"
+    },
+    {
+      "title": "Shane",
+      "tmdbId": 3110,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/svr5ADpjXTCOQv8hmuJnB7I14Qv.jpg",
+      "releaseYear": "1953"
+    },
+    {
+      "title": "Dances with Wolves",
+      "tmdbId": 581,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/hw0ZEHAaTqTxSXGVwUFX7uvanSA.jpg",
+      "releaseYear": "1990"
+    },
+    {
+      "title": "The Assassination of Jesse James",
+      "tmdbId": 4512,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/xMKn6EQS7eR5ubhPJbw5pQSBZMw.jpg",
+      "releaseYear": "2007"
+    },
+    {
+      "title": "Hell or High Water",
+      "tmdbId": 338766,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/ljRRxqy2aXIkIBXLmOVifcOR021.jpg",
+      "releaseYear": "2016"
+    },
+    {
+      "title": "Open Range",
+      "tmdbId": 2055,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/1mrNc88NrUEGtMtat4FD7sfpFrW.jpg",
+      "releaseYear": "2003"
+    },
+    {
+      "title": "Rio Bravo",
+      "tmdbId": 301,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/4gI4KKmoi0d3yfsF71YU3S0I5t8.jpg",
+      "releaseYear": "1959"
+    },
+    {
+      "title": "The Outlaw Josey Wales",
+      "tmdbId": 10747,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/92BZIFPbyCPNhExyFScxA3xF1dy.jpg",
+      "releaseYear": "1976"
+    },
+    {
+      "title": "A Fistful of Dollars",
+      "tmdbId": 391,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/lBwOEpwVeUAmrmglcstnaGcJq3Y.jpg",
+      "releaseYear": "1964"
+    },
+    {
+      "title": "For a Few Dollars More",
+      "tmdbId": 938,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/ooqASvA7qxlTVKL3KwOzBwy57Dh.jpg",
+      "releaseYear": "1965"
+    },
+    {
+      "title": "The Revenant (Western)",
+      "tmdbId": 281957,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/ji3ecJphATlVgWNY0B0RVXZizdf.jpg",
+      "releaseYear": "2015"
+    },
+    {
+      "title": "Django",
+      "tmdbId": 68718,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/7oWY8VDWW7thTzWh3OKYRkWUlD5.jpg",
+      "releaseYear": "2012"
+    },
+    {
+      "title": "Silverado",
+      "tmdbId": 11509,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/k6zurzegRKsNGMICXZ57VJDUzXO.jpg",
+      "releaseYear": "1985"
+    },
+    {
+      "title": "Young Guns",
+      "tmdbId": 11967,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/3AgCq7xY1rHRAAn0iVcnNr2OWL.jpg",
+      "releaseYear": "1988"
+    },
+    {
+      "title": "News of the World",
+      "tmdbId": 581032,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/fYQCgVRsQTEfUrP7cW5iAFVYOlh.jpg",
+      "releaseYear": "2020"
+    },
+    {
+      "title": "The Power of the Dog",
+      "tmdbId": 600583,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/kEy48iCzGnp0ao1cZbNeWR6yIhC.jpg",
+      "releaseYear": "2021"
+    }
+  ],
+  "Animation": [
+    {
+      "title": "Toy Story",
+      "tmdbId": 1084244,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/sfQtVlIHljToOwYjhe21KPGzZWK.jpg",
+      "releaseYear": "2026"
+    },
+    {
+      "title": "Spirited Away (Animation)",
+      "tmdbId": 129,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/39wmItIWsg5sZMyRUHLkWBcuVCM.jpg",
+      "releaseYear": "2001"
+    },
+    {
+      "title": "The Lion King",
+      "tmdbId": 8587,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/sKCr78MXSLixwmZ8DyJLrpMsd15.jpg",
+      "releaseYear": "1994"
+    },
+    {
+      "title": "Up",
+      "tmdbId": 14160,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/mFvoEwSfLqbcWwFsDjQebn9bzFe.jpg",
+      "releaseYear": "2009"
+    },
+    {
+      "title": "Finding Nemo",
+      "tmdbId": 12,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/eHuGQ10FUzK1mdOY69wF5pGgEf5.jpg",
+      "releaseYear": "2003"
+    },
+    {
+      "title": "Inside Out",
+      "tmdbId": 150540,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/2H1TmgdfNtsKlU9jKdeNyYL5y8T.jpg",
+      "releaseYear": "2015"
+    },
+    {
+      "title": "Spider-Man: Into the Spider-Verse",
+      "tmdbId": 324857,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/iiZZdoQBEYBv6id8su7ImL0oCbD.jpg",
+      "releaseYear": "2018"
+    },
+    {
+      "title": "Coco",
+      "tmdbId": 354912,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/6Ryitt95xrO8KXuqRGm1fUuNwqF.jpg",
+      "releaseYear": "2017"
+    },
+    {
+      "title": "WALL-E",
+      "tmdbId": 1398911,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/1OsdhvbLNLUJEi9vqQCyhAXsaRX.jpg",
+      "releaseYear": "2025"
+    },
+    {
+      "title": "Shrek",
+      "tmdbId": 808,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/iB64vpL3dIObOtMZgX3RqdVdQDc.jpg",
+      "releaseYear": "2001"
+    },
+    {
+      "title": "How to Train Your Dragon",
+      "tmdbId": 1087192,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/53dsJ3oEnBhTBVMigWJ9tkA5bzJ.jpg",
+      "releaseYear": "2025"
+    },
+    {
+      "title": "Zootopia",
+      "tmdbId": 269149,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/hlK0e0wAQ3VLuJcsfIYPvb4JVud.jpg",
+      "releaseYear": "2016"
+    },
+    {
+      "title": "The Incredibles",
+      "tmdbId": 9806,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/2LqaLgk4Z226KkgPJuiOQ58wvrm.jpg",
+      "releaseYear": "2004"
+    },
+    {
+      "title": "Frozen",
+      "tmdbId": 109445,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/itAKcobTYGpYT8Phwjd8c9hleTo.jpg",
+      "releaseYear": "2013"
+    },
+    {
+      "title": "Ratatouille",
+      "tmdbId": 2062,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/t3vaWRPSf6WjDSamIkKDs1iQWna.jpg",
+      "releaseYear": "2007"
+    },
+    {
+      "title": "Beauty and the Beast",
+      "tmdbId": 10020,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/hUJ0UvQ5tgE2Z9WpfuduVSdiCiU.jpg",
+      "releaseYear": "1991"
+    },
+    {
+      "title": "Aladdin",
+      "tmdbId": 420817,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/ykUEbfpkf8d0w49pHh0AD2KrT52.jpg",
+      "releaseYear": "2019"
+    },
+    {
+      "title": "Moana",
+      "tmdbId": 1108427,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/gaet1xQ2nxrG0V1Ep9T20ZMNEIC.jpg",
+      "releaseYear": "2026"
+    },
+    {
+      "title": "Princess Mononoke",
+      "tmdbId": 128,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/cMYCDADoLKLbB83g4WnJegaZimC.jpg",
+      "releaseYear": "1997"
+    },
+    {
+      "title": "Your Name.",
+      "tmdbId": 372058,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/vfJFJPepRKapMd5G2ro7klIRysq.jpg",
+      "releaseYear": "2016"
+    },
+    {
+      "title": "Akira (Animation)",
+      "tmdbId": 149,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/neZ0ykEsPqxamsX6o5QNUFILQrz.jpg",
+      "releaseYear": "1988"
+    },
+    {
+      "title": "The Iron Giant",
+      "tmdbId": 10386,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/k1Cv5CHJvqGWK1xJDUJz8DojFEy.jpg",
+      "releaseYear": "1999"
+    },
+    {
+      "title": "Wallace & Gromit: The Curse of the Were-Rabbit",
+      "tmdbId": 533,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/cMQ2lNd7sBe6PCf6zF5QxrKzbRG.jpg",
+      "releaseYear": "2005"
+    },
+    {
+      "title": "Chicken Run",
+      "tmdbId": 7443,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/8XgmIsbpVamdhwcNVsYzohFZTtT.jpg",
+      "releaseYear": "2000"
+    },
+    {
+      "title": "Kubo and the Two Strings",
+      "tmdbId": 313297,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/la6QA9tk4Foq8OBH2Dyh5dTcw6H.jpg",
+      "releaseYear": "2016"
+    },
+    {
+      "title": "Ponyo",
+      "tmdbId": 12429,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/yp8vEZflGynlEylxEesbYasc06i.jpg",
+      "releaseYear": "2008"
+    },
+    {
+      "title": "My Neighbor Totoro",
+      "tmdbId": 8392,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/rtGDOeG9LzoerkDGZF9dnVeLppL.jpg",
+      "releaseYear": "1988"
+    },
+    {
+      "title": "Fantastic Mr. Fox",
+      "tmdbId": 10315,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/bOVr292mwn3jxr1e0NmUPM1rcjo.jpg",
+      "releaseYear": "2009"
+    },
+    {
+      "title": "Puss in Boots: The Last Wish",
+      "tmdbId": 315162,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/kuf6dutpsT0vSVehic3EZIqkOBt.jpg",
+      "releaseYear": "2022"
+    },
+    {
+      "title": "The Boy and the Heron",
+      "tmdbId": 508883,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/f4oZTcfGrVTXKTWg157AwikXqmP.jpg",
+      "releaseYear": "2023"
+    }
+  ],
+  "Musical": [
+    {
+      "title": "La La Land (Musical)",
+      "tmdbId": 313369,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/uDO8zWDhfWwoFdKS4fzkUJt0Rf0.jpg",
+      "releaseYear": "2016"
+    },
+    {
+      "title": "Chicago",
+      "tmdbId": 1574,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/3ED8cWCXY9zkx77Sd0N5qMbsdDP.jpg",
+      "releaseYear": "2002"
+    },
+    {
+      "title": "Grease",
+      "tmdbId": 621,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/2rM7fQKpb7cs1Iq7IBqub9LFDzJ.jpg",
+      "releaseYear": "1978"
+    },
+    {
+      "title": "The Sound of Music",
+      "tmdbId": 15121,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/c6CrUZypAsBCaRWX0M3RVRDbhNS.jpg",
+      "releaseYear": "1965"
+    },
+    {
+      "title": "West Side Story",
+      "tmdbId": 511809,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/yfz3IUoYYSY32tkb97HlUBGFsnh.jpg",
+      "releaseYear": "2021"
+    },
+    {
+      "title": "Moulin Rouge! (Musical)",
+      "tmdbId": 824,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/2kjM5CUZRIU5yOANUowrbJcRL9L.jpg",
+      "releaseYear": "2001"
+    },
+    {
+      "title": "Singin' in the Rain",
+      "tmdbId": 872,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/671EPwBsHGHBk0cdOeZqmOK0XB3.jpg",
+      "releaseYear": "1952"
+    },
+    {
+      "title": "Mamma Mia!",
+      "tmdbId": 11631,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/xYLiCWmAMHJubx5jNZ7HuXKjAbV.jpg",
+      "releaseYear": "2008"
+    },
+    {
+      "title": "The Greatest Showman",
+      "tmdbId": 316029,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/b9CeobiihCx1uG1tpw8hXmpi7nm.jpg",
+      "releaseYear": "2017"
+    },
+    {
+      "title": "Hairspray",
+      "tmdbId": 2976,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/fgMka3HtFvI5OgW1eYdR9XpySxH.jpg",
+      "releaseYear": "2007"
+    },
+    {
+      "title": "Les Misérables",
+      "tmdbId": 82695,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/6CuzBs2Lb8At7qQr64mLXg2RYRb.jpg",
+      "releaseYear": "2012"
+    },
+    {
+      "title": "Rent",
+      "tmdbId": 557648,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/9fxpcJ5a1MwLmdfMrIAqtVCRpud.jpg",
+      "releaseYear": "2019"
+    },
+    {
+      "title": "Cabaret",
+      "tmdbId": 10784,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/fMhOeJ2TvuY46iYGmsowhgRXfnr.jpg",
+      "releaseYear": "1972"
+    },
+    {
+      "title": "Dreamgirls",
+      "tmdbId": 1125,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/sG5JyOj8Spe13QkNJMH8b5kzQUh.jpg",
+      "releaseYear": "2006"
+    },
+    {
+      "title": "My Fair Lady",
+      "tmdbId": 11113,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/bTXVc29lGSNclf94VIZ49W4gGKl.jpg",
+      "releaseYear": "1964"
+    },
+    {
+      "title": "The Wizard of Oz (Musical)",
+      "tmdbId": 630,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/uCC3j4pV9eOZwzDUWp2ilbcTf1f.jpg",
+      "releaseYear": "1939"
+    },
+    {
+      "title": "Fiddler on the Roof",
+      "tmdbId": 14811,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/v65PHx7Q6Jx0anyNeUOX07SJic9.jpg",
+      "releaseYear": "1971"
+    },
+    {
+      "title": "Sweeney Todd: The Demon Barber of Fleet Street",
+      "tmdbId": 13885,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/gAW4J1bkRjZKmFsJsIiOBASeoAp.jpg",
+      "releaseYear": "2007"
+    },
+    {
+      "title": "Into the Woods",
+      "tmdbId": 224141,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/bINGDDuvUnZyde2sIcSx41IE5b6.jpg",
+      "releaseYear": "2014"
+    },
+    {
+      "title": "Wicked",
+      "tmdbId": 402431,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/xDGbZ0JJ3mYaGKy4Nzd9Kph6M9L.jpg",
+      "releaseYear": "2024"
+    },
+    {
+      "title": "Tick, Tick... Boom!",
+      "tmdbId": 537116,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/DPmfcuR8fh8ROYXgdjrAjSGA0o.jpg",
+      "releaseYear": "2021"
+    },
+    {
+      "title": "In the Heights",
+      "tmdbId": 467909,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/lbf7wmrYRieR8fNFLnGiypMoPm1.jpg",
+      "releaseYear": "2021"
+    },
+    {
+      "title": "A Star Is Born (Musical)",
+      "tmdbId": 332562,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/wrFpXMNBRj2PBiN4Z5kix51XaIZ.jpg",
+      "releaseYear": "2018"
+    },
+    {
+      "title": "Beauty and the Beast (Musical)",
+      "tmdbId": 10020,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/hUJ0UvQ5tgE2Z9WpfuduVSdiCiU.jpg",
+      "releaseYear": "1991"
+    },
+    {
+      "title": "The Rocky Horror Picture Show",
+      "tmdbId": 36685,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/3pyE6ZqDbuJi7zrNzzQzcKTWdmN.jpg",
+      "releaseYear": "1975"
+    },
+    {
+      "title": "Across the Universe",
+      "tmdbId": 4688,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/447c8Te3DXC46rQvDEixKGO4dS6.jpg",
+      "releaseYear": "2007"
+    },
+    {
+      "title": "Once",
+      "tmdbId": 5723,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/7nW363kSYRCkr4VGOMvuSGwtzKs.jpg",
+      "releaseYear": "2007"
+    },
+    {
+      "title": "Yankee Doodle Dandy",
+      "tmdbId": 3087,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/cqLLIyJFjLr6jGOxWVEHG11WGzB.jpg",
+      "releaseYear": "1942"
+    },
+    {
+      "title": "Funny Girl",
+      "tmdbId": 16085,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/ywjXHWUK0niM26UKy7DTCErWTFz.jpg",
+      "releaseYear": "1968"
+    },
+    {
+      "title": "An American in Paris",
+      "tmdbId": 2769,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/lyDXkvG53ldz6Cf7dbjJl7TaoP5.jpg",
+      "releaseYear": "1951"
+    }
+  ],
+  "Documentary": [
+    {
+      "title": "March of the Penguins",
+      "tmdbId": 1667,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/o9xJ1xG1WKlHkl8ACqq0LShOuMu.jpg",
+      "releaseYear": "2005"
+    },
+    {
+      "title": "Bowling for Columbine",
+      "tmdbId": 1430,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/4XsiTsZcNCRSkee1o0fdr5OqYRT.jpg",
+      "releaseYear": "2002"
+    },
+    {
+      "title": "Fahrenheit 9/11",
+      "tmdbId": 1777,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/cZ7M343iuiMDc36fSeSm699XQFv.jpg",
+      "releaseYear": "2004"
+    },
+    {
+      "title": "An Inconvenient Truth",
+      "tmdbId": 1781,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/zrYT5UHE2UIsofwkv6KK2Tsu5a.jpg",
+      "releaseYear": "2006"
+    },
+    {
+      "title": "Super Size Me",
+      "tmdbId": 9372,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/zYkbqQaCuIHBxqBDGgnQCwJ9jIG.jpg",
+      "releaseYear": "2004"
+    },
+    {
+      "title": "Won't You Be My Neighbor?",
+      "tmdbId": 490003,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/8qE8NZjiP2M884baH0VoLF828Vp.jpg",
+      "releaseYear": "2018"
+    },
+    {
+      "title": "Free Solo",
+      "tmdbId": 515042,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/v4QfYZMACODlWul9doN9RxE99ag.jpg",
+      "releaseYear": "2018"
+    },
+    {
+      "title": "13th",
+      "tmdbId": 13207,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/88wlJ4teYlck4hJ2bnlxBrAVh0m.jpg",
+      "releaseYear": "2009"
+    },
+    {
+      "title": "Blackfish",
+      "tmdbId": 158999,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/kCk4mDFE96Mn1AYfEcbxkIiw7ND.jpg",
+      "releaseYear": "2013"
+    },
+    {
+      "title": "The Social Dilemma",
+      "tmdbId": 656690,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/jcaM6V2tCtu6iMHDsGLBUbaYgYp.jpg",
+      "releaseYear": "2020"
+    },
+    {
+      "title": "Icarus",
+      "tmdbId": 35402,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/cmDDkOXzEICJ3v6pIxOsmulwPi9.jpg",
+      "releaseYear": "2010"
+    },
+    {
+      "title": "Amy",
+      "tmdbId": 331781,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/qL0RepWSNUuZoeDXfyhqowVYhrn.jpg",
+      "releaseYear": "2015"
+    },
+    {
+      "title": "Searching for Sugar Man",
+      "tmdbId": 84334,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/ucM98HuBHSWmn44oiE83hIDc6VB.jpg",
+      "releaseYear": "2012"
+    },
+    {
+      "title": "Man on Wire",
+      "tmdbId": 14048,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/1mS4rhIgHZcHIvf1beP9Av0Ui33.jpg",
+      "releaseYear": "2008"
+    },
+    {
+      "title": "The Act of Killing",
+      "tmdbId": 123678,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/sp5B7Tz5ttsgOLnIlCP5uEhtesI.jpg",
+      "releaseYear": "2012"
+    },
+    {
+      "title": "Citizenfour",
+      "tmdbId": 293310,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/nOVhX69EAxtSKEEnr5UcSd5UVci.jpg",
+      "releaseYear": "2014"
+    },
+    {
+      "title": "Exit Through the Gift Shop",
+      "tmdbId": 39452,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/ruM5ehUQlHC1Kx3SF18d6klfrAx.jpg",
+      "releaseYear": "2010"
+    },
+    {
+      "title": "Grizzly Man",
+      "tmdbId": 501,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/zuZWpcuye25rpsiZ4XzsAvmLDHG.jpg",
+      "releaseYear": "2005"
+    },
+    {
+      "title": "The Cove",
+      "tmdbId": 113555,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/9eRbmXUJ8GWUqWtx2vWhrRn4tkb.jpg",
+      "releaseYear": "2009"
+    },
+    {
+      "title": "Jiro Dreams of Sushi",
+      "tmdbId": 80767,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/iVrkM4jSJw1IsOpW5jTtY5QxVqj.jpg",
+      "releaseYear": "2011"
+    },
+    {
+      "title": "Won't Back Down",
+      "tmdbId": 82631,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/7Repugxu8BQXMYSGpzqRrBjFRna.jpg",
+      "releaseYear": "2012"
+    },
+    {
+      "title": "My Octopus Teacher",
+      "tmdbId": 682110,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/hvTVZb7hBC8tZAGoEhH5eiMJu2B.jpg",
+      "releaseYear": "2020"
+    },
+    {
+      "title": "The Last Dance",
+      "tmdbId": 912649,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/vGXptEdgZIhPg3cGlc7e8sNPC2e.jpg",
+      "releaseYear": "2024"
+    },
+    {
+      "title": "Summer of Soul",
+      "tmdbId": 776527,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/8kNwhqUGvpzWJd60O1Qvb8G6psK.jpg",
+      "releaseYear": "2021"
+    },
+    {
+      "title": "20 Feet from Stardom",
+      "tmdbId": 159014,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/6iRxKxfE6SB586cQV3BH8NSMzoZ.jpg",
+      "releaseYear": "2013"
+    },
+    {
+      "title": "RBG",
+      "tmdbId": 493099,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/vIenhDe9DuvxODJOIpMjBheYlcS.jpg",
+      "releaseYear": "2018"
+    },
+    {
+      "title": "Won't You Be My Neighbor? (Documentary)",
+      "tmdbId": 490003,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/8qE8NZjiP2M884baH0VoLF828Vp.jpg",
+      "releaseYear": "2018"
+    },
+    {
+      "title": "The Fog of War",
+      "tmdbId": 12698,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/m1dEnkrdJGBSLeAyJepuGrU9sNI.jpg",
+      "releaseYear": "2003"
+    },
+    {
+      "title": "Hoop Dreams",
+      "tmdbId": 14275,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/gLzHl2XBtVwycl8DxdOXRHPm8G3.jpg",
+      "releaseYear": "1994"
+    },
+    {
+      "title": "Crip Camp",
+      "tmdbId": 653725,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/iALSypN3MhC6kBVwc9VpuJUlm1j.jpg",
+      "releaseYear": "2020"
+    }
+  ],
+  "Sports": [
+    {
+      "title": "Rocky",
+      "tmdbId": 1366,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/xSI0dbKLDETwhiVUy6hGE8KXUln.jpg",
+      "releaseYear": "1976"
+    },
+    {
+      "title": "Rocky IV",
+      "tmdbId": 1374,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/2MHUit4H6OK5adcOjnCN6suCKOl.jpg",
+      "releaseYear": "1985"
+    },
+    {
+      "title": "Raging Bull",
+      "tmdbId": 1578,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/1WV7WlTS8LI1L5NkCgjWT9GSW3O.jpg",
+      "releaseYear": "1980"
+    },
+    {
+      "title": "Remember the Titans",
+      "tmdbId": 10637,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/825ohvC4wZ3gCuncCaqkWeQnK8h.jpg",
+      "releaseYear": "2000"
+    },
+    {
+      "title": "Rudy",
+      "tmdbId": 14534,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/fAbfTCRpjHe2rprXBly55KL1dL9.jpg",
+      "releaseYear": "1993"
+    },
+    {
+      "title": "Hoosiers",
+      "tmdbId": 5693,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/dHpjZQXEdoi1xNLubM1rPmTHJYz.jpg",
+      "releaseYear": "1986"
+    },
+    {
+      "title": "Moneyball",
+      "tmdbId": 60308,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/4yIQq1e6iOcaZ5rLDG3lZBP3j7a.jpg",
+      "releaseYear": "2011"
+    },
+    {
+      "title": "Field of Dreams",
+      "tmdbId": 2323,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/oeM7nAw6FVFICwUaXKCRkDsKjqO.jpg",
+      "releaseYear": "1989"
+    },
+    {
+      "title": "The Blind Side",
+      "tmdbId": 22881,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/PhpAdRopu0sOWf0BY7vVtxrRD3.jpg",
+      "releaseYear": "2009"
+    },
+    {
+      "title": "Miracle",
+      "tmdbId": 24739,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/9qRCVO9L3s3CsPnoUO9c3iZm6aB.jpg",
+      "releaseYear": "1989"
+    },
+    {
+      "title": "Million Dollar Baby",
+      "tmdbId": 70,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/jcfEqKdWF1zeyvECPqp3mkWLct2.jpg",
+      "releaseYear": "2004"
+    },
+    {
+      "title": "Creed",
+      "tmdbId": 312221,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/1BfTsk5VWuw8FCocAhCyqnRbEzq.jpg",
+      "releaseYear": "2015"
+    },
+    {
+      "title": "Coach Carter",
+      "tmdbId": 7214,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/y3HOTTyM5nLsdUzXFtFCohG28qj.jpg",
+      "releaseYear": "2005"
+    },
+    {
+      "title": "Any Given Sunday",
+      "tmdbId": 9563,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/bysZeUvSPZPJnku4qkHF34CdgMG.jpg",
+      "releaseYear": "1999"
+    },
+    {
+      "title": "Friday Night Lights",
+      "tmdbId": 13416,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/8HIqpOgqShRc3TAleabnYispDl1.jpg",
+      "releaseYear": "2004"
+    },
+    {
+      "title": "A League of Their Own",
+      "tmdbId": 11287,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/f9BtX6wYOwJUyfUr4vyeT3COz6m.jpg",
+      "releaseYear": "1992"
+    },
+    {
+      "title": "The Sandlot",
+      "tmdbId": 11528,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/7PYqz0viEuW8qTvuGinUMjDWMnj.jpg",
+      "releaseYear": "1993"
+    },
+    {
+      "title": "Space Jam",
+      "tmdbId": 2300,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/4RN5El3Pj2W4gpwgiAGLVfSJv2g.jpg",
+      "releaseYear": "1996"
+    },
+    {
+      "title": "Cool Runnings",
+      "tmdbId": 864,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/6fXuGEb7EqGmAeUodxm7l5ELPZ.jpg",
+      "releaseYear": "1993"
+    },
+    {
+      "title": "42",
+      "tmdbId": 109410,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/iZ7jVGQWj3eBUdqwAPUlKk0BaS2.jpg",
+      "releaseYear": "2013"
+    },
+    {
+      "title": "Ford v Ferrari",
+      "tmdbId": 359724,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/dR1Ju50iudrOh3YgfwkAU1g2HZe.jpg",
+      "releaseYear": "2019"
+    },
+    {
+      "title": "Days of Thunder",
+      "tmdbId": 2119,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/8UvcoeMJag8UWGF8sg7eYspzq0Q.jpg",
+      "releaseYear": "1990"
+    },
+    {
+      "title": "Chariots of Fire",
+      "tmdbId": 9443,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/qnRaum8k0HqGRml2i7OawFqUtEb.jpg",
+      "releaseYear": "1981"
+    },
+    {
+      "title": "The Fighter (Sports)",
+      "tmdbId": 45317,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/xfsFerGhO1h6rLk8vwLgMyQ8WVJ.jpg",
+      "releaseYear": "2010"
+    },
+    {
+      "title": "Warrior",
+      "tmdbId": 59440,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/iM8n4nZJPR2abpnyZ36FUgHiRjr.jpg",
+      "releaseYear": "2011"
+    },
+    {
+      "title": "Invincible (Sports)",
+      "tmdbId": 11652,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/oEaUMn5POAiMLnU6hKOBKoZbDpo.jpg",
+      "releaseYear": "2006"
+    },
+    {
+      "title": "We Are Marshall",
+      "tmdbId": 11170,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/5PSiExbg6Fm8MiPJOikBCOcZFnd.jpg",
+      "releaseYear": "2006"
+    },
+    {
+      "title": "Draft Day",
+      "tmdbId": 200505,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/bnl2ocjS1io4UCPhjoFuPKmJ9bf.jpg",
+      "releaseYear": "2014"
+    },
+    {
+      "title": "Bull Durham",
+      "tmdbId": 287,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/q3T9bO6p74NcTxWOhdUA6fASQ5T.jpg",
+      "releaseYear": "1988"
+    },
+    {
+      "title": "Major League",
+      "tmdbId": 9942,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/ypUedY9zX4nGGf1lQv1UGc8PhPA.jpg",
+      "releaseYear": "1989"
+    }
+  ],
+  "Family / Children": [
+    {
+      "title": "Home Alone",
+      "tmdbId": 9714,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/6uOadrCfle0n2LOOxHbgWEdnrm2.jpg",
+      "releaseYear": "1997"
+    },
+    {
+      "title": "E.T. the Extra-Terrestrial (Family)",
+      "tmdbId": 601,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/an0nD6uq6byfxXCfk6lQBzdL2J1.jpg",
+      "releaseYear": "1982"
+    },
+    {
+      "title": "Matilda",
+      "tmdbId": 10830,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/wYoDpWInsBEVSmWStnRH06ddoyk.jpg",
+      "releaseYear": "1996"
+    },
+    {
+      "title": "The Sandlot (Family)",
+      "tmdbId": 11528,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/7PYqz0viEuW8qTvuGinUMjDWMnj.jpg",
+      "releaseYear": "1993"
+    },
+    {
+      "title": "Paddington",
+      "tmdbId": 116149,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/wpchRGhRhvhtU083PfX2yixXtiw.jpg",
+      "releaseYear": "2014"
+    },
+    {
+      "title": "Charlotte's Web",
+      "tmdbId": 9986,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/fU0IR5HF8KxQbZijuWKPTrY81Qv.jpg",
+      "releaseYear": "2006"
+    },
+    {
+      "title": "The Parent Trap",
+      "tmdbId": 9820,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/p4dGmi8u9W0HHyVXcgWPoiFfKTF.jpg",
+      "releaseYear": "1998"
+    },
+    {
+      "title": "Freaky Friday",
+      "tmdbId": 10330,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/y6kn3tUb4qrNZvV4TDIIjskZ9eV.jpg",
+      "releaseYear": "2003"
+    },
+    {
+      "title": "The Karate Kid",
+      "tmdbId": 38575,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/b1RBy3l297N0c7PHjlz35cClWju.jpg",
+      "releaseYear": "2010"
+    },
+    {
+      "title": "Babe",
+      "tmdbId": 9598,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/zKuQMtnbVTz9DsOnOJmlW71v4qH.jpg",
+      "releaseYear": "1995"
+    },
+    {
+      "title": "Free Willy",
+      "tmdbId": 1634,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/9iBgd9gi9ztWiVcYSG6zl8wDFBN.jpg",
+      "releaseYear": "1993"
+    },
+    {
+      "title": "Flipper",
+      "tmdbId": 19893,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/x8tmePZ3082Na0QTqOgB5zZVb2S.jpg",
+      "releaseYear": "1963"
+    },
+    {
+      "title": "Air Bud",
+      "tmdbId": 20737,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/kDfzh6QdX2tseTwwyB7lp2RP7iE.jpg",
+      "releaseYear": "1997"
+    },
+    {
+      "title": "The Chronicles of Narnia (Family)",
+      "tmdbId": 411,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/iREd0rNCjYdf5Ar0vfaW32yrkm.jpg",
+      "releaseYear": "2005"
+    },
+    {
+      "title": "Willy Wonka & the Chocolate Factory",
+      "tmdbId": 252,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/vmpsZkrs4Uvkp9r1atL8B3frA63.jpg",
+      "releaseYear": "1971"
+    },
+    {
+      "title": "Charlie and the Chocolate Factory",
+      "tmdbId": 118,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/iKP6wg3c6COUe8gYutoGG7qcPnO.jpg",
+      "releaseYear": "2005"
+    },
+    {
+      "title": "Mrs. Doubtfire",
+      "tmdbId": 788,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/shHrSmXS5140o6sQzgzXxn3KqSm.jpg",
+      "releaseYear": "1993"
+    },
+    {
+      "title": "Annie",
+      "tmdbId": 703,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/dEtjPywhDbAXYjoFfhBC4U9unU7.jpg",
+      "releaseYear": "1977"
+    },
+    {
+      "title": "Honey, I Shrunk the Kids",
+      "tmdbId": 9354,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/omQOzahi2NIeiYznNxHFDvNbvo6.jpg",
+      "releaseYear": "1989"
+    },
+    {
+      "title": "The Princess Diaries",
+      "tmdbId": 9880,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/7axhsbEzFan6HQQ1aMOy7w3CFRx.jpg",
+      "releaseYear": "2001"
+    },
+    {
+      "title": "Enchanted",
+      "tmdbId": 4523,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/8KCNzCArLlvLdQoHx6npua2VSVc.jpg",
+      "releaseYear": "2007"
+    },
+    {
+      "title": "Night at the Museum",
+      "tmdbId": 1593,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/pDsAAYf6Zn0yiAGJ6lYGs6hoZ4E.jpg",
+      "releaseYear": "2006"
+    },
+    {
+      "title": "Big",
+      "tmdbId": 2280,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/eWhCDJiwxvx3YXkAFRiHjimnF0j.jpg",
+      "releaseYear": "1988"
+    },
+    {
+      "title": "Hook",
+      "tmdbId": 879,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/a6rB1lGXoGms7gWxRfJneQmAjNV.jpg",
+      "releaseYear": "1991"
+    },
+    {
+      "title": "Jumanji (Family)",
+      "tmdbId": 512200,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/jyw8VKYEiM1UDzPB7NsisUgBeJ8.jpg",
+      "releaseYear": "2019"
+    },
+    {
+      "title": "The Wizard of Oz (Family)",
+      "tmdbId": 630,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/uCC3j4pV9eOZwzDUWp2ilbcTf1f.jpg",
+      "releaseYear": "1939"
+    },
+    {
+      "title": "Willow (Family)",
+      "tmdbId": 847,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/pAIRGMIdN7ZdZhflazdV2ezuJ9f.jpg",
+      "releaseYear": "1988"
+    },
+    {
+      "title": "Spy Kids",
+      "tmdbId": 10054,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/j3rUkHIAAoKr6jU30q3Db4fcIF9.jpg",
+      "releaseYear": "2001"
+    },
+    {
+      "title": "Diary of a Wimpy Kid",
+      "tmdbId": 33217,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/iLAGiPnSuODt9cn332bkFElrRig.jpg",
+      "releaseYear": "2010"
+    },
+    {
+      "title": "A Wrinkle in Time",
+      "tmdbId": 407451,
+      "posterUrl": "https://image.tmdb.org/t/p/w500/yAcb58vipewa1BfNit2RjE6boXA.jpg",
+      "releaseYear": "2018"
+    }
+  ]
+}
