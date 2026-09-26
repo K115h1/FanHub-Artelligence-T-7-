@@ -1,11 +1,8 @@
-// SettingsContext — carries the visitor's preferences across the app.
+// SettingsContext — the visitor's preferences. State and persistence live in
+// app/providers/SettingsProvider.tsx.
 //
-// Provides: settings, updateSettings, resetSettings, setFontScale, toggle…
-// The real state + persistence lives in app/providers/SettingsProvider.tsx.
-//
-// Kept separate from ThemeContext on purpose: the theme is one setting, and it
-// already has its own provider that owns the `.dark` class on <html>. Folding
-// theme in here would mean two providers fighting over the same class.
+// Theme is deliberately not in here: ThemeProvider already owns the `.dark`
+// class on <html>, and merging them would leave two providers writing it.
 import { createContext, useContext } from 'react'
 import { DEFAULT_SETTINGS, type UserSettings } from '../types/models'
 
@@ -15,12 +12,10 @@ export interface SettingsContextValue {
   updateSettings: (patch: Partial<UserSettings>) => void
   resetSettings: () => void
   setFontScale: (scale: number) => void
-  /** Convenience wrapper so callers don't repeat the field name. */
   toggleCarouselAutoplay: () => void
 }
 
-// The default is the real DEFAULT_SETTINGS rather than an empty object, so a
-// component rendered outside the provider still gets usable values.
+// Defaulted to real values so components rendered outside the provider still work.
 export const SettingsContext = createContext<SettingsContextValue>({
   settings: DEFAULT_SETTINGS,
   updateSettings: () => {},

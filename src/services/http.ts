@@ -1,9 +1,5 @@
-// http.ts — shared fetch wrapper (scaffold placeholder).
-// Responsibilities:
-//   * prefixes VITE_API_URL from the environment (never hardcode secrets)
-//   * attaches session credentials/Authorization header
-//   * JSON (de)serialization
-//   * normalizes errors into ApiError (src/types/api.ts)
-//   * maps 401 → session expired, 403 → forbidden, 500 → generic message
-// Every service in this folder must go through this wrapper.
+// http.ts — shared fetch wrapper (not built yet). Every service in this folder
+// must go through it. It needs to: prefix VITE_API_URL (never hardcode secrets),
+// attach credentials, handle JSON, normalize errors into ApiError (types/api.ts),
+// and map 401/403/500 to friendly messages.
 export {}

@@ -1,12 +1,6 @@
-// Profile — the member's own account area.
-//
-// Three tabs: Profile (identity), Settings (display + motion), Privacy (data
-// sharing). The active tab lives in the URL (`?tab=settings`) so it can be
-// linked to and survives a reload — and so the Breadcrumbs bar and the page
-// title can reflect it.
-//
-// The whole page sits behind RequireAuth in the router, so a signed-out visitor
-// gets the login popup instead of this.
+// Profile — the member's account area, in three tabs: identity, settings and
+// privacy. The active tab lives in the URL (`?tab=settings`) so it can be
+// linked to and survives a reload. Sits behind RequireAuth in the router.
 import { useSearchParams } from 'react-router-dom'
 import { User, Settings, ShieldCheck } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'

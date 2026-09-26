@@ -1,6 +1,7 @@
 // Mock data — local fixtures for the homepage + dashboard.
 // Stands in for the C# API until the backend is connected; swapping to real
 // data later means replacing these arrays with service calls (see src/services).
+import { toSlug } from './slug'
 import type { LucideIcon } from 'lucide-react'
 import {
   Gamepad2,
@@ -277,29 +278,29 @@ export const ARTICLES: Article[] = [
 ]
 
 // ---------- Upcoming events (dashboard) ----------
+// The full dataset lives in lib/events.ts; this is the compact shape the
+// homepage and dashboard need, derived so the two can't drift apart.
 
-export interface UpcomingEvent {
-  id: number
-  day: string
-  month: string
-  title: string
-  location: string
-  tag: string
-}
+export type { UpcomingEvent } from './events'
+import { EVENTS, type UpcomingEvent } from './events'
 
-export const UPCOMING_EVENTS: UpcomingEvent[] = [
-  { id: 1, day: '22', month: 'OCT', title: 'Anime Expo 2025', location: 'Lagos, Nigeria', tag: 'Anime' },
-  { id: 2, day: '26', month: 'OCT', title: 'K-Pop World Festival', location: 'Online', tag: 'K-Pop' },
-  { id: 3, day: '05', month: 'NOV', title: 'Comic Con Africa', location: 'Johannesburg, SA', tag: 'Comics' },
-]
+export const UPCOMING_EVENTS: UpcomingEvent[] = EVENTS.slice(0, 3).map((event) => ({
+  id: event.id,
+  day: event.day,
+  month: event.month,
+  title: event.title,
+  location: event.location,
+  tag: event.tag,
+}))
 
 // ---------- Category maps (hashmaps) ----------
 // One pass over each list groups its items by category slug, so every page
 // can pull "its" data with a single O(1) lookup instead of re-filtering.
 
 // "TV Shows" → "tv-shows" — same shape as the slugs used in CATEGORIES.
-export const toSlug = (label: string): string =>
-  label.toLowerCase().replace(/\s+/g, '-')
+// Re-exported so existing imports from mockData keep working; the
+// implementation lives in slug.ts to avoid an events ↔ mockData cycle.
+export { toSlug } from './slug'
 
 const groupByCategory = <T>(items: T[], getType: (item: T) => string): Record<string, T[]> => {
   const grouped: Record<string, T[]> = {}

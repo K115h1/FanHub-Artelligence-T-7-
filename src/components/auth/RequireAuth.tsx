@@ -1,14 +1,9 @@
-// RequireAuth — route guard for members-only pages (content detail,
-// characters, articles, merchandise, dashboard, admin, …).
-//   • not logged in → the protected page NEVER renders; you get a popup
-//     pointing at /login that remembers where you were headed
-//   • logged in     → the page renders normally through <Outlet/>
+// RequireAuth — route guard for members-only pages.
 //
-// BEHAVIOUR CONTRACT — restyle the markup, but keep all of this:
-//   1. the early return (the guard replaces the page, it doesn't overlay it)
-//   2. `state={{ from }}` on the login link, so Login can return the visitor
-//      to the page they originally asked for
-//   3. the role/aria wiring, so the popup is announced correctly
+// Guests never see the protected page; they get a login popup that remembers
+// where they were headed. Restyle the markup freely, but keep the early return
+// (it replaces the page rather than overlaying it), the `state={{ from }}`
+// handoff so Login can return them, and the role/aria wiring.
 import { useEffect, useRef } from 'react'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { Lock } from 'lucide-react'
@@ -18,25 +13,23 @@ export default function RequireAuth() {
   const { isAuthed } = useAuth()
   const location = useLocation()
 
-  // Deny access: no page content, just the login popup.
   if (!isAuthed) {
     return <LoginRequiredModal from={location.pathname + location.search} />
   }
   return <Outlet />
 }
 
-// The popup itself — only ever rendered by the guard above.
+// The popup — only ever rendered by the guard above.
 function LoginRequiredModal({ from }: { from: string }) {
   const navigate = useNavigate()
   const confirmRef = useRef<HTMLAnchorElement>(null)
 
-  // Move focus to the primary action so keyboard and screen-reader users
-  // land inside the dialog instead of continuing to page behind it.
+  // Focus the primary action so keyboard users land in the dialog, not behind it.
   useEffect(() => {
     confirmRef.current?.focus()
   }, [])
 
-  // Escape dismisses to the homepage — the "Not now" action.
+  // Escape is the keyboard equivalent of "Not now".
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') navigate('/')

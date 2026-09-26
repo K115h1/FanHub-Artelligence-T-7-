@@ -1,8 +1,5 @@
-// SettingsTab — display and motion preferences.
-//
-// Two of these (font size, reduce motion) write to <html> rather than to a
-// React tree, so their effect is document-wide and they live in the provider.
-// See app/providers/SettingsProvider.tsx.
+// SettingsTab — display and motion preferences. Font size and reduce motion act
+// on <html> via SettingsProvider, since that's what index.css reads.
 import { useSettings } from '../../context/SettingsContext'
 import { useTheme, type Theme } from '../../context/ThemeContext'
 import { FONT_SCALES } from '../../types/models'
@@ -25,7 +22,7 @@ export default function SettingsTab() {
           <div>
             <span className="block text-sm font-medium text-ink">Theme</span>
             <p className="mt-0.5 text-xs text-ink-subtle">
-              Dark mode is also available from the switch at the bottom of the sidebar.
+              Also available from the theme switch at the bottom of the sidebar.
             </p>
           </div>
 

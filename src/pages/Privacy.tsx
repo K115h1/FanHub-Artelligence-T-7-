@@ -1,19 +1,12 @@
-// PrivacyPolicy — the mock policy document.
-//
-// A DEMONSTRATION DOCUMENT. Nothing here describes a live service: there is no
-// server, no analytics and no email sending. It is written to show the shape a
-// real policy would take, and it deliberately describes what the code actually
-// does today (localStorage on the visitor's own device), so it isn't quietly
-// making claims the app doesn't honour.
-//
+// PrivacyPolicy — DEMONSTRATION DOCUMENT. There is no server, analytics or
+// email sending, so it describes what the code actually does today (data stays
+// in the visitor's own localStorage) rather than making claims it can't honour.
 // The per-account switches that back this up are in Profile → Privacy.
 import { Link } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import { SETTINGS_STORAGE_KEY } from '../types/models'
 
-// The last two localStorage keys the auth + theme providers use. Named here so
-// the policy names the real keys rather than invented ones. (The theme key,
-// "fanhub-theme", is owned by ThemeProvider and isn't referenced directly.)
+// Real localStorage keys, so the policy names what the code actually writes.
 const ACCOUNT_KEY = 'fanhub-accounts'
 const SESSION_KEY = 'fanhub-session'
 

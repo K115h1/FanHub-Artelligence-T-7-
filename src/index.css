@@ -8,17 +8,10 @@
 /* ==========================================================================
    DESIGN TOKENS
    --------------------------------------------------------------------------
-   One source of truth for surface / ink / accent colours, so the restyle
-   didn't have to hardcode hex values in a dozen components.
-
-   Neutrals are the project's own purple-black family (--ink-950 = #15001f),
-   NOT the reference demo's navy. The accent (#7C3AED) is shared with the
-   reference, so buttons, links and the active nav row read identically.
-
-   Every token is declared twice: a light value on :root, and a dark value
-   under `html.dark`. Because the utilities in @theme inline reference these
-   vars, `bg-surface` / `text-ink-muted` etc. re-theme themselves with no
-   `dark:` prefix needed at the call site.
+   One source of truth for surface / ink / accent colours — don't hardcode hex
+   values in components. Each token is declared on :root for light mode and
+   again under `html.dark`; because the @theme inline utilities reference these
+   vars, `bg-surface` / `text-ink-muted` re-theme with no `dark:` prefix needed.
    ========================================================================== */
 
 :root {
@@ -44,10 +37,9 @@
   --accent-soft: #f3eeff;
   --accent-ink: #ffffff; /* text placed on top of --accent */
 
-  /* Category hues. Kept distinguishable at a glance in the 8-across grid:
-     Anime orange vs Comics red, Manga teal vs Cosplay sky are the two pairs
-     that needed separating. Used for the small dot + icon tint only — the
-     surrounding chrome stays purple. */
+  /* Category hues, kept distinguishable in the 8-across grid (Comics red vs
+     Anime orange, Manga teal vs Cosplay sky). Used for dots and icon tints
+     only — surrounding chrome stays purple. */
   --cat-anime: #f97316;
   --cat-gaming: #10b981;
   --cat-movies: #eab308;
@@ -78,9 +70,8 @@ html.dark {
   --accent-ink: #ffffff;
 }
 
-/* Expose the tokens as Tailwind colours. `inline` makes the generated
-   utilities reference the vars directly, which is what lets them flip
-   between light and dark without a `dark:` variant at every call site. */
+/* Exposes the tokens as Tailwind colours. `inline` is what lets the generated
+   utilities reference the vars and flip with the theme. */
 @theme inline {
   --color-surface: var(--surface);
   --color-surface-raised: var(--surface-raised);
@@ -116,8 +107,7 @@ html {
   color-scheme: light;
   background-color: var(--surface);
   color: var(--ink);
-  /* Reserve the scrollbar gutter so pushing the sidebar open on desktop
-     doesn't shift the page horizontally. */
+  /* Reserve the gutter so opening the sidebar doesn't shift the page sideways. */
   scrollbar-gutter: stable;
 }
 
@@ -127,12 +117,11 @@ html.dark {
 
 /* ==========================================================================
    PRIMITIVES
-   A few shared classes for the repeated card/section shapes, so a page
-   change is a one-line edit instead of a find-and-replace across sections.
+   Shared classes for the repeated card shapes, so a style change is a one-line
+   edit instead of a find-and-replace across sections.
    ========================================================================== */
 
-/* The standard content card: translucent panel, soft purple edge, lifts on
-   hover. Used by featured content, trending, articles and recommendations. */
+/* Standard content card: soft purple edge, lifts on hover. */
 .surface-card {
   background-color: var(--surface-raised);
   border: 1px solid var(--line);
@@ -177,11 +166,10 @@ html.dark {
 }
 
 /* ---- accessibility preferences -------------------------------------- */
-/* Both are driven by SettingsProvider, which writes them onto <html> because
-   they affect the whole document rather than any one component. */
+/* Both written onto <html> by SettingsProvider, since they affect the whole
+   document rather than any one component. */
 
-/* Font scale: a multiplier on the root font size, so every rem-based size in
-   the app grows with it. Defaults to 1 (no change). */
+/* Font scale: multiplier on the root font size, so every rem size grows. */
 :root {
   --app-font-scale: 1;
 }
@@ -190,8 +178,8 @@ html {
   font-size: calc(100% * var(--app-font-scale));
 }
 
-/* "Reduce motion" setting. The OS-level query is honoured too — a visitor who
-   asked the system to calm down should not have to also find this toggle. */
+/* "Reduce motion" setting. The OS-level query is honoured too, so the in-app
+   toggle isn't the only way to get this. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -212,19 +200,11 @@ html[data-reduce-motion] *::after {
   scroll-behavior: auto !important;
 }
 
-/* ==========================================================================
-   FOCUS RING — currently OFF.
-   --------------------------------------------------------------------------
-   To turn the keyboard focus ring back on, change `none` to
-   `2px solid var(--accent)` below. That is the ONLY edit needed.
-
-   While it is `none`, focus is signalled purely by the per-field
-   `focus:border-*` colour change, which is far less noticeable.
-
-   NOTE: a focus indicator is an accessibility requirement (WCAG 2.4.7), and
-   this project lists accessibility as a judging criterion. If the site is ever
-   audited, switch this back on — it is one word, not a refactor.
-   ========================================================================== */
+/* FOCUS RING — currently OFF. To switch it on, change `none` to
+   `2px solid var(--accent)` below; nothing else needs editing.
+   While off, focus is signalled only by each field's `focus:border-*`.
+   A focus indicator is a WCAG 2.4.7 requirement and accessibility is a judging
+   criterion here, so turn this back on before submitting. */
 :root {
   --focus-ring: none;
 }

@@ -1,24 +1,7 @@
-// HeroCarousel — the homepage banner.
-//
-// A single artwork track that slides horizontally: every slide is a full-width
-// panel, and the TRACK is translated by -index * 100% so exactly one panel is
-// in view. Only the track moves — the panels themselves never re-render or
-// remount, which is why the transition is smooth rather than a cross-fade.
-//
-// There are deliberately NO arrows, dots or pause button. The banner advances
-// on its own; the visitor's only interaction is the link inside each slide.
-// (If controls are ever wanted back, they should sit OUTSIDE the track so
-// they don't slide along with it.)
-//
-// Details worth keeping:
-//   • Every slide carries its OWN copy (kicker / title / blurb). The reference
-//     design used one static overlay for all three, so slides 2 and 3 were
-//     just wallpaper swaps.
-//   • Autoplay halts on hover, when the tab is hidden, when the visitor has
-//     turned autoplay off in Profile → Settings, and for anyone who asked the
-//     OS for reduced motion.
-//   • Artwork is a generated gradient wash rather than a remote image, so the
-//     page has no network dependency.
+// HeroCarousel — homepage banner. One track of full-width panels translated by
+// -index * 100%; only the track moves, so panels never remount.
+// No arrows or dots: autoplay only, paused from Profile → Settings. If controls
+// return, keep them outside the track. Artwork is generated, not remote.
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
@@ -28,8 +11,7 @@ import { useSettings } from '../../context/SettingsContext'
 // Autoplay interval in ms.
 const ROTATE_MS = 6000
 
-// Must match the `duration-*` on the track below, so JS timing and the CSS
-// transition stay in step.
+// Must match the track's transition duration below.
 const SLIDE_MS = 700
 
 export default function HeroCarousel() {
@@ -37,16 +19,14 @@ export default function HeroCarousel() {
   const [paused, setPaused] = useState(false)
   const total = SLIDES.length
 
-  // The visitor's autoplay preference (Profile → Settings). This is the only
-  // way to stop the carousel now that its arrows and dots are gone, so it has
-  // to be honoured here.
+  // The visitor's autoplay preference (Profile → Settings) — with no on-screen
+  // controls, this is the only way to stop the carousel.
   const { settings } = useSettings()
   const autoplay = settings.carouselAutoplay
 
   const goNext = useCallback(() => setIndex((i) => (i + 1) % total), [total])
 
-  // Autoplay — halts while hovered, while the tab is hidden, when the
-  // autoplay setting is off, and for anyone who asked for reduced motion.
+  // Stops on hover, on a hidden tab, when the setting is off, and for reduced motion.
   useEffect(() => {
     if (!autoplay || paused) return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return

@@ -1,16 +1,8 @@
 // SettingsProvider — the visitor's preferences, persisted to localStorage.
 //
-// Two of these settings have to reach outside React to take effect, which is
-// why they live in a provider rather than in the Settings page:
-//   • fontScale  → written to a CSS custom property on <html>, so every
-//                  rem-based size in the app scales with it.
-//   • reduceMotion → written to a `data-reduce-motion` attribute on <html>,
-//                  which index.css keys off to neutralise animations.
-// Both are read by CSS, not by components, so they must be applied to the
-// document rather than passed down as props.
-//
-// Everything else is read through useSettings() by whichever component needs it
-// (the hero reads carouselAutoplay, the profile page writes everything).
+// fontScale and reduceMotion are applied to <html> rather than passed down as
+// props, because index.css is what reads them. Everything else goes through
+// useSettings() (the hero reads carouselAutoplay; the profile page writes).
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { SettingsContext } from '../../context/SettingsContext'
 import {
@@ -19,9 +11,8 @@ import {
   type UserSettings,
 } from '../../types/models'
 
-// Reads the saved blob. Storage can be blocked (private mode) → fall back to
-// defaults rather than crashing. Unknown or missing keys are filled from the
-// defaults so a blob written by an older version of the app still loads.
+// Falls back to defaults if storage is blocked (private mode), and fills in
+// missing keys so a blob written by an older build still loads.
 function readStorage(): UserSettings {
   try {
     const parsed: unknown = JSON.parse(localStorage.getItem(SETTINGS_STORAGE_KEY) ?? '{}')

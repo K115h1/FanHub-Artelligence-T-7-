@@ -1,22 +1,19 @@
-// AuthProvider — login state for the whole app (mock auth for now).
-// Accounts live on the device (localStorage):
-//   fanhub-accounts → every account saved here (the header dropdown list)
+// AuthProvider — mock login state. Accounts live on the device:
+//   fanhub-accounts → every account saved (the header dropdown list)
 //   fanhub-session  → id of the active account (removed when signed out)
-// Swapping in a real API later only means replacing the helpers below.
+// Swapping in a real API only means replacing the helpers below.
 import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { AuthContext, type Account } from '../../context/AuthContext'
 
 const ACCOUNTS_KEY = 'fanhub-accounts'
 const SESSION_KEY = 'fanhub-session'
 
-// Reads the device accounts + active session.
-// Storage can be blocked (private mode) → fall back to "nobody signed in".
+// Falls back to "nobody signed in" if storage is blocked (private mode).
 function readStorage(): { accounts: Account[]; currentId: string | null } {
   try {
     const parsed: unknown = JSON.parse(localStorage.getItem(ACCOUNTS_KEY) ?? '[]')
     return {
-      // Backfill `bio` on accounts saved before it existed, so an older
-      // localStorage blob doesn't produce `undefined` in the Profile page.
+      // Backfills `bio` for accounts saved before the field existed.
       accounts: Array.isArray(parsed)
         ? (parsed as Account[]).map((account) => ({ ...account, bio: account.bio ?? '' }))
         : [],

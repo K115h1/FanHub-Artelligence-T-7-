@@ -1,24 +1,9 @@
-// Home page — the public landing page.
+// Home — the public landing page.
 //
-// Section order, and why:
-//   Hero             → what the site is
-//   Categories       → the eight fandoms, the primary navigation affordance
-//   Trending Now     → social proof, works fully logged out
-//   For You          → personalised; falls back to defaults when signed out
-//   Try Something New → discovery, deliberately outside the visitor's habits
-//   Featured         → the editorial picks
-//   Based on recent activity → personalised from history; signed-out fallback
-//   Upcoming events  → what's coming up
-//   Events near you  → uses the browser geolocation hook
-//   Latest articles  → the long tail
-//   Browse by fandom → all eight links, for anyone who scrolled past the grid
-//
-// Each section is wrapped in <section aria-labelledby="..."> pointing at its
-// OWN SectionHeader heading. Do not add a second sr-only heading per section —
-// that announces the title twice to screen-reader users.
-//
-// Artwork is generated (see CategoryArt / ContentCard) rather than fetched,
-// so the page renders identically offline and on every run.
+// Sections, in order: Hero, Categories, Trending, For You, Try Something New,
+// Featured, Recent Activity, Upcoming Events, Events Near You, Latest Articles,
+// Browse by Fandom. Each is <section aria-labelledby> pointing at its own
+// SectionHeader heading — don't add a second sr-only heading, it double-announces.
 import { Link } from 'react-router-dom'
 import {
   Drama,
@@ -48,8 +33,7 @@ import {
 } from '../lib/mockData'
 
 // ---------- Trending ----------
-// Ranked by view count. Parses "216K" → 216 so the sort is real rather than
-// alphabetical on a display string.
+// Ranked by view count: "216K" is parsed to 216 so the sort is numeric.
 function Trending() {
   const trending = [...FEATURED_CONTENT]
     .sort((a, b) => Number.parseFloat(b.views) - Number.parseFloat(a.views))
@@ -74,19 +58,15 @@ function Trending() {
 }
 
 // ---------- For You (personalised) ----------
-// Signed in  → content matching the categories the account has been reading.
-// Signed out → the same component, fed global defaults, plus a prompt.
+// Signed in → picks for their categories. Signed out → global picks + a prompt.
 function ForYou() {
   const { isAuthed } = useAuth()
   const { settings } = useSettings()
 
-  // The privacy toggle actually changes behaviour: with personalisation off
-  // this section stops reading history and shows general popular picks.
+  // Personalisation off (privacy setting) falls back to general popular picks.
   const personalised = settings.personalisedRecommendations
 
-  // With no real activity log yet, "your" categories are derived from the
-  // content types present in the fixture. When the activity service lands,
-  // this becomes a call to features/*/hooks and nothing else changes.
+  // Stands in for real activity until the service lands.
   const picks = FEATURED_CONTENT.filter((item) =>
     ['Anime', 'Gaming', 'K-Pop'].includes(item.type),
   ).slice(0, 4)
@@ -137,8 +117,7 @@ function ForYou() {
 }
 
 // ---------- Try Something New ----------
-// Deliberately the inverse of For You: categories the visitor is NOT already
-// drawn to, so it surfaces something genuinely new.
+// The inverse of For You: categories the visitor isn't already drawn to.
 function TrySomethingNew() {
   const { current } = useAuth()
 
@@ -179,8 +158,7 @@ function RecentActivity() {
   const { settings } = useSettings()
   const recent = ARTICLES.slice(4, 8)
 
-  // Nothing to personalise from when the visitor has opted out, so the section
-  // is dropped entirely rather than shown with a misleading subtitle.
+  // Dropped entirely when personalisation is off, rather than shown misleadingly.
   if (!settings.personalisedRecommendations) return null
 
   return (
@@ -230,8 +208,7 @@ function UpcomingEvents() {
 }
 
 // ---------- Events near you ----------
-// Geolocation is opt-in on purpose: the browser prompt fires on load in most
-// browsers, which is hostile. It asks when the visitor asks.
+// Geolocation is opt-in: browsers prompt on load, so we ask only on click.
 function EventsNearYou() {
   const { coordinates, error, loading, requestLocation } = useGeolocation()
 

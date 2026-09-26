@@ -1,18 +1,10 @@
-// CategoryArt — the generated artwork tile used wherever a category needs a
-// picture: the homepage grid, the category page header, and the sidebar dots.
-//
-// This exists so the app has NO remote images. The reference demo pulled
-// every picture from picsum.photos, which meant a broken page offline and a
-// different-looking page on every run — bad for a demo where screenshots in
-// the report need to match the live site.
-//
-// Each category gets a hue derived from its accent token, layered over the
-// purple wash so the grid still reads as one system. When real artwork lands,
-// replace the body of this component with an <img> — every call site keeps
-// working because they all go through here.
+// CategoryArt — generated artwork for any category, so the app needs no remote
+// images. Each tile is the purple wash plus its category hue, so the grid still
+// reads as one system. When real artwork lands, swap the body for an <img> —
+// every call site goes through here.
 import type { LucideIcon } from 'lucide-react'
 
-// slug → the Tailwind colour token for that category.
+// slug → colour token for that category.
 const HUE_BY_SLUG: Record<string, string> = {
   anime: 'text-cat-anime',
   gaming: 'text-cat-gaming',

@@ -8,13 +8,21 @@ import { router } from './router'
 import ThemeProvider from './providers/ThemeProvider'
 import SettingsProvider from './providers/SettingsProvider'
 import AuthProvider from './providers/AuthProvider'
+import BookmarksProvider from './providers/BookmarksProvider'
+import RatingsProvider from './providers/RatingsProvider'
 
 export default function AppProviders() {
   return (
     <ThemeProvider>
       <SettingsProvider>
+        {/* Bookmarks and ratings are scoped to the account, so they sit
+            inside AuthProvider. */}
         <AuthProvider>
-          <RouterProvider router={router} />
+          <BookmarksProvider>
+            <RatingsProvider>
+              <RouterProvider router={router} />
+            </RatingsProvider>
+          </BookmarksProvider>
         </AuthProvider>
       </SettingsProvider>
     </ThemeProvider>

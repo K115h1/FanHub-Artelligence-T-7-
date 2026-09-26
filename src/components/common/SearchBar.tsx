@@ -1,16 +1,8 @@
-// SearchBar — the one search field, used in two places.
+// SearchBar — the shared search field, in two looks:
+//   "default" → standalone dark pill   "header" → compact pill in the Header
 //
-//   variant="default" → a standalone dark pill (Explorer results, future pages)
-//   variant="header"  → the compact translucent pill that sits in the Header
-//
-// Both share this component so the debounce, the clear button and the keyboard
-// behaviour exist once. The header previously had its own raw <input>, which is
-// how the site ended up with two search bars that behaved differently.
-//
-// SUBMIT BEHAVIOUR: pass `onSubmit` (the Header does) and the bar renders a
-// <form> — Enter or the button submits, and the debounce only smooths typing.
-// Omit it (the Explorer does) and `onSearch` fires on a debounce, which is what
-// you want when results update live under the field.
+// Pass onSubmit (the Header does) to get a <form> that submits on Enter.
+// Omit it and onSearch fires on a debounce, for results that update as you type.
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Search, X } from 'lucide-react'
 import { useDebounce } from '../../hooks/useDebounce'
@@ -50,9 +42,8 @@ export function SearchBar({
     onSubmitRef.current = onSubmit
   }, [onSearch, onSubmit])
 
-  // Echo `value` back into the field when the parent changes it (e.g. the
-  // Explorer rewrites ?q=). Guarded on an actual change so typing is never
-  // clobbered by the parent echoing our own value straight back.
+  // Syncs from `value` when the parent changes it, but only on a real change,
+  // so a parent echoing our own value back can't clobber typing.
   const lastProp = useRef(value)
   useEffect(() => {
     if (value !== lastProp.current) {
@@ -61,9 +52,8 @@ export function SearchBar({
     }
   }, [value])
 
-  // Live search, whenever a handler is supplied. The Header decides what that
-  // means: on /explore it rewrites ?q= so results filter as you type; on every
-  // other page it passes no handler, so typing does nothing until Enter.
+  // Fires only if a handler was passed. The Header supplies one on /explore
+  // (rewrites ?q= as you type) and omits it elsewhere, so typing does nothing.
   useEffect(() => {
     onSearchRef.current?.(debouncedQuery.trim())
   }, [debouncedQuery])

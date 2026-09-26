@@ -1,10 +1,6 @@
-// RootLayout — the route shell every page renders through.
-// Header (sticky) / Sidebar / Breadcrumbs / Footer are layout components.
-//
-// The sidebar's open/closed state lives HERE rather than inside Sidebar,
-// because three separate things need to drive it: the header's hamburger
-// button, the mobile scrim, and the sidebar's own close button. Lifting it
-// up means one source of truth instead of prop-drilling through the header.
+// RootLayout — the shell every page renders through.
+// The sidebar's open state lives here, not in Sidebar, because the header's
+// hamburger, the mobile scrim and the close button all drive it.
 import { Outlet } from 'react-router-dom'
 import Header from './Header'
 import Sidebar from './Sidebar'

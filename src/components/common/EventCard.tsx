@@ -5,8 +5,7 @@ import type { UpcomingEvent } from '../../lib/mockData'
 import { CategoryDot } from './CategoryArt'
 import { toSlug } from '../../lib/mockData'
 
-// "Online" and "Near you" events get a different treatment from a named city,
-// so the two sections are visually distinguishable at a glance.
+// `near` relabels the location, so the two sections stay distinguishable.
 export default function EventCard({
   event,
   near = false,

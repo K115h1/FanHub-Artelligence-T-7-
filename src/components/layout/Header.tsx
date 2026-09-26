@@ -1,11 +1,7 @@
-// Header — full-width sticky top bar for FanHub Plus.
+// Header — full-width sticky top bar.
 //
-// "Casual premium" glass style:
-//   • transparent while you're at the very top of the page
-//   • fades into a translucent, blurred (frosted-glass) bar once you scroll
-//   • white glass in light mode / black glass in dark mode, purple accents
-//
-// The scroll detection is done with GSAP ScrollTrigger (already in package.json).
+// Transparent at the top of the page; past 50px it becomes a frosted-glass bar.
+// Scroll position is tracked with GSAP ScrollTrigger.
 import { useState } from 'react'
 import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom'
 import { Menu } from 'lucide-react'
@@ -16,7 +12,6 @@ import { useAuth } from '../../context/AuthContext'
 import AccountMenu from '../auth/AccountMenu'
 import { SearchBar } from '../common/SearchBar'
 
-// Register the GSAP plugins once, before we use them.
 gsap.registerPlugin(ScrollTrigger, useGSAP)
 
 export default function Header({
@@ -26,19 +21,15 @@ export default function Header({
   onToggleSidebar: () => void
   sidebarOpen: boolean
 }) {
-  // True once the page has been scrolled past 50px.
-  // This single flag turns the frosted-glass background on/off below.
+  // Past 50px scrolled — switches the frosted-glass background on.
   const [scrolled, setScrolled] = useState(false)
 
-  // Search navigation. The query itself now lives inside SearchBar; we only
-  // need to send it to the Explorer page as a ?q= search param on submit.
   const navigate = useNavigate()
   const location = useLocation()
   const [searchParams, setSearchParams] = useSearchParams()
 
-  // On /explore the URL IS the query, so the field both reads from it and
-  // writes to it as the user types — that is what keeps a single search bar on
-  // the page showing (and able to edit) the active results.
+  // On /explore the URL holds the query, so the header's search bar both reads
+  // it and writes it — that's what keeps one bar able to edit the results.
   const isExplore = location.pathname === '/explore'
   const activeQuery = isExplore ? (searchParams.get('q') ?? '') : ''
 
@@ -55,43 +46,32 @@ export default function Header({
   // The signed-in account (null → guests still see the Login button).
   const { current } = useAuth()
 
-  // ScrollTrigger watches the scrollbar for us and reports the scroll
-  // position on every update + refresh, so `scrolled` always matches
-  // reality — even if the page loads halfway down or its height changes.
-  // useGSAP automatically kills the trigger when the component unmounts,
-  // so there's no manual cleanup to worry about.
+  // onRefresh keeps `scrolled` correct on load/resize; useGSAP handles cleanup.
   useGSAP(() => {
-    // Helper: the glass only belongs on when we're past 50px.
     const syncGlass = (self: ScrollTrigger) => setScrolled(self.scroll() > 50)
 
     ScrollTrigger.create({
-      start: 0, // watch the page from the very top...
-      end: 999999, // ...far past the bottom, so it stays active on ANY page,
-      // even a short one whose height changes later (lazy content, etc.)
-      onUpdate: syncGlass, // fires on every scroll → turn glass on/off
-      onRefresh: syncGlass, // fires on load/resize → correct initial state
+      start: 0,
+      end: 999999, // stay active on short pages whose height changes later
+      onUpdate: syncGlass,
+      onRefresh: syncGlass,
     })
   })
 
   return (
     <header
-      // The header itself spans the full width of the screen.
-      // When `scrolled` flips on, it grows a translucent color + backdrop blur.
       className={`sticky top-0 z-50 w-full border-b transition-all duration-300 ${
         scrolled ? 'glass-panel border-line shadow-lg shadow-black/5' : 'border-transparent bg-transparent'
       }`}
     >
-      {/* Inner row: content stays centered in a max-width container so the
-          layout never looks stretched on wide monitors. */}
+      {/* Max-width row so the header doesn't stretch on wide monitors. */}
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 sm:py-4 lg:px-8">
-        {/* Hamburger — drives the sidebar. Sits left of the logo so the
-            toggle target is in the same spot the reference design used. */}
+        {/* Hamburger — drives the sidebar. */}
         <button
           type="button"
           onClick={onToggleSidebar}
           aria-label="Toggle navigation"
-          // Real state, not `undefined` — screen readers announce the button as
-          // expanded/collapsed, and it doubles as a check that the wiring works.
+          // Must stay wired to real state or screen readers can't announce it.
           aria-expanded={sidebarOpen}
           aria-controls="app-sidebar"
           className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-ink-muted transition hover:bg-accent-soft hover:text-accent"

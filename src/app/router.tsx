@@ -1,26 +1,15 @@
-// Route table — FanHub Plus (React Router v7 data router: createBrowserRouter).
+// Route table (React Router v7 data router). Everything renders inside
+// RootLayout; the members-only branch is wrapped in RequireAuth.
 //
-// Structure:
-//   RootLayout (Header / Outlet / Breadcrumbs / Footer)
-//   ├── public routes        ← Home, Explorer, Feedback, auth pages
-//   ├── members-only routes  ← RequireAuth: guests get the login popup
-//   │   ├── content: category/:slug, content/:id, characters, articles,
-//   │   │            merchandise, events
-//   │   ├── user:    dashboard, bookmarks, profile
-//   │   └── admin/*  ← admin-role check comes later
-//   └── *                    ← Page Not Found
-//
-// Every route carries `handle: { title }`:
-//   * renders the shared ComingSoon placeholder until the real page exists
-//   * already feeds the Breadcrumbs component
-// When a page is built, only its entry changes, e.g.:
-//   { path: 'explorer', lazy: () => import('../pages/Explorer'), handle: { title: 'Explorer' } }
+// Every route carries `handle: { title }` for the Breadcrumbs bar. Unbuilt
+// routes use `placeholder(title)`, so building a page means swapping that for
+// a `lazy` import.
 import { createBrowserRouter } from 'react-router-dom'
 import RootLayout from '../components/layout/RootLayout'
 import ComingSoon from '../components/common/ComingSoon'
 import RequireAuth from '../components/auth/RequireAuth'
 
-// Builds a route entry that renders the shared ComingSoon placeholder.
+// Route entry for a page that hasn't been built yet.
 const placeholder = (title: string) => ({
   element: <ComingSoon />,
   handle: { title },
@@ -31,14 +20,14 @@ export const router = createBrowserRouter([
     path: '/',
     element: <RootLayout />,
     children: [
-      // Landing page — real homepage (hero carousel, categories, content).
+      // Landing page.
       {
         index: true,
         lazy: async () => ({ Component: (await import('../pages/Home')).default }),
         handle: { title: 'Home' },
       },
 
-      // Auth (guest-oriented)
+      // Auth
       {
         path: 'login',
         lazy: async () => ({ Component: (await import('../pages/Login')).default }),
@@ -48,40 +37,38 @@ export const router = createBrowserRouter([
       { path: 'forgot-password', ...placeholder('Forgot Password') },
       { path: 'reset-password', ...placeholder('Reset Password') },
 
-      // Public browsing — no login needed.
+      // Public browsing
       { path: 'explorer', ...placeholder('Explorer') },
-      // Paths used by the sidebar nav (Explore) and the header search box.
       { path: 'explore', lazy: async () => ({ Component: (await import('../pages/Explorer')).default }), handle: { title: 'Explore' } },
-      // Legal document, so deliberately public: a privacy policy that requires
-      // a login is not much of a privacy policy.
+      // Public deliberately: a privacy policy behind a login isn't one.
       { path: 'privacy', lazy: async () => ({ Component: (await import('../pages/Privacy')).default }), handle: { title: 'Privacy Policy' } },
-      { path: 'feedback', ...placeholder('Feedback') },
+      { path: 'feedback', lazy: async () => ({ Component: (await import('../pages/Feedback')).default }), handle: { title: 'Feedback' } },
 
-      // Members-only content — RequireAuth shows the login popup instead
-      // of the page whenever nobody is signed in.
+      // Members-only. RequireAuth shows the login popup instead of the page.
       {
         element: <RequireAuth />,
         children: [
-          // Category page — one child page per category, fed by the hashmaps in mockData.
+          // Fed by the per-category hashmaps in mockData.
           {
             path: 'category/:slug',
             lazy: async () => ({ Component: (await import('../pages/Category')).default }),
             handle: { title: 'Category' },
           },
-          { path: 'content/:id', ...placeholder('Content Detail') },
+          { path: 'content/:id', lazy: async () => ({ Component: (await import('../pages/ContentDetail')).default }), handle: { title: 'Content' } },
           { path: 'characters', ...placeholder('Characters') },
           { path: 'characters/:id', ...placeholder('Character Detail') },
-          { path: 'articles', ...placeholder('Articles') },
-          { path: 'articles/:id', ...placeholder('Article Detail') },
-          { path: 'merchandise', ...placeholder('Merchandise') },
-          { path: 'events', ...placeholder('Events') },
+          { path: 'articles', lazy: async () => ({ Component: (await import('../pages/Articles')).default }), handle: { title: 'Articles' } },
+          { path: 'articles/:id', lazy: async () => ({ Component: (await import('../pages/ArticleDetail')).default }), handle: { title: 'Article' } },
+          { path: 'merchandise', lazy: async () => ({ Component: (await import('../pages/Merchandise')).default }), handle: { title: 'Merchandise' } },
+          { path: 'events', lazy: async () => ({ Component: (await import('../pages/Events')).default }), handle: { title: 'Events' } },
+          { path: 'events/:id', lazy: async () => ({ Component: (await import('../pages/EventDetail')).default }), handle: { title: 'Event' } },
 
-          // Authenticated.
+          // Account area
           { path: 'dashboard', lazy: async () => ({ Component: (await import('../pages/Dashboard')).default }), handle: { title: 'Dashboard' } },
-          { path: 'bookmarks', ...placeholder('Bookmarks') },
+          { path: 'bookmarks', lazy: async () => ({ Component: (await import('../pages/Bookmarks')).default }), handle: { title: 'Bookmarks' } },
           { path: 'profile', lazy: async () => ({ Component: (await import('../pages/Profile')).default }), handle: { title: 'Profile' } },
 
-          // Admin panel (login gated above; admin-role check comes later).
+          // Admin. Login-gated for now; the role check arrives with this panel.
           {
             path: 'admin',
             children: [
@@ -96,7 +83,7 @@ export const router = createBrowserRouter([
         ],
       },
 
-      // Catch-all 404.
+      // 404
       { path: '*', ...placeholder('Page Not Found') },
     ],
   },

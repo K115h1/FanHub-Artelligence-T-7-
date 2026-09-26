@@ -1,25 +1,12 @@
 // useSidebar — open/closed state for the left navigation.
 //
-// The sidebar has two different behaviours, and the breakpoint decides which:
-//   • md and up   → it PUSHES the page content over (the content area gets a
-//     left margin). Nothing is covered, so there's no need for a scrim.
-//   • below md    → it OVERLAYS the content as a drawer, with a scrim behind
-//     it to catch the click that dismisses it.
-//
-// The same boolean drives both; only the CSS changes at the breakpoint.
-//
-// The state is stored RAW and returned honestly on every breakpoint. An earlier
-// version returned `isOpen || isDesktop`, which pinned the sidebar open on
-// desktop no matter what the toggle did — the button looked live but could
-// never collapse the panel. Desktop and mobile differ only in CSS, so the
-// state itself must stay truthful on both.
-//
-// State is NOT persisted: the sidebar always starts open on load so a judge
-// landing on the homepage sees the navigation without having to click.
+// One boolean drives both breakpoints; only the CSS differs. At md and up the
+// panel pushes the content sideways, below md it overlays as a drawer with a
+// scrim. The state stays truthful on both — derive anything else in CSS, not here.
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useMediaQuery } from './useMediaQuery'
 
-// Matches Tailwind's `md` breakpoint — keep these in sync.
+// Must match Tailwind's `md` breakpoint.
 const DESKTOP_QUERY = '(min-width: 768px)'
 
 export interface UseSidebarReturn {
@@ -30,6 +17,7 @@ export interface UseSidebarReturn {
   close: () => void
 }
 
+// Starts open and is not persisted, so the nav is visible on first load.
 export function useSidebar(): UseSidebarReturn {
   const [isOpen, setIsOpen] = useState(true)
   const isDesktop = useMediaQuery(DESKTOP_QUERY)
@@ -38,8 +26,8 @@ export function useSidebar(): UseSidebarReturn {
   const open = useCallback(() => setIsOpen(true), [])
   const close = useCallback(() => setIsOpen(false), [])
 
-  // Escape closes the drawer on mobile. Skipped on desktop, where the panel is
-  // page furniture rather than a modal overlay.
+  // Escape closes the drawer. Desktop is skipped: the panel is page furniture
+  // there, not a modal overlay.
   useEffect(() => {
     if (!isOpen || isDesktop) return
 
@@ -51,8 +39,8 @@ export function useSidebar(): UseSidebarReturn {
     return () => document.removeEventListener('keydown', onKeyDown)
   }, [isOpen, isDesktop])
 
-  // Leaving a drawer open across a resize to desktop would strand the scrim
-  // over a now-pushing panel, so close it when crossing up to md.
+  // Reopen when crossing up to md, so the scrim isn't stranded over a panel
+  // that now pushes.
   const wasDesktop = useRef(isDesktop)
   useEffect(() => {
     if (isDesktop && !wasDesktop.current) setIsOpen(true)

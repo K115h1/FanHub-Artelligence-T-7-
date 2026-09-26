@@ -1,13 +1,6 @@
-// Explorer — the search results / browse page.
-//
-// This exists because the header search bar needs somewhere real to send
-// people. It used to be a ComingSoon placeholder, which meant submitting a
-// search landed on a "not built yet" screen.
-//
-// Reads ?q= from the URL (written by the header form) and filters the mock
-// fixtures across every content type at once — content, articles and events —
-// so one search box covers the whole site. When the services layer lands, only
-// the two loader functions change; the filtering and rendering stay.
+// Explorer — search results and browse. Reads ?q= from the URL (written by the
+// header search bar) and filters content, articles and events in one pass.
+// When the services layer lands, only the loader functions change.
 import { useMemo } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { Search as SearchIcon, Sparkles } from 'lucide-react'

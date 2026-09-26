@@ -1,25 +1,12 @@
-// Shared domain models.
-//
-// These mirror the MySQL tables 1:1 (see database/01_schema.sql) and the C#
-// entities in FanHubPlus.Domain — one contract across all three tiers.
-//
-// Naming per rubric: interfaces/types are PascalCase with NO "I" prefix.
-//
-// NOTE: this file previously held only comments while the real shapes lived
-// next to the data that used them. `UserSettings` is the first type to move
-// here, because it is now shared by the provider, the context and the UI.
-
-// ---------- User (device-local, until the API lands) ----------
+// Shared domain models, mirroring database/01_schema.sql and the C# entities.
+// Naming per rubric: PascalCase, no "I" prefix on types.
 
 /** How prominently an account appears in public lists and recommendations. */
 export type ProfileVisibility = 'public' | 'followers' | 'private'
 
 /**
- * Per-account preferences. Persisted to localStorage by SettingsProvider.
- *
- * These are deliberately client-side only for now: the API has no settings
- * endpoint, so there is nowhere to sync them to. When `settings.service.ts`
- * exists, only the provider's load/save functions change.
+ * Per-account preferences, persisted to localStorage by SettingsProvider.
+ * Client-side only for now: the API has no settings endpoint to sync to.
  */
 export interface UserSettings {
   /** Master switch for the home hero carousel. */
@@ -32,7 +19,7 @@ export interface UserSettings {
   profileVisibility: ProfileVisibility
   /** Opt in to "For You" / "Based on recent activity" personalisation. */
   personalisedRecommendations: boolean
-  /** Include this account's reading activity in anonymous site-wide stats. */
+  /** Include reading activity in anonymous site-wide stats. */
   shareActivityForAnalytics: boolean
   /** Opt in to product/demo announcements by email. */
   emailNotifications: boolean

@@ -1,7 +1,5 @@
-// SectionHeader — the heading row that opens every homepage section.
-//
-// Shared so the spacing, the accent bar and the "View all" link stay
-// identical across sections instead of drifting apart one copy-paste at a time.
+// SectionHeader — the heading row that opens every homepage section, shared so
+// the spacing and "View all" link stay identical across them.
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'

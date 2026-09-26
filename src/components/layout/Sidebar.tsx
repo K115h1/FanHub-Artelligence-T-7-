@@ -1,17 +1,7 @@
-// Sidebar — FanHub Plus left navigation.
-//
-// What makes it functional:
-//   • NavLink instead of <a href> → clicks navigate inside the app
-//     (no full page reload) and the current page's row stays highlighted.
-//     `end` is set for Home only, so "/" isn't active on every page.
-//   • Dark Mode switch → flips the whole site theme via ThemeProvider.
-//   • open state is owned by RootLayout, because the header's hamburger
-//     button and the scrim both need to drive the same panel.
-//
-// Positioning: the panel is `fixed` and full height, so it can slide in and out
-// as a drawer. On md and up the content area is given a matching left margin
-// so the sidebar PUSHES it; below md the sidebar overlays and a scrim
-// dismisses it. See useSidebar for the breakpoint logic.
+// Sidebar — left navigation. Fixed and full height so it slides as a drawer:
+// pushes content at md and up, overlays below (see useSidebar). Open state is
+// owned by RootLayout, since the header's hamburger and the scrim share it.
+// NavLink highlights the current row; `end` on Home only, so "/" isn't always active.
 import { NavLink } from 'react-router-dom'
 import type { IconType } from 'react-icons'
 import {
@@ -24,6 +14,7 @@ import {
   FaCommentDots,
   FaCog,
   FaMoon,
+  FaSun,
   FaTimes,
 } from 'react-icons/fa'
 import { useTheme } from '../../context/ThemeContext'
@@ -36,10 +27,7 @@ type SidebarItem = {
   path: string
 }
 
-// The category rows are generated from mockData so the sidebar can never
-// drift out of sync with CATEGORIES. `tone` is the per-category accent
-// applied to the little dot, so eight categories stay tellable apart at a
-// glance in a single column.
+// `tone` colours the dot beside each category so the eight stay tellable apart.
 type CategoryItem = SidebarItem & { tone: string }
 
 const TONE_BY_SLUG: Record<string, string> = {
@@ -61,8 +49,7 @@ const mainNav: SidebarItem[] = [
 const categories: CategoryItem[] = CATEGORIES.map((category) => ({
   label: category.name,
   icon: category.icon,
-  // Same slug the router expects — the reference demo used `tvshows`/`kpop`
-  // here, which would have 404'd against our routes.
+  // Slug must match the router.
   path: `/category/${category.slug}`,
   tone: TONE_BY_SLUG[category.slug] ?? 'bg-accent',
 }))
@@ -77,8 +64,7 @@ const userNav: SidebarItem[] = [
 
 const adminNav: SidebarItem[] = [{ label: 'Admin Panel', icon: FaCog, path: '/admin' }]
 
-// A single nav row. The WHOLE row is the link, and whichever row matches the
-// current page gets the accent fill.
+// A single nav row. The whole row is the link; the active one gets the accent fill.
 function SidebarLink({
   item,
   big = false,
@@ -130,8 +116,9 @@ function GroupLabel({ children }: { children: string }) {
   )
 }
 
-// Dark Mode switch — sits at the bottom of the sidebar, same row style as the
-// nav items. Reads + flips the site theme (kept in localStorage).
+// Theme switch. Label and icon name the mode you're currently in, so the row
+// reads correctly in both themes. `aria-label` stays the control's purpose
+// (not the current state) so `role="switch"` + `aria-checked` stay unambiguous.
 function ThemeToggle() {
   const { theme, toggleTheme } = useTheme()
   const isDark = theme === 'dark'
@@ -140,13 +127,18 @@ function ThemeToggle() {
     <button
       role="switch"
       aria-checked={isDark}
-      aria-label="Toggle dark mode"
+      aria-label="Dark mode"
+      title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
       onClick={toggleTheme}
       className="mt-auto flex w-full cursor-pointer items-center justify-between rounded-lg border border-line bg-surface-sunken px-3 py-2.5 text-ink-muted transition-colors hover:border-accent hover:text-accent"
     >
       <span className="flex items-center gap-3">
-        <FaMoon size={18} className="shrink-0" />
-        <span className="text-sm font-medium">Dark Mode</span>
+        {isDark ? (
+          <FaMoon size={18} className="shrink-0" aria-hidden="true" />
+        ) : (
+          <FaSun size={18} className="shrink-0" aria-hidden="true" />
+        )}
+        <span className="text-sm font-medium">{isDark ? 'Dark Mode' : 'Light Mode'}</span>
       </span>
       {/* Switch track: slides right + turns purple while dark mode is on. */}
       <span
@@ -176,16 +168,13 @@ export default function Sidebar({
   return (
     <aside
       id="app-sidebar"
-      // The aside itself is the fixed drawer, and the open state is honoured on
-      // BOTH breakpoints — `-translate-x-full` parks it off screen when closed.
-      // The only desktop-specific change is the offset/height, so the panel sits
-      // below the 73px header instead of over it.
+      // `-translate-x-full` parks it off screen when closed, on both breakpoints.
+      // md: only changes the offset/height, so the panel sits below the 73px header.
       className={`fixed inset-y-0 left-0 z-50 flex w-60 shrink-0 flex-col overflow-y-auto border-r border-line bg-surface p-4 scrollbar-hide transition-transform duration-300 ease-out md:top-[73px] md:h-[calc(100dvh-73px)] ${
         isOpen ? 'translate-x-0 shadow-2xl md:shadow-none' : '-translate-x-full'
       }`}
-      // When collapsed, take the panel out of the accessibility tree AND out
-      // of the tab order. `aria-hidden` alone would still let keyboard users
-      // tab into a sidebar they cannot see. React 19 supports `inert` directly.
+      // `inert` (not just aria-hidden) so a collapsed panel also leaves the
+      // tab order — otherwise keyboard users tab into a sidebar they can't see.
       inert={!isOpen}
     >
       {/* Close button — only reachable when it's actually a drawer. */}

@@ -1,8 +1,4 @@
-// Toggle — a labelled on/off switch.
-//
-// Built here rather than inline in the Settings page because the Profile
-// settings and privacy tabs both need one, and a hand-rolled switch in each
-// place is how the two end up looking subtly different.
+// Toggle — a labelled on/off switch, shared by the settings and privacy tabs.
 interface ToggleProps {
   checked: boolean
   onChange: (next: boolean) => void

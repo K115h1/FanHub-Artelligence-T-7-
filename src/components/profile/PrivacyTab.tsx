@@ -1,9 +1,6 @@
-// PrivacyTab — what the account shares, and a link to the policy itself.
-//
-// These toggles are NOT decorative. `personalisedRecommendations` and
-// `profileVisibility` are read by the homepage (see pages/Home.tsx), and
-// `reduceMotion` from Settings is read document-wide — so switching them off
-// visibly changes the site.
+// PrivacyTab — what the account shares, plus a link to the policy.
+// These toggles are not decorative: personalisedRecommendations and
+// profileVisibility are read by the homepage (pages/Home.tsx).
 import { Link } from 'react-router-dom'
 import { ExternalLink } from 'lucide-react'
 import { useSettings } from '../../context/SettingsContext'

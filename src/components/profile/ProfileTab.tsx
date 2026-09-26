@@ -1,10 +1,7 @@
-// ProfileTab — identity: the account's avatar, name and bio.
+// ProfileTab — identity: avatar, name and bio.
 //
-// The profile PICTURE is a placeholder for now. There is no upload endpoint
-// (`services/upload.service.ts` is still a stub), so the button is disabled and
-// says so rather than opening a file picker that cannot do anything. The
-// initials avatar from `common/Avatar` stands in, which is how the rest of the
-// app already renders an account with no picture.
+// The picture is a placeholder: upload.service.ts has no endpoint yet, so the
+// button is disabled and the initials avatar stands in.
 import { useEffect, useState, type FormEvent } from 'react'
 import { Camera, Mail, Check, LoaderCircle } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
@@ -16,13 +13,9 @@ const MAX_BIO = 160
 export default function ProfileTab() {
   const { current, updateProfile } = useAuth()
 
-  // Local draft state, so typing doesn't rewrite storage on every keystroke.
-  //
-  // These are seeded from the account ONCE. The parent gives this component a
-  // `key` of the account id, so switching accounts in the header remounts it
-  // with fresh values. Doing it with an effect instead would mean re-seeding
-  // whenever the name changes — including the change we just saved — which
-  // would fight the user's cursor mid-edit.
+  // Draft state so typing doesn't write to storage every keystroke. Seeded once:
+  // the parent keys this component on the account id, so switching accounts
+  // remounts it. Re-seeding via an effect would fight the cursor after a save.
   const [name, setName] = useState(current?.name ?? '')
   const [bio, setBio] = useState(current?.bio ?? '')
   const [saved, setSaved] = useState(false)
