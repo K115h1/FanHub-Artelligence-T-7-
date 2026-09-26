@@ -1,4 +1,4 @@
-# Project Report — Fan Hub Plus
+# Project Report — FanHub Plus
 
 Required sections for the submission report (**no source code allowed in the documentation**).
 

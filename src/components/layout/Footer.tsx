@@ -111,10 +111,10 @@ export default function Footer() {
         {/* Attribution */}
         <div className="mt-6 flex flex-col items-center justify-between gap-3 border-t border-purple-500/20 pt-6 text-xs text-black/50 sm:flex-row dark:text-white/50">
           <p>
-            <span className="font-bold text-black/70 dark:text-white/70">Fan Hub Plus</span> — all
+            <span className="font-bold text-black/70 dark:text-white/70">FanHub Plus</span> — all
             your fandoms, one home.
           </p>
-          <p>© {new Date().getFullYear()} Fan Hub Plus. Built for the Techwiz challenge.</p>
+          <p>© {new Date().getFullYear()} FanHub Plus. Built for the Techwiz challenge.</p>
         </div>
       </div>
     </footer>

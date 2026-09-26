@@ -1,4 +1,4 @@
-// Login page — mock sign-in for Fan Hub Plus.
+// Login page — mock sign-in for FanHub Plus.
 // Creates (or reuses) an account saved on this device (see AuthProvider),
 // then returns you to the page that asked you to log in.
 import { useState, type FormEvent } from 'react'
@@ -8,7 +8,7 @@ import Avatar from '../components/common/Avatar'
 
 // Shared style for the three inputs (kept in one place so they stay identical).
 const inputClass =
-  'w-full rounded-md border border-purple-500/30 bg-white/70 px-3 py-2 text-sm text-black outline-none transition placeholder:text-black/40 focus:border-purple-500 dark:bg-white/[0.04] dark:text-white dark:placeholder:text-white/40'
+  'w-full rounded-md border border-purple-500/30 bg-white/70 px-3 py-2 text-sm text-black transition placeholder:text-black/40 focus:border-purple-500 dark:bg-white/[0.04] dark:text-white dark:placeholder:text-white/40'
 
 export default function Login() {
   const { signIn, current } = useAuth()

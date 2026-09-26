@@ -1,14 +1,22 @@
+// Sidebar — FanHub Plus left navigation.
+//
+// What makes it functional:
+//   • NavLink instead of <a href> → clicks navigate inside the app
+//     (no full page reload) and the current page's row stays highlighted.
+//     `end` is set for Home only, so "/" isn't active on every page.
+//   • Dark Mode switch → flips the whole site theme via ThemeProvider.
+//   • open state is owned by RootLayout, because the header's hamburger
+//     button and the scrim both need to drive the same panel.
+//
+// Positioning: the panel is `fixed` and full height, so it can slide in and out
+// as a drawer. On md and up the content area is given a matching left margin
+// so the sidebar PUSHES it; below md the sidebar overlays and a scrim
+// dismisses it. See useSidebar for the breakpoint logic.
 import { NavLink } from 'react-router-dom'
 import type { IconType } from 'react-icons'
 import {
   FaHome,
   FaCompass,
-  FaGamepad,
-  FaFilm,
-  FaTv,
-  FaMusic,
-  FaBook,
-  FaMask,
   FaUser,
   FaBookmark,
   FaCalendarAlt,
@@ -16,49 +24,65 @@ import {
   FaCommentDots,
   FaCog,
   FaMoon,
-} from "react-icons/fa";
-import { SiComicfury } from "react-icons/si";
-import { PiMaskHappyFill } from "react-icons/pi";
+  FaTimes,
+} from 'react-icons/fa'
 import { useTheme } from '../../context/ThemeContext'
+import { CATEGORIES } from '../../lib/mockData'
 
+// One entry in a nav group.
 type SidebarItem = {
-  label: string;
-  icon: IconType;
-  path: string;
+  label: string
+  icon: IconType
+  path: string
+}
+
+// The category rows are generated from mockData so the sidebar can never
+// drift out of sync with CATEGORIES. `tone` is the per-category accent
+// applied to the little dot, so eight categories stay tellable apart at a
+// glance in a single column.
+type CategoryItem = SidebarItem & { tone: string }
+
+const TONE_BY_SLUG: Record<string, string> = {
+  anime: 'bg-cat-anime',
+  gaming: 'bg-cat-gaming',
+  movies: 'bg-cat-movies',
+  'tv-shows': 'bg-cat-tv-shows',
+  'k-pop': 'bg-cat-k-pop',
+  comics: 'bg-cat-comics',
+  manga: 'bg-cat-manga',
+  cosplay: 'bg-cat-cosplay',
 }
 
 const mainNav: SidebarItem[] = [
-  { label: "Home", icon: FaHome, path: "/" },
-  { label: "Explore", icon: FaCompass, path: "/explore" },
-];
+  { label: 'Home', icon: FaHome, path: '/' },
+  { label: 'Explore', icon: FaCompass, path: '/explore' },
+]
 
-const categories: SidebarItem[] = [
-  { label: "Anime", icon: PiMaskHappyFill, path: "/category/anime" },
-  { label: "Gaming", icon: FaGamepad, path: "/category/gaming" },
-  { label: "Movies", icon: FaFilm, path: "/category/movies" },
-  { label: "TV Shows", icon: FaTv, path: "/category/tv-shows" },
-  { label: "K-Pop", icon: FaMusic, path: "/category/k-pop" },
-  { label: "Comics", icon: SiComicfury, path: "/category/comics" },
-  { label: "Manga", icon: FaBook, path: "/category/manga" },
-  { label: "Cosplay", icon: FaMask, path: "/category/cosplay" },
-];
+const categories: CategoryItem[] = CATEGORIES.map((category) => ({
+  label: category.name,
+  icon: category.icon,
+  // Same slug the router expects — the reference demo used `tvshows`/`kpop`
+  // here, which would have 404'd against our routes.
+  path: `/category/${category.slug}`,
+  tone: TONE_BY_SLUG[category.slug] ?? 'bg-accent',
+}))
 
 const userNav: SidebarItem[] = [
-  { label: "My Profile", icon: FaUser, path: "/profile" },
-  { label: "Bookmarks", icon: FaBookmark, path: "/bookmarks" },
-  { label: "Events", icon: FaCalendarAlt, path: "/events" },
-  { label: "Merchandise", icon: FaShoppingBag, path: "/merchandise" },
-  { label: "Feedback", icon: FaCommentDots, path: "/feedback" },
-];
+  { label: 'My Profile', icon: FaUser, path: '/profile' },
+  { label: 'Bookmarks', icon: FaBookmark, path: '/bookmarks' },
+  { label: 'Events', icon: FaCalendarAlt, path: '/events' },
+  { label: 'Merchandise', icon: FaShoppingBag, path: '/merchandise' },
+  { label: 'Feedback', icon: FaCommentDots, path: '/feedback' },
+]
 
-const adminNav: SidebarItem[] = [
-  { label: "Admin Panel", icon: FaCog, path: "/admin" },
-];
+const adminNav: SidebarItem[] = [{ label: 'Admin Panel', icon: FaCog, path: '/admin' }]
 
+// A single nav row. The WHOLE row is the link, and whichever row matches the
+// current page gets the accent fill.
 function SidebarLink({
   item,
   big = false,
-  className = "",
+  className = '',
 }: {
   item: SidebarItem
   big?: boolean
@@ -67,25 +91,50 @@ function SidebarLink({
   return (
     <NavLink
       to={item.path}
-      end={item.path === "/"}
+      // Exact match only for Home, so "/" isn't active on every page.
+      end={item.path === '/'}
       className={({ isActive }) =>
-        `sidebar-header mb-2 flex cursor-pointer items-center space-x-2 rounded-lg p-2 duration-500 ease-in-out hover:bg-purple-600 hover:text-white ${className} ${isActive
-          ? "bg-purple-600 text-white"
-          : "text-purple-950 dark:text-white"
-        }`
+        `group mb-1 flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 transition-colors duration-200 ${
+          isActive
+            ? 'bg-accent font-semibold text-accent-ink'
+            : 'text-ink-muted hover:bg-accent-soft hover:text-accent'
+        } ${className}`
       }
     >
-      <item.icon size={big ? 24 : 20} />
-      <span className={big ? "font-bold text-lg" : "font-medium"}>
-        {item.label}
-      </span>
+      {({ isActive }) => (
+        <>
+          <item.icon size={big ? 22 : 18} className="shrink-0" />
+          <span className={`truncate ${big ? 'text-base' : 'text-sm'}`}>{item.label}</span>
+          {/* The category dot — decorative, so it's hidden from screen readers
+              because the category name is already the link text. */}
+          {'tone' in item && item.tone && (
+            <span
+              aria-hidden="true"
+              className={`ml-auto h-2 w-2 shrink-0 rounded-full ${item.tone} ${
+                isActive ? 'opacity-100' : 'opacity-70'
+              }`}
+            />
+          )}
+        </>
+      )}
     </NavLink>
   )
 }
 
+// Small uppercase heading above a group of links.
+function GroupLabel({ children }: { children: string }) {
+  return (
+    <p className="mt-6 mb-2 px-3 text-[11px] font-semibold tracking-wider text-ink-subtle uppercase">
+      {children}
+    </p>
+  )
+}
+
+// Dark Mode switch — sits at the bottom of the sidebar, same row style as the
+// nav items. Reads + flips the site theme (kept in localStorage).
 function ThemeToggle() {
   const { theme, toggleTheme } = useTheme()
-  const isDark = theme === "dark"
+  const isDark = theme === 'dark'
 
   return (
     <button
@@ -93,52 +142,84 @@ function ThemeToggle() {
       aria-checked={isDark}
       aria-label="Toggle dark mode"
       onClick={toggleTheme}
-      className="sidebar-header sticky bottom-0 mt-auto flex w-full cursor-pointer items-center justify-between rounded-lg bg-white p-2 text-purple-950 duration-500 ease-in-out hover:bg-purple-600 hover:text-white dark:bg-purple-950 dark:text-white"
+      className="mt-auto flex w-full cursor-pointer items-center justify-between rounded-lg border border-line bg-surface-sunken px-3 py-2.5 text-ink-muted transition-colors hover:border-accent hover:text-accent"
     >
-      <span className="flex items-center space-x-2">
-        <FaMoon size={20} />
-        <span className="font-medium">Dark Mode</span>
+      <span className="flex items-center gap-3">
+        <FaMoon size={18} className="shrink-0" />
+        <span className="text-sm font-medium">Dark Mode</span>
       </span>
-
+      {/* Switch track: slides right + turns purple while dark mode is on. */}
       <span
-        className={`relative h-5 w-9 rounded-md transition-colors ${isDark ? "bg-purple-600" : "bg-purple-500/30"
-          }`}
+        className={`relative h-5 w-9 shrink-0 rounded-full transition-colors ${
+          isDark ? 'bg-accent' : 'bg-line-strong'
+        }`}
       >
         <span
-          className={`absolute top-0.5 left-0.5 h-4 w-4 rounded-sm bg-white shadow transition-transform ${isDark ? "translate-x-4" : ""
-            }`}
+          className={`absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${
+            isDark ? 'translate-x-4' : ''
+          }`}
         />
       </span>
     </button>
   )
 }
 
-export default function Sidebar() {
+export default function Sidebar({
+  isOpen,
+  isDesktop,
+  onClose,
+}: {
+  isOpen: boolean
+  isDesktop: boolean
+  onClose: () => void
+}) {
   return (
-    <aside className="sidebar-content sticky top-[73px] hidden h-[calc(100vh-73px)] w-60 shrink-0 flex-col overflow-y-auto border-r border-purple-200 bg-linear-225 from-white to-purple-200 p-4 scrollbar-hide dark:border-transparent dark:from-black/0 dark:via-black dark:via-purple-950/95 dark:to-purple-900 md:flex">
-      {mainNav.map((item) => (
-        <SidebarLink key={item.label} item={item} big />
-      ))}
+    <aside
+      id="app-sidebar"
+      // The aside itself is the fixed drawer, and the open state is honoured on
+      // BOTH breakpoints — `-translate-x-full` parks it off screen when closed.
+      // The only desktop-specific change is the offset/height, so the panel sits
+      // below the 73px header instead of over it.
+      className={`fixed inset-y-0 left-0 z-50 flex w-60 shrink-0 flex-col overflow-y-auto border-r border-line bg-surface p-4 scrollbar-hide transition-transform duration-300 ease-out md:top-[73px] md:h-[calc(100dvh-73px)] ${
+        isOpen ? 'translate-x-0 shadow-2xl md:shadow-none' : '-translate-x-full'
+      }`}
+      // When collapsed, take the panel out of the accessibility tree AND out
+      // of the tab order. `aria-hidden` alone would still let keyboard users
+      // tab into a sidebar they cannot see. React 19 supports `inert` directly.
+      inert={!isOpen}
+    >
+      {/* Close button — only reachable when it's actually a drawer. */}
+      {!isDesktop && (
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close navigation"
+          className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-lg text-ink-muted transition hover:bg-accent-soft hover:text-accent"
+        >
+          <FaTimes size={16} />
+        </button>
+      )}
 
-      <p className="text-purple-700 text-xs uppercase font-semibold mt-4 mb-2 px-2 dark:text-purple-300">
-        Categories
-      </p>
+      <nav aria-label="Main navigation" className="flex flex-col">
+        {mainNav.map((item) => (
+          <SidebarLink key={item.label} item={item} big />
+        ))}
 
-      {categories.map((item) => (
-        <SidebarLink key={item.label} item={item} />
-      ))}
+        <GroupLabel>Categories</GroupLabel>
+        {categories.map((item) => (
+          <SidebarLink key={item.label} item={item} />
+        ))}
 
-      <p className="text-purple-700 text-xs uppercase font-semibold mt-4 mb-2 px-2 dark:text-purple-300">
-        User
-      </p>
+        <GroupLabel>User</GroupLabel>
+        {userNav.map((item) => (
+          <SidebarLink key={item.label} item={item} />
+        ))}
 
-      {userNav.map((item) => (
-        <SidebarLink key={item.label} item={item} />
-      ))}
-
-      {adminNav.map((item) => (
-        <SidebarLink key={item.label} item={item} className="mt-4" />
-      ))}
+        <GroupLabel>Admin</GroupLabel>
+        {adminNav.map((item) => (
+          <SidebarLink key={item.label} item={item} />
+        ))}
+      </nav>
 
       <ThemeToggle />
     </aside>

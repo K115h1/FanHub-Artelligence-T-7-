@@ -1,5 +1,5 @@
 -- ============================================================
--- Fan Hub Plus — Database Schema (MySQL 8+)
+-- FanHub Plus — Database Schema (MySQL 8+)
 -- ============================================================
 -- STATUS: Placeholder. Tables will be written during the build phase.
 --

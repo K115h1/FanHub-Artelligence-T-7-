@@ -1,4 +1,4 @@
-# Fan Hub Plus — Artelligence (TechWiz 7)
+# FanHub Plus — Artelligence (TechWiz 7)
 
 **Category:** End-to-End Web Solutions (Full-Stack)
 **Theme:** Fandom Universe — a single, visually rich hub for Anime, Gaming, Movies, TV Shows, K-Pop, Comics, Manga, and Cosplay fans.

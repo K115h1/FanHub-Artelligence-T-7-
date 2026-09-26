@@ -27,7 +27,7 @@ export function SortSelect({
                 id="sort-select"
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
-                className="rounded-lg border border-purple-500/40 bg-linear-0 from-purple-950 to-purple-900 px-3 py-2 text-sm text-purple-50 outline-none transition focus:border-purple-400"
+                className="rounded-lg border border-purple-500/40 bg-linear-0 from-purple-950 to-purple-900 px-3 py-2 text-sm text-purple-50 transition focus:border-purple-400"
             >
                 {SORT_OPTIONS.map((option) => (
                     <option key={option.value} value={option.value}>

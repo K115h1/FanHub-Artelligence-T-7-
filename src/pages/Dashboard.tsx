@@ -32,7 +32,7 @@ export default function Dashboard() {
             <div>
               <h1 className="text-lg font-bold text-black dark:text-white">Hi, {PROFILE.name} 👋</h1>
               <p className="text-sm text-black/60 dark:text-white/60">
-                Welcome back to Fan Hub Plus!
+                Welcome back to FanHub Plus!
               </p>
             </div>
           </div>

@@ -1,4 +1,4 @@
-# Diagrams — Fan Hub Plus
+# Diagrams — FanHub Plus
 
 Required by the project report. Each file will be added during the documentation phase.
 

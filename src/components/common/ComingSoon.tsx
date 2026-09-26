@@ -16,7 +16,7 @@ export default function ComingSoon() {
   return (
     <section className="mx-auto flex min-h-[60vh] w-full max-w-3xl flex-col items-center justify-center gap-4 px-6 text-center">
       <p className="text-sm font-semibold tracking-widest text-gray-500 uppercase dark:text-white/50">
-        Fan Hub Plus
+        FanHub Plus
       </p>
       <h1 className="text-3xl font-bold text-slate-900 sm:text-4xl dark:text-white">{title}</h1>
       <p className="text-gray-600 dark:text-white/60">

@@ -86,7 +86,7 @@ export const SLIDES: Slide[] = [
   {
     id: 1,
     kicker: 'Welcome to',
-    title: 'Fan Hub Plus',
+    title: 'FanHub Plus',
     blurb: 'Your all-in-one destination for Anime, Gaming, Movies, TV Shows, K-Pop, Comics, Manga and Cosplay!',
   },
   {

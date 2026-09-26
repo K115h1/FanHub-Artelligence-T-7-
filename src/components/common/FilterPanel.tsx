@@ -20,7 +20,7 @@ function FilterField({ label, value, options, paramKey, onChange }: FilterFieldP
             <select
                 value={value}
                 onChange={(e) => onChange(paramKey, e.target.value)}
-                className="rounded-lg border border-purple-500/40 bg-purple-950 px-3 py-2 text-sm text-purple-50 transition focus:border-purple-400 focus:outline-none"
+                className="rounded-lg border border-purple-500/40 bg-purple-950 px-3 py-2 text-sm text-purple-50 transition focus:border-purple-400"
             >
                 <option value="">All</option>
                 {options.map((opt) => (

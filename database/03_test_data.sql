@@ -1,5 +1,5 @@
 -- ============================================================
--- Fan Hub Plus — Test Data
+-- FanHub Plus — Test Data
 -- ============================================================
 -- STATUS: Placeholder. Required submission deliverable:
 --         "Test Data Used in the Project".

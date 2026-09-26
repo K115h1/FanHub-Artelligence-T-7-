@@ -1,4 +1,4 @@
-# User Credentials — Fan Hub Plus
+# User Credentials — FanHub Plus
 
 > **MANDATORY deliverable.** The project report must list login credentials for every user type, with passwords.
 > Fill in the final values once authentication and seed data are built.

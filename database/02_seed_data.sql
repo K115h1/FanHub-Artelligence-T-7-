@@ -1,5 +1,5 @@
 -- ============================================================
--- Fan Hub Plus — Seed Data
+-- FanHub Plus — Seed Data
 -- ============================================================
 -- STATUS: Placeholder. Will be written after 01_schema.sql.
 --

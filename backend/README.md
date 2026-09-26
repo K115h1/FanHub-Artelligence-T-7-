@@ -1,4 +1,4 @@
-# Fan Hub Plus — Backend (C# / ASP.NET Core Web API)
+# FanHub Plus — Backend (C# / ASP.NET Core Web API)
 
 > **STATUS:** Scaffold only. The solution has not been created yet — directories below mark where each project will live.
 

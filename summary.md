@@ -1,4 +1,4 @@
-# Project Summary — Fan Hub Plus (Artelligence, TechWiz 7)
+# Project Summary — FanHub Plus (Artelligence, TechWiz 7)
 
 This document is your reference map: what the project is, which decisions have been made, what every path is for, and what happens next.
 
@@ -6,7 +6,7 @@ This document is your reference map: what the project is, which decisions have b
 
 ## 1. What We Are Building
 
-**Fan Hub Plus** is an end-to-end web application — a unified "Fandom Universe" portal serving eight communities: **Anime, Gaming, Movies, TV Shows, K-Pop, Comics, Manga, and Cosplay**.
+**FanHub Plus** is an end-to-end web application — a unified "Fandom Universe" portal serving eight communities: **Anime, Gaming, Movies, TV Shows, K-Pop, Comics, Manga, and Cosplay**.
 
 Three user roles:
 
@@ -160,6 +160,6 @@ These come directly from the TechWiz judging rubric:
 
 ## 6. Key Contacts Between Documents
 
-- **SRS source:** `Fan Hub Plus End-to-End Web Solutions_SRS.pdf` — defines scope and mandatory features.
+- **SRS source:** `FanHub Plus End-to-End Web Solutions_SRS.pdf` — defines scope and mandatory features.
 - **Rubric source:** `Code-Create-Compete.pdf` — defines how the project is judged (quality, security, documentation, AI ethics).
 - **AI usage log:** `ATTRIBUTION.md` — keep it updated every time an AI tool contributes.

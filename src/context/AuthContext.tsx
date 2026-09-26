@@ -9,6 +9,8 @@ export interface Account {
   id: string
   name: string
   email: string
+  /** Short self-description, edited from the Profile page. */
+  bio: string
 }
 
 export interface AuthContextValue {
@@ -18,6 +20,8 @@ export interface AuthContextValue {
   signIn: (name: string, email: string) => void // log in / add an account
   switchTo: (id: string) => void // swap the active account
   signOut: () => void // clear the session (accounts stay on device)
+  /** Edit the active account's name / bio. Ignored when signed out. */
+  updateProfile: (patch: Partial<Pick<Account, 'name' | 'bio'>>) => void
 }
 
 // Default value only matters if someone renders UI outside <AuthProvider>.
@@ -28,6 +32,7 @@ export const AuthContext = createContext<AuthContextValue>({
   signIn: () => {},
   switchTo: () => {},
   signOut: () => {},
+  updateProfile: () => {},
 })
 
 // Convenience hook: const { current, signIn } = useAuth()

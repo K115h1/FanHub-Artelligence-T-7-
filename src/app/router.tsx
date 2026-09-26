@@ -1,4 +1,4 @@
-// Route table — Fan Hub Plus (React Router v7 data router: createBrowserRouter).
+// Route table — FanHub Plus (React Router v7 data router: createBrowserRouter).
 //
 // Structure:
 //   RootLayout (Header / Outlet / Breadcrumbs / Footer)
@@ -50,8 +50,11 @@ export const router = createBrowserRouter([
 
       // Public browsing — no login needed.
       { path: 'explorer', ...placeholder('Explorer') },
-      // Paths used by the sidebar nav (Explore).
-      { path: 'explore', ...placeholder('Explorer') },
+      // Paths used by the sidebar nav (Explore) and the header search box.
+      { path: 'explore', lazy: async () => ({ Component: (await import('../pages/Explorer')).default }), handle: { title: 'Explore' } },
+      // Legal document, so deliberately public: a privacy policy that requires
+      // a login is not much of a privacy policy.
+      { path: 'privacy', lazy: async () => ({ Component: (await import('../pages/Privacy')).default }), handle: { title: 'Privacy Policy' } },
       { path: 'feedback', ...placeholder('Feedback') },
 
       // Members-only content — RequireAuth shows the login popup instead
@@ -76,7 +79,7 @@ export const router = createBrowserRouter([
           // Authenticated.
           { path: 'dashboard', lazy: async () => ({ Component: (await import('../pages/Dashboard')).default }), handle: { title: 'Dashboard' } },
           { path: 'bookmarks', ...placeholder('Bookmarks') },
-          { path: 'profile', ...placeholder('Profile') },
+          { path: 'profile', lazy: async () => ({ Component: (await import('../pages/Profile')).default }), handle: { title: 'Profile' } },
 
           // Admin panel (login gated above; admin-role check comes later).
           {

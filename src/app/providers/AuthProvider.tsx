@@ -15,7 +15,11 @@ function readStorage(): { accounts: Account[]; currentId: string | null } {
   try {
     const parsed: unknown = JSON.parse(localStorage.getItem(ACCOUNTS_KEY) ?? '[]')
     return {
-      accounts: Array.isArray(parsed) ? (parsed as Account[]) : [],
+      // Backfill `bio` on accounts saved before it existed, so an older
+      // localStorage blob doesn't produce `undefined` in the Profile page.
+      accounts: Array.isArray(parsed)
+        ? (parsed as Account[]).map((account) => ({ ...account, bio: account.bio ?? '' }))
+        : [],
       currentId: localStorage.getItem(SESSION_KEY),
     }
   } catch {
@@ -54,6 +58,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         id: `acc_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
         name: name.trim(),
         email: email.trim(),
+        bio: '',
       }
       return { accounts: [...prev.accounts, account], currentId: account.id }
     })
@@ -69,6 +74,30 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   // Sign out — the session is cleared but the accounts stay on the device.
   const signOut = useCallback(() => setState((prev) => ({ ...prev, currentId: null })), [])
 
+  // Edit the ACTIVE account. Only name and bio are editable here; email and id
+  // are identity fields and would need a verification flow to change.
+  const updateProfile = useCallback(
+    (patch: Partial<Pick<Account, 'name' | 'bio'>>) => {
+      setState((prev) => {
+        if (!prev.currentId) return prev
+        return {
+          ...prev,
+          accounts: prev.accounts.map((account) =>
+            account.id === prev.currentId
+              ? {
+                  ...account,
+                  // Ignore empty names so an account can't end up nameless.
+                  name: patch.name?.trim() ? patch.name.trim() : account.name,
+                  bio: patch.bio !== undefined ? patch.bio : account.bio,
+                }
+              : account,
+          ),
+        }
+      })
+    },
+    [],
+  )
+
   return (
     <AuthContext.Provider
       value={{
@@ -78,6 +107,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         signIn,
         switchTo,
         signOut,
+        updateProfile,
       }}
     >
       {children}
