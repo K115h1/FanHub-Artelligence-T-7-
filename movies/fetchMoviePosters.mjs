@@ -9,7 +9,8 @@ if (!API_KEY) {
 }
 
 const INPUT_FILE = "movies.json";
-const DELAY_MS = 250; // stay well under TMDB's rate limit
+const DELAY_MS = 250;
+
 
 function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
