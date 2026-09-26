@@ -36,7 +36,7 @@ function Hero() {
   return (
     <section
       aria-label="Highlights"
-      className="relative overflow-hidden rounded-lg border border-purple-500/20"
+      className="relative overflow-hidden lg:h-[70vh] rounded-lg border border-purple-500/20"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -47,10 +47,10 @@ function Hero() {
 
       {/* Slide content */}
       <div className="relative flex min-h-[260px] flex-col justify-center gap-3 p-6 sm:min-h-[320px] sm:p-10">
-        <p className="text-xs font-semibold tracking-[0.3em] text-white/70 uppercase">
+        <p className="text-xs font-semibold tracking-[0.3em] my-auto text-white/70 uppercase">
           {slide.kicker}
         </p>
-        <h1 className="max-w-2xl text-3xl font-bold text-white sm:text-5xl">{slide.title}</h1>
+        <h1 className="max-w-2xl text-3xl font-bold text-white sm:text-5xl ">{slide.title}</h1>
         <p className="max-w-xl text-sm text-white/80 sm:text-base">{slide.blurb}</p>
         <div className="mt-2">
           <Link
@@ -128,7 +128,7 @@ export default function Home() {
           {CATEGORIES.map(({ slug, name, icon: Icon }) => (
             <Link
               key={slug}
-              to="/explorer"
+              to={`/category/${slug}`}
               className={`${glassCard} group flex flex-col items-center gap-2 p-4 text-center`}
             >
               <span
@@ -146,7 +146,8 @@ export default function Home() {
       <section aria-label="Featured content">
         <SectionHeader title="Featured Content" href="/explorer" />
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {FEATURED_CONTENT.map((item) => (
+          {/* Homepage shows the first four; category pages use the full list. */}
+          {FEATURED_CONTENT.slice(0, 4).map((item) => (
             <Link key={item.id} to={`/content/${item.id}`} className={`${glassCard} overflow-hidden`}>
               {/* Artwork placeholder — purple gradient stand-in for real media */}
               <div className={`flex h-32 items-center justify-center ${purpleGradient}`}>
@@ -175,7 +176,8 @@ export default function Home() {
       <section aria-label="Latest articles">
         <SectionHeader title="Latest Articles" href="/articles" />
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {ARTICLES.map((article) => (
+          {/* Homepage shows the first four; category pages use the full list. */}
+          {ARTICLES.slice(0, 4).map((article) => (
             <Link key={article.id} to={`/articles/${article.id}`} className={`${glassCard} p-4`}>
               <span className={`mb-3 flex h-1.5 w-12 rounded-md ${purpleGradient}`} />
               <h3 className="mb-1.5 font-semibold text-black dark:text-white">{article.title}</h3>

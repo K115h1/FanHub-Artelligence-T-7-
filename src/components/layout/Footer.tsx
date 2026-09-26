@@ -2,6 +2,7 @@
 // a full text hierarchy of every route, plus category shortcuts and attribution.
 // Glass style, purple accents, low roundness — same design language as Home.
 import { Link } from 'react-router-dom'
+import { toSlug } from '../../lib/mockData'
 
 const glassPanel =
   'border-t border-purple-500/20 bg-white/60 backdrop-blur-xl dark:bg-white/[0.04]'
@@ -99,7 +100,7 @@ export default function Footer() {
           {CATEGORY_SHORTCUTS.map((name) => (
             <Link
               key={name}
-              to="/explorer"
+              to={`/category/${toSlug(name)}`}
               className="rounded-md border border-purple-500/30 px-2.5 py-1 text-xs font-medium text-black/70 transition hover:border-purple-500 hover:text-purple-600 dark:text-white/70 dark:hover:text-purple-400"
             >
               {name}

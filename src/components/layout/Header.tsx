@@ -7,10 +7,13 @@
 //
 // The scroll detection is done with GSAP ScrollTrigger (already in package.json).
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Search } from 'lucide-react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
+import { useAuth } from '../../context/AuthContext'
+import AccountMenu from '../auth/AccountMenu'
 
 // Register the GSAP plugins once, before we use them.
 gsap.registerPlugin(ScrollTrigger, useGSAP)
@@ -19,6 +22,9 @@ export default function Header() {
   // True once the page has been scrolled past 50px.
   // This single flag turns the frosted-glass background on/off below.
   const [scrolled, setScrolled] = useState(false)
+
+  // The signed-in account (null → guests still see the Login button).
+  const { current } = useAuth()
 
   // ScrollTrigger watches the scrollbar for us and reports the scroll
   // position on every update + refresh, so `scrolled` always matches
@@ -84,10 +90,18 @@ export default function Header() {
             <span className="px-1 text-base font-medium text-black/70 dark:text-white/70">A+</span>
           </div>
 
-          {/* Login */}
-          <button className="shrink-0 rounded-xl bg-gradient-to-r from-purple-600 to-purple-500 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-purple-600/30 transition hover:from-purple-500 hover:to-purple-400 sm:text-base">
-            Login
-          </button>
+          {/* Guests get Login; signed-in users get the account menu
+              (avatar + username + chevron → accounts on device). */}
+          {current ? (
+            <AccountMenu />
+          ) : (
+            <Link
+              to="/login"
+              className="shrink-0 rounded-xl bg-gradient-to-r from-purple-600 to-purple-500 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-purple-600/30 transition hover:from-purple-500 hover:to-purple-400 sm:text-base"
+            >
+              Login
+            </Link>
+          )}
         </div>
       </div>
     </header>
