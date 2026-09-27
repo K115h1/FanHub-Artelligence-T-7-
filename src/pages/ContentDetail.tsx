@@ -5,7 +5,7 @@
 // than silently doing nothing.
 import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { Eye, Calendar, Clock, Users, Film, Tag, ArrowRight, Share2, Check } from 'lucide-react'
+import { Eye, Calendar, Clock, Users, Film, Tag, ArrowRight, Share2, Check, Star } from 'lucide-react'
 import PageHero from '../components/common/PageHero'
 import BackButton from '../components/common/BackButton'
 import SectionHeader from '../components/common/SectionHeader'
@@ -18,13 +18,12 @@ import SignInPrompt from '../components/common/SignInPrompt'
 import { CategoryDot } from '../components/common/CategoryArt'
 import { useAuth } from '../context/AuthContext'
 import { useRatings } from '../context/RatingsContext'
-import {
-  ARTICLES,
-  CATEGORY_MAP,
-  FEATURED_CONTENT,
-  toSlug,
-} from '../lib/mockData'
-import { getContentDetail, relatedContent } from '../lib/details'
+import { useAsync } from '../hooks/useAsync'
+import { getContentBySlug, getContents } from '../services/content.service'
+import { categoryIcon } from '../lib/categoryIcons'
+
+// ARTICLES is still local: the schema has no articles table.
+import { ARTICLES } from '../lib/mockData'
 
 /** Copies the permalink and confirms it, falling back when the API is absent. */
 function CopyLinkButton() {
@@ -53,33 +52,67 @@ function CopyLinkButton() {
 }
 
 export default function ContentDetail() {
-  const { id } = useParams()
+  // The route param is a slug, because a slug is what the cards link to and it
+  // survives an id renumber. "akira" exists under three fandoms, so the category
+  // is passed alongside it where the page can tell.
+  const { slug, category: categoryParam } = useParams()
   const { isAuthed } = useAuth()
   const { get, set } = useRatings()
 
-  const item = useMemo(
-    () => FEATURED_CONTENT.find((c) => String(c.id) === id),
-    [id],
+  const { data: item, loading, error } = useAsync(
+    () => getContentBySlug(slug ?? '', categoryParam),
+    [slug, categoryParam],
   )
-  const detail = item ? getContentDetail(item.id) : null
-  const rating = item ? get('content', item.id) : 0
+
+  // Related titles come from the same category, which the API can do properly
+  // rather than filtering a fixed local list.
+  const { data: relatedPage } = useAsync(
+    () =>
+      item
+        ? getContents({ category: item.categorySlug, pageSize: 5, sort: 'popular' })
+        : Promise.resolve(null),
+    [item?.categorySlug],
+  )
 
   const related = useMemo(
-    () => (item ? relatedContent(item.id) : []),
-    [item],
+    () => (relatedPage?.items ?? []).filter((row) => row.id !== item?.id).slice(0, 4),
+    [relatedPage, item?.id],
   )
+
+  // Articles are still local: the schema has no articles table.
   const articles = useMemo(
-    () => (item ? ARTICLES.filter((a) => a.type === item.type).slice(0, 4) : []),
+    () => (item ? ARTICLES.filter((a) => a.type === item.categoryName).slice(0, 4) : []),
     [item],
   )
 
-  // Unknown id: show a real "not found" rather than an empty shell.
-  if (!item) {
+  // The local rating store is the source of truth while signed in, so the stars
+  // stay responsive; the API's userRating seeds it on first load.
+  const rating = item ? (get('content', item.id) || item.userRating || 0) : 0
+
+  if (loading) {
+    return (
+      <div className="mx-auto w-full max-w-7xl space-y-6 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+        <div className="h-64 animate-pulse rounded-xl border border-line bg-surface-sunken" />
+        <div className="grid gap-6 lg:grid-cols-3">
+          <div className="h-80 animate-pulse rounded-xl border border-line bg-surface-sunken lg:col-span-2" />
+          <div className="h-48 animate-pulse rounded-xl border border-line bg-surface-sunken" />
+        </div>
+      </div>
+    )
+  }
+
+  // A 404 is a real answer, not an error worth shouting about; anything else is.
+  if (error || !item) {
+    const notFound = !error
     return (
       <div className="mx-auto w-full max-w-3xl space-y-4 px-4 py-10 sm:px-6">
-        <h1 className="text-2xl font-bold text-ink">We couldn’t find that title</h1>
+        <h1 className="text-2xl font-bold text-ink">
+          {notFound ? 'We couldn’t find that title' : 'That did not load'}
+        </h1>
         <p className="text-sm text-ink-muted">
-          It may have been removed, or the link might be wrong.
+          {notFound
+            ? 'It may have been removed, or the link might be wrong.'
+            : error}
         </p>
         <Link to="/explore" className="inline-flex items-center gap-2 text-sm font-semibold text-accent">
           Browse everything <ArrowRight size={15} aria-hidden="true" />
@@ -88,7 +121,11 @@ export default function ContentDetail() {
     )
   }
 
-  const category = CATEGORY_MAP[toSlug(item.type)]
+  const cast = (item.castList ?? '')
+    .replace(/^\[|\]$/g, '')
+    .split(',')
+    .map((name) => name.trim().replace(/^"|"$/g, ''))
+    .filter(Boolean)
 
   return (
     <div className="mx-auto w-full max-w-7xl space-y-8 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
@@ -96,15 +133,15 @@ export default function ContentDetail() {
           bookmark, a search result — and falls back to this title's category
           when the page was opened directly. */}
       <BackButton
-        fallbackTo={category ? `/category/${toSlug(item.type)}` : '/'}
-        fallbackLabel={category ? `Back to ${category.name}` : 'Back to home'}
+        fallbackTo={`/category/${item.categorySlug}`}
+        fallbackLabel={`Back to ${item.categoryName}`}
       />
 
       <PageHero
-        kicker={item.type}
+        kicker={item.categoryName}
         title={item.title}
-        icon={category?.icon}
-        blurb={item.description}
+        icon={categoryIcon(item.categorySlug)}
+        blurb={item.shortSynopsis ?? undefined}
       >
         <div className="flex flex-wrap items-center gap-2">
           <BookmarkButton kind="content" refId={item.id} title={item.title} size="md" />
@@ -119,67 +156,112 @@ export default function ContentDetail() {
             <h2 id="about" className="text-sm font-semibold text-ink">
               About
             </h2>
-            {detail ? (
-              <>
-                <p className="mt-2 text-sm leading-relaxed text-ink-muted">{detail.synopsis}</p>
 
+            {item.synopsis ? (
+              <>
+                <p className="mt-2 text-sm leading-relaxed text-ink-muted">{item.synopsis}</p>
+
+                {/* Only the fields this title actually has are shown, so the
+                    block never fills with "—". */}
                 <dl className="mt-4 grid gap-3 sm:grid-cols-2">
-                  <div className="flex items-start gap-2">
-                    <Film size={15} className="mt-0.5 shrink-0 text-ink-subtle" aria-hidden="true" />
-                    <div>
-                      <dt className="text-xs text-ink-subtle">{item.type === 'Movies' ? 'Director' : 'Created by'}</dt>
-                      <dd className="text-sm text-ink">{detail.credit}</dd>
+                  {item.creator && (
+                    <div className="flex items-start gap-2">
+                      <Film size={15} className="mt-0.5 shrink-0 text-ink-subtle" aria-hidden="true" />
+                      <div>
+                        <dt className="text-xs text-ink-subtle">
+                          {item.contentType === 'Movie' ? 'Director' : 'Created by'}
+                        </dt>
+                        <dd className="text-sm text-ink">{item.creator}</dd>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Calendar size={15} className="mt-0.5 shrink-0 text-ink-subtle" aria-hidden="true" />
-                    <div>
-                      <dt className="text-xs text-ink-subtle">Year</dt>
-                      <dd className="text-sm text-ink">{detail.year}</dd>
+                  )}
+                  {item.releaseYear && (
+                    <div className="flex items-start gap-2">
+                      <Calendar size={15} className="mt-0.5 shrink-0 text-ink-subtle" aria-hidden="true" />
+                      <div>
+                        <dt className="text-xs text-ink-subtle">Year</dt>
+                        <dd className="text-sm text-ink">{item.releaseYear}</dd>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <Clock size={15} className="mt-0.5 shrink-0 text-ink-subtle" aria-hidden="true" />
-                    <div>
-                      <dt className="text-xs text-ink-subtle">Length</dt>
-                      <dd className="text-sm text-ink">{detail.length}</dd>
+                  )}
+                  {item.runtimeMinutes && (
+                    <div className="flex items-start gap-2">
+                      <Clock size={15} className="mt-0.5 shrink-0 text-ink-subtle" aria-hidden="true" />
+                      <div>
+                        <dt className="text-xs text-ink-subtle">Length</dt>
+                        <dd className="text-sm text-ink">
+                          {Math.floor(item.runtimeMinutes / 60)}h {item.runtimeMinutes % 60}m
+                        </dd>
+                      </div>
                     </div>
-                  </div>
+                  )}
+                  {item.episodeCount && (
+                    <div className="flex items-start gap-2">
+                      <Clock size={15} className="mt-0.5 shrink-0 text-ink-subtle" aria-hidden="true" />
+                      <div>
+                        <dt className="text-xs text-ink-subtle">
+                          {item.contentType === 'Manga' ? 'Chapters' : 'Episodes'}
+                        </dt>
+                        <dd className="text-sm text-ink">{item.episodeCount}</dd>
+                      </div>
+                    </div>
+                  )}
                   <div className="flex items-start gap-2">
                     <Eye size={15} className="mt-0.5 shrink-0 text-ink-subtle" aria-hidden="true" />
                     <div>
                       <dt className="text-xs text-ink-subtle">Views</dt>
-                      <dd className="text-sm text-ink">{item.views}</dd>
+                      <dd className="text-sm text-ink">{item.viewCount.toLocaleString()}</dd>
                     </div>
                   </div>
+                  {item.communityRating && (
+                    <div className="flex items-start gap-2">
+                      <Star size={15} className="mt-0.5 shrink-0 text-ink-subtle" aria-hidden="true" />
+                      <div>
+                        <dt className="text-xs text-ink-subtle">Community score</dt>
+                        <dd className="text-sm text-ink">
+                          {item.communityRating.toFixed(1)}
+                          {item.communityRatingCount ? ` (${item.communityRatingCount.toLocaleString()} votes)` : ''}
+                        </dd>
+                      </div>
+                    </div>
+                  )}
                 </dl>
 
-                <div className="mt-4">
-                  <h3 className="text-xs font-medium text-ink-subtle">Genres</h3>
-                  <div className="mt-1.5 flex flex-wrap gap-1.5">
-                    {detail.genres.map((genre) => (
-                      <span
-                        key={genre}
-                        className="inline-flex items-center gap-1 rounded-full bg-accent-soft px-2.5 py-1 text-xs font-medium text-accent"
-                      >
-                        <Tag size={10} aria-hidden="true" />
-                        {genre}
-                      </span>
-                    ))}
+                {item.genres.length > 0 && (
+                  <div className="mt-4">
+                    <h3 className="text-xs font-medium text-ink-subtle">Genres</h3>
+                    <div className="mt-1.5 flex flex-wrap gap-1.5">
+                      {item.genres.map((genre) => (
+                        <span
+                          key={genre}
+                          className="inline-flex items-center gap-1 rounded-full bg-accent-soft px-2.5 py-1 text-xs font-medium text-accent"
+                        >
+                          <Tag size={10} aria-hidden="true" />
+                          {genre}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
 
-                <div className="mt-4">
-                  <h3 className="flex items-center gap-1.5 text-xs font-medium text-ink-subtle">
-                    <Users size={12} aria-hidden="true" />
-                    {item.type === 'Movies' || item.type === 'TV Shows' ? 'Cast' : 'Featuring'}
-                  </h3>
-                  <p className="mt-1.5 text-sm text-ink-muted">{detail.cast.join(' · ')}</p>
-                </div>
+                {cast.length > 0 && (
+                  <div className="mt-4">
+                    <h3 className="flex items-center gap-1.5 text-xs font-medium text-ink-subtle">
+                      <Users size={12} aria-hidden="true" />
+                      {item.contentType === 'Movie' || item.contentType === 'Series'
+                        ? 'Cast'
+                        : 'Featuring'}
+                    </h3>
+                    <p className="mt-1.5 text-sm text-ink-muted">{cast.join(' · ')}</p>
+                  </div>
+                )}
               </>
             ) : (
+              /* No synopsis yet — the enrichment pass fills these in. Say so
+                 plainly rather than showing an empty About panel. */
               <p className="mt-2 text-sm text-ink-muted">
-                {item.description} Full details are still being written.
+                {item.shortSynopsis ?? `${item.genres.join(', ') || 'No description yet.'}`}{' '}
+                Full details are still being written.
               </p>
             )}
           </section>
@@ -188,11 +270,11 @@ export default function ContentDetail() {
             <section aria-labelledby="related-articles">
               <SectionHeader
                 id="related-articles"
-                title={`More ${item.type} coverage`}
+                title={`More ${item.categoryName} coverage`}
                 icon={Film}
                 viewAllHref="/articles"
               />
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {articles.map((article) => (
                   <ArticleCard key={article.id} article={article} />
                 ))}
@@ -238,20 +320,16 @@ export default function ContentDetail() {
 
           <section className="surface-card p-5">
             <h2 className="text-sm font-semibold text-ink">Fandom</h2>
-            {category ? (
-              <>
-                <Link
-                  to={`/category/${category.slug}`}
-                  className="mt-3 flex items-center gap-2 text-sm text-ink transition hover:text-accent"
-                >
-                  <CategoryDot slug={category.slug} />
-                  {category.name}
-                </Link>
-                <p className="mt-1.5 text-xs text-ink-muted">{category.description}</p>
-              </>
-            ) : (
-              <p className="mt-2 text-sm text-ink-muted">{item.type}</p>
-            )}
+            <Link
+              to={`/category/${item.categorySlug}`}
+              className="mt-3 flex items-center gap-2 text-sm text-ink transition hover:text-accent"
+            >
+              <CategoryDot slug={item.categorySlug} />
+              {item.categoryName}
+            </Link>
+            <p className="mt-1.5 text-xs text-ink-muted">
+              {item.status} · {item.contentType}
+            </p>
           </section>
         </div>
       </div>
@@ -262,9 +340,9 @@ export default function ContentDetail() {
             id="related-content"
             title="More like this"
             icon={Film}
-            viewAllHref={`/explore?q=${encodeURIComponent(item.type)}`}
+            viewAllHref={`/explore?category=${item.categorySlug}`}
           />
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {related.map((rel) => (
               <ContentCard key={rel.id} item={rel} />
             ))}

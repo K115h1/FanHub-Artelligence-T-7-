@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/FanHubPlus.Api/FanHubPlus.Api.csproj" />
+    <Project Path="src/FanHubPlus.Application/FanHubPlus.Application.csproj" />
+    <Project Path="src/FanHubPlus.Domain/FanHubPlus.Domain.csproj" />
+    <Project Path="src/FanHubPlus.Infrastructure/FanHubPlus.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/FanHubPlus.IntegrationTests/FanHubPlus.IntegrationTests.csproj" />
+    <Project Path="tests/FanHubPlus.UnitTests/FanHubPlus.UnitTests.csproj" />
+  </Folder>
+</Solution>

@@ -9,6 +9,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
 import { useAuth } from '../../context/AuthContext'
+import { useLoginModal } from '../../context/LoginModalContext'
 import AccountMenu from '../auth/AccountMenu'
 import { SearchBar } from '../common/SearchBar'
 import { FontSizeControl } from '../common/FontSizeControl'
@@ -36,7 +37,16 @@ export default function Header({
 
   function handleLiveSearch(nextQuery: string) {
     if (!isExplore) return
-    setSearchParams(nextQuery ? { q: nextQuery } : {}, { replace: true })
+    // Merge rather than replace: /explore?category=anime&sort=title has to keep
+    // its category and sort when the visitor types in the search box. Passing a
+    // bare object to setSearchParams discards every other param, which silently
+    // dropped the category deep-link on the first keystroke.
+    const next = new URLSearchParams(searchParams)
+    if (nextQuery) next.set('q', nextQuery)
+    else next.delete('q')
+    // A new search invalidates the old page number.
+    next.delete('page')
+    setSearchParams(next, { replace: true })
   }
 
   function handleSearchSubmit(trimmedQuery: string) {
@@ -46,6 +56,9 @@ export default function Header({
 
   // The signed-in account (null → guests still see the Login button).
   const { current } = useAuth()
+
+  // Opens the sign-in overlay over the current page.
+  const { open: openLogin } = useLoginModal()
 
   // onRefresh keeps `scrolled` correct on load/resize; useGSAP handles cleanup.
   useGSAP(() => {
@@ -109,16 +122,23 @@ export default function Header({
           <FontSizeControl className="hidden sm:flex" />
 
           {/* Guests get Login; signed-in users get the account menu
-              (avatar + username + chevron → accounts on device). */}
+              (avatar + username + chevron → accounts on device).
+
+              Login is a button, not a link, because it opens the sign-in overlay
+              rather than navigating. The overlay covers the whole viewport — the
+              header and sidebar included — so a guest never loses their place
+              on the page they were reading. /login still exists as a route for
+              direct links and for signing in without the header. */}
           {current ? (
             <AccountMenu />
           ) : (
-            <Link
-              to="/login"
+            <button
+              type="button"
+              onClick={() => openLogin()}
               className="shrink-0 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-accent-ink shadow-md shadow-accent/25 transition hover:bg-accent-hover sm:text-base"
             >
               Login
-            </Link>
+            </button>
           )}
         </div>
       </div>

@@ -5,9 +5,11 @@
 // (it replaces the page rather than overlaying it), the `state={{ from }}`
 // handoff so Login can return them, and the role/aria wiring.
 import { useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { Lock } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
+import { useModalLayer } from '../../hooks/useModalLayer'
 
 export default function RequireAuth() {
   const { isAuthed } = useAuth()
@@ -38,7 +40,16 @@ function LoginRequiredModal({ from }: { from: string }) {
     return () => document.removeEventListener('keydown', onKeyDown)
   }, [navigate])
 
-  return (
+  // The app behind stops scrolling and goes inert, so the backdrop really is
+  // the only live thing on screen.
+  useModalLayer(true)
+
+  // Portalled to <body> so the overlay is a sibling of the app root, not a
+  // descendant of the page column. That puts it above the sticky header and the
+  // fixed sidebar by construction, instead of relying on the page having no
+  // ancestor stacking context of its own. `inset-0` is the viewport, so the
+  // blurred backdrop reaches every edge — header, sidebar and content alike.
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
@@ -79,6 +90,7 @@ function LoginRequiredModal({ from }: { from: string }) {
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }

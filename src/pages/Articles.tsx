@@ -131,7 +131,7 @@ export default function Articles() {
             }}
           />
         ) : (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {visible.map((article) => (
               <ArticleCard key={article.id} article={article} />
             ))}

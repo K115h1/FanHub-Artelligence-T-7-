@@ -8,48 +8,55 @@ import Breadcrumbs from './Breadcrumbs'
 import Footer from './Footer'
 import ScrollToTop from './ScrollToTop'
 import { useSidebar } from '../../hooks/useSidebar'
+import LoginModalProvider from '../auth/LoginModalProvider'
 
 export default function RootLayout() {
   const { isOpen, isDesktop, toggle, close } = useSidebar()
 
   return (
-    <div className="flex min-h-screen flex-col bg-surface">
-      {/* Sits above the page so any navigation starts at the top. */}
-      <ScrollToTop />
+    // The sign-in overlay is mounted here rather than in the header so it
+    // survives navigating between pages, and rather than in app/providers/ so
+    // it can use the router. It portals to <body> on its own, so nesting it
+    // inside the page column does not put it behind the header or sidebar.
+    <LoginModalProvider>
+      <div className="flex min-h-screen flex-col bg-surface">
+        {/* Sits above the page so any navigation starts at the top. */}
+        <ScrollToTop />
 
-      <Header onToggleSidebar={toggle} sidebarOpen={isOpen} />
+        <Header onToggleSidebar={toggle} sidebarOpen={isOpen} />
 
-      <div className="flex flex-1">
-        <Sidebar isOpen={isOpen} isDesktop={isDesktop} onClose={close} />
+        <div className="flex flex-1">
+          <Sidebar isOpen={isOpen} isDesktop={isDesktop} onClose={close} />
 
-        {/* The content column. On desktop it gets a left margin equal to the
-            sidebar width, so opening the sidebar PUSHES the page rather than
-            covering it. Below md there's no margin — the sidebar overlays. */}
-        <div
-          className={`flex min-w-0 flex-1 flex-col transition-[margin] duration-300 ease-out ${
-            isOpen && isDesktop ? 'md:ml-60' : 'md:ml-0'
-          }`}
-        >
-          <Breadcrumbs />
-          <main className="flex-1">
-            <Outlet />
-          </main>
-          <Footer />
+          {/* The content column. On desktop it gets a left margin equal to the
+              sidebar width, so opening the sidebar PUSHES the page rather than
+              covering it. Below md there's no margin — the sidebar overlays. */}
+          <div
+            className={`flex min-w-0 flex-1 flex-col transition-[margin] duration-300 ease-out ${
+              isOpen && isDesktop ? 'md:ml-60' : 'md:ml-0'
+            }`}
+          >
+            <Breadcrumbs />
+            <main className="flex-1">
+              <Outlet />
+            </main>
+            <Footer />
+          </div>
         </div>
-      </div>
 
-      {/* Scrim — mobile only. Tapping anywhere outside the open drawer
-          dismisses it. `aria-hidden` because Escape is the keyboard
-          equivalent and the button would be redundant to screen readers. */}
-      {!isDesktop && isOpen && (
-        <button
-          type="button"
-          onClick={close}
-          aria-hidden="true"
-          tabIndex={-1}
-          className="fixed inset-0 z-40 cursor-default bg-black/50 backdrop-blur-sm md:hidden"
-        />
-      )}
-    </div>
+        {/* Scrim — mobile only. Tapping anywhere outside the open drawer
+            dismisses it. `aria-hidden` because Escape is the keyboard
+            equivalent and the button would be redundant to screen readers. */}
+        {!isDesktop && isOpen && (
+          <button
+            type="button"
+            onClick={close}
+            aria-hidden="true"
+            tabIndex={-1}
+            className="fixed inset-0 z-40 cursor-default bg-black/50 backdrop-blur-sm md:hidden"
+          />
+        )}
+      </div>
+    </LoginModalProvider>
   )
 }

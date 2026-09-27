@@ -54,7 +54,7 @@ export const router = createBrowserRouter([
             lazy: async () => ({ Component: (await import('../pages/Category')).default }),
             handle: { title: 'Category' },
           },
-          { path: 'content/:id', lazy: async () => ({ Component: (await import('../pages/ContentDetail')).default }), handle: { title: 'Content' } },
+          { path: 'content/:slug', lazy: async () => ({ Component: (await import('../pages/ContentDetail')).default }), handle: { title: 'Content' } },
           { path: 'characters', ...placeholder('Characters') },
           { path: 'characters/:id', ...placeholder('Character Detail') },
           { path: 'articles', lazy: async () => ({ Component: (await import('../pages/Articles')).default }), handle: { title: 'Articles' } },

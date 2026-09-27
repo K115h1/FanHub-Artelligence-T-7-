@@ -4,19 +4,22 @@
 // link and the "what's on around the same time" list live.
 import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { MapPin, Users, Ticket, Globe, Check, Share2, CalendarDays, ArrowRight } from 'lucide-react'
+import { MapPin, Ticket, Globe, Check, Share2, CalendarDays, ArrowRight } from 'lucide-react'
 import PageHero from '../components/common/PageHero'
 import SectionHeader from '../components/common/SectionHeader'
 import EventCard from '../components/common/EventCard'
 import { CategoryDot } from '../components/common/CategoryArt'
 import { useLocalStorage } from '../hooks/useLocalStorage'
-import { EVENTS, byDate, formatGoing } from '../lib/events'
+import { useAsync } from '../hooks/useAsync'
+import { getEventById, getEvents } from '../services/event.service'
 import { CATEGORY_MAP, toSlug } from '../lib/mockData'
 
 const INTEREST_KEY = 'fanhub-event-interest'
 
 /** "Saturday 22 October 2026" — fuller than the card's day/month tiles. */
-function longDate(iso: string): string {
+// An event with no confirmed date shows as such rather than as "Invalid Date".
+function longDate(iso: string | null): string {
+  if (!iso) return 'Date to be announced'
   return new Date(iso).toLocaleDateString('en-GB', {
     weekday: 'long',
     day: 'numeric',
@@ -30,21 +33,37 @@ export default function EventDetail() {
   const [interest, setInterest] = useLocalStorage<number[]>(INTEREST_KEY, [])
   const [copied, setCopied] = useState(false)
 
-  const event = useMemo(() => EVENTS.find((e) => String(e.id) === id), [id])
+  const { data: event, loading, error } = useAsync(
+    () => getEventById(Number(id)),
+    [id],
+  )
 
-  // Same fandom, or failing that, anything else coming up.
+  // All events, so the "similar" row can be built from real rows: same fandom
+  // first, then anything else coming up.
+  const { data: allEvents } = useAsync(() => getEvents(), [])
+
   const similar = useMemo(() => {
     if (!event) return []
-    const sameTag = EVENTS.filter((e) => e.id !== event.id && e.tag === event.tag).sort(byDate)
-    const others = EVENTS.filter((e) => e.id !== event.id && e.tag !== event.tag).sort(byDate)
-    return [...sameTag, ...others].slice(0, 4)
-  }, [event])
+    const others = (allEvents ?? []).filter((e) => e.id !== event.id)
+    const sameTag = others.filter((e) => e.categorySlug === event.categorySlug)
+    return [...sameTag, ...others.filter((e) => e.categorySlug !== event.categorySlug)].slice(0, 4)
+  }, [event, allEvents])
 
-  if (!event) {
+  if (loading) {
+    return (
+      <div className="mx-auto w-full max-w-5xl space-y-4 px-4 py-10 sm:px-6">
+        <div className="h-56 animate-pulse rounded-xl border border-line bg-surface-sunken" />
+      </div>
+    )
+  }
+
+  if (error || !event) {
     return (
       <div className="mx-auto w-full max-w-3xl space-y-4 px-4 py-10 sm:px-6">
         <h1 className="text-2xl font-bold text-ink">We couldn’t find that event</h1>
-        <p className="text-sm text-ink-muted">It may have been cancelled or rescheduled.</p>
+        <p className="text-sm text-ink-muted">
+          {error ?? 'It may have been cancelled or rescheduled.'}
+        </p>
         <Link to="/events" className="inline-flex items-center gap-2 text-sm font-semibold text-accent">
           All events <ArrowRight size={15} aria-hidden="true" />
         </Link>
@@ -55,7 +74,7 @@ export default function EventDetail() {
   // Captured as a const so the closures below don't re-narrow `event`.
   const eventId = event.id
   const going = interest.includes(eventId)
-  const category = CATEGORY_MAP[toSlug(event.tag)]
+  const category = CATEGORY_MAP[toSlug(event.categorySlug)]
 
   function toggleInterest() {
     setInterest((current) =>
@@ -76,10 +95,10 @@ export default function EventDetail() {
   return (
     <div className="mx-auto w-full max-w-7xl space-y-8 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
       <PageHero
-        kicker={event.tag}
+        kicker={category?.name ?? event.categorySlug}
         title={event.title}
         icon={category?.icon ?? CalendarDays}
-        blurb={event.summary}
+        blurb={event.summary ?? undefined}
       >
         <button
           type="button"
@@ -113,7 +132,7 @@ export default function EventDetail() {
               <CalendarDays size={16} className="mt-0.5 shrink-0 text-ink-subtle" aria-hidden="true" />
               <div>
                 <dt className="text-xs text-ink-subtle">Date</dt>
-                <dd className="text-sm text-ink">{longDate(event.date)}</dd>
+                <dd className="text-sm text-ink">{longDate(event.startsAt)}</dd>
               </div>
             </div>
             <div className="flex items-start gap-2">
@@ -124,54 +143,57 @@ export default function EventDetail() {
               )}
               <div>
                 <dt className="text-xs text-ink-subtle">Where</dt>
-                <dd className="text-sm text-ink">{event.location}</dd>
+                <dd className="text-sm text-ink">
+                  {event.isOnline ? 'Online' : (event.city ?? event.location ?? 'TBA')}
+                </dd>
               </div>
             </div>
-            <div className="flex items-start gap-2">
-              <Users size={16} className="mt-0.5 shrink-0 text-ink-subtle" aria-hidden="true" />
-              <div>
-                <dt className="text-xs text-ink-subtle">Going</dt>
-                <dd className="text-sm text-ink">{formatGoing(event.going)} people</dd>
+            {/* Attendance and ticket price have no column in fan_events, so
+                they are omitted rather than shown as "0 people" / "—". */}
+            {event.priceNote && (
+              <div className="flex items-start gap-2">
+                <Ticket size={16} className="mt-0.5 shrink-0 text-ink-subtle" aria-hidden="true" />
+                <div>
+                  <dt className="text-xs text-ink-subtle">Tickets</dt>
+                  <dd className="text-sm text-ink">{event.priceNote}</dd>
+                </div>
               </div>
-            </div>
-            <div className="flex items-start gap-2">
-              <Ticket size={16} className="mt-0.5 shrink-0 text-ink-subtle" aria-hidden="true" />
-              <div>
-                <dt className="text-xs text-ink-subtle">Tickets</dt>
-                <dd className="text-sm text-ink">{event.price}</dd>
-              </div>
-            </div>
+            )}
           </dl>
 
           <p className="mt-5 border-t border-line pt-4 text-sm leading-relaxed text-ink-muted">
             {event.summary}
           </p>
 
-          <p className="mt-4 rounded-lg border border-dashed border-line-strong bg-surface-sunken p-3 text-xs text-ink-subtle">
-            Ticket links and RSVP handling arrive with the events API. Marking interest is stored
-            so you can find it again later.
-          </p>
+          {event.ticketUrl && (
+            <a
+              href={event.ticketUrl}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="mt-4 inline-flex items-center gap-1.5 rounded-lg border border-line px-3 py-2 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent"
+            >
+              <Ticket size={14} aria-hidden="true" />
+              Get tickets
+            </a>
+          )}
         </section>
 
         <div className="space-y-4">
           <section className="surface-card p-5">
             <h2 className="text-sm font-semibold text-ink">Fandom</h2>
-            {category ? (
-              <Link
-                to={`/category/${category.slug}`}
-                className="mt-3 flex items-center gap-2 text-sm text-ink transition hover:text-accent"
-              >
-                <CategoryDot slug={category.slug} />
-                {category.name}
-              </Link>
-            ) : (
-              <p className="mt-2 text-sm text-ink-muted">{event.tag}</p>
-            )}
             <Link
-              to={`/events`}
+              to={`/category/${event.categorySlug}`}
+              className="mt-3 flex items-center gap-2 text-sm text-ink transition hover:text-accent"
+            >
+              <CategoryDot slug={event.categorySlug} />
+              {category?.name ?? event.categorySlug}
+            </Link>
+            <Link
+              to={`/events?category=${event.categorySlug}`}
               className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-accent transition hover:gap-2"
             >
-              All {event.tag} events <ArrowRight size={12} aria-hidden="true" />
+              All {category?.name ?? event.categorySlug} events{' '}
+              <ArrowRight size={12} aria-hidden="true" />
             </Link>
           </section>
 

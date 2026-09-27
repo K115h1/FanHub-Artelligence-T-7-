@@ -28,6 +28,9 @@ Artelligence_Techwiz/
 ├── backend/              # C# / ASP.NET Core Web API solution
 ├── database/             # MySQL schema, seed data, and test data (.sql scripts)
 ├── docs/                 # Diagrams, project report material, credentials
+├── data/                 # Fandom source lists (data/*_by_genre.json) + poster provenance CSVs
+├── scripts/              # Catalogue pipeline: source lists -> catalog.json -> seed SQL
+├── public/images/        # 2,696 title posters, named by catalogue slug
 ├── README.md             # This file — project overview and setup
 ├── summary.md            # Detailed project summary + explanation of every path
 ├── ATTRIBUTION.md        # Disclosure of all AI tools used (competition requirement)
@@ -109,12 +112,29 @@ npm run dev
 dotnet restore
 dotnet run --project src/FanHubPlus.Api
 
-# Database
+# Database — schema, then the generated catalogue seeds
 mysql -u root -p < database/01_schema.sql
 mysql -u root -p < database/02_seed_data.sql
+mysql -u root -p < database/03_test_data.sql
+for f in database/04_*_seed.sql; do mysql -u root -p < "$f"; done
 ```
 
-> These commands will become fully accurate once the build phase begins. Installation instructions are a **mandatory submission deliverable** and will be finalized then.
+The `04_*_seed.sql` files are **generated** — edit `data/*_by_genre.json`, not
+the SQL. To rebuild the catalogue and its seeds:
+
+```bash
+node scripts/buildCatalog.mjs          # data/*.json -> src/data/catalog.json
+node scripts/importCatalog.mjs <fandom> data/<fandom>_by_genre.json
+node scripts/verifyCatalog.mjs         # proves JSON, SQL and image files agree
+```
+
+Posters are loaded by `scripts/importImages.mjs` from the delivered archives and
+are **committed**, so a normal `npm install` is enough to run the app with
+artwork. See **[docs/poster-assets.md](./docs/poster-assets.md)** for provenance
+and the full rebuild procedure.
+
+> Installation instructions are a **mandatory submission deliverable** and are
+> being finalized as the backend lands.
 
 ---
 

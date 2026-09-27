@@ -26,18 +26,48 @@ import { useAuth } from '../context/AuthContext'
 import { useSettings } from '../context/SettingsContext'
 import { useGeolocation } from '../hooks/useGeolocation'
 import {
-  ARTICLES,
-  CATEGORIES,
-  FEATURED_CONTENT,
-  UPCOMING_EVENTS,
-} from '../lib/mockData'
+  placeholders,
+  useDiscovery,
+  useFeatured,
+  useHomeCategories,
+  useHomeEvents,
+  useTrending,
+} from '../features/home/hooks'
+import { categoryIcon, sortCategories } from '../lib/categoryIcons'
+
+// ARTICLES is the one remaining mock import: there is no articles table in
+// database/01_schema.sql, so the Latest Articles and Recent Activity sections
+// need a table before they can move to the API.
+import { ARTICLES } from '../lib/mockData'
+
+/** A neutral card-shaped block shown while a section's request is in flight. */
+function SkeletonCard() {
+  return (
+    <div className="surface-card overflow-hidden" aria-hidden="true">
+      <div className="h-40 animate-pulse bg-surface-sunken" />
+      <div className="space-y-2 p-4">
+        <div className="h-4 w-3/4 animate-pulse rounded bg-surface-sunken" />
+        <div className="h-3 w-full animate-pulse rounded bg-surface-sunken" />
+        <div className="h-3 w-1/2 animate-pulse rounded bg-surface-sunken" />
+      </div>
+    </div>
+  )
+}
+
+/** Shown in place of a section's content when its request failed. */
+function InlineError({ message }: { message: string }) {
+  return (
+    <p className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-700 dark:text-rose-300">
+      {message}
+    </p>
+  )
+}
 
 // ---------- Trending ----------
-// Ranked by view count: "216K" is parsed to 216 so the sort is numeric.
+// Ranked by the API's popularity score, which the Explorer also sorts by, so the
+// two agree on what "trending" means.
 function Trending() {
-  const trending = [...FEATURED_CONTENT]
-    .sort((a, b) => Number.parseFloat(b.views) - Number.parseFloat(a.views))
-    .slice(0, 4)
+  const { items, loading, error } = useTrending()
 
   return (
     <section aria-labelledby="trending-heading">
@@ -48,11 +78,19 @@ function Trending() {
         viewAllHref="/explorer"
         subtitle="What the community is watching right now"
       />
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {trending.map((item, i) => (
-          <ContentCard key={item.id} item={item} rank={i + 1} />
-        ))}
-      </div>
+      {error ? (
+        <InlineError message={error} />
+      ) : (
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {(loading ? placeholders() : items).map((item, i) =>
+            item.id < 0 ? (
+              <SkeletonCard key={`skeleton-${i}`} />
+            ) : (
+              <ContentCard key={item.id} item={item} rank={i + 1} />
+            ),
+          )}
+        </div>
+      )}
     </section>
   )
 }
@@ -65,12 +103,7 @@ function ForYou() {
 
   // Personalisation off (privacy setting) falls back to general popular picks.
   const personalised = settings.personalisedRecommendations
-
-  // Stands in for real activity until the service lands.
-  const picks = FEATURED_CONTENT.filter((item) =>
-    ['Anime', 'Gaming', 'K-Pop'].includes(item.type),
-  ).slice(0, 4)
-  const items = personalised && picks.length > 0 ? picks : FEATURED_CONTENT.slice(0, 4)
+  const { items, loading } = useTrending()
 
   return (
     <section aria-labelledby="foryou-heading">
@@ -107,10 +140,14 @@ function ForYou() {
         </p>
       )}
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {items.map((item) => (
-          <ContentCard key={item.id} item={item} />
-        ))}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {(loading ? placeholders() : items).map((item, i) =>
+          item.id < 0 ? (
+            <SkeletonCard key={`skeleton-${i}`} />
+          ) : (
+            <ContentCard key={item.id} item={item} />
+          ),
+        )}
       </div>
     </section>
   )
@@ -120,12 +157,7 @@ function ForYou() {
 // The inverse of For You: categories the visitor isn't already drawn to.
 function TrySomethingNew() {
   const { current } = useAuth()
-
-  // Signed-in visitors get the categories least like their current picks.
-  const seen = new Set(['Anime', 'Gaming', 'K-Pop'])
-  const discovery = FEATURED_CONTENT.filter((item) => !seen.has(item.type)).slice(0, 4)
-
-  const items = discovery.length >= 4 ? discovery : FEATURED_CONTENT.slice(4, 8)
+  const { items, loading } = useDiscovery(['anime', 'gaming', 'k-pop'])
 
   return (
     <section aria-labelledby="discover-heading">
@@ -137,10 +169,14 @@ function TrySomethingNew() {
         subtitle="A step outside your usual fandoms"
       />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {items.map((item) => (
-          <ContentCard key={item.id} item={item} />
-        ))}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {(loading ? placeholders() : items).map((item, i) =>
+          item.id < 0 ? (
+            <SkeletonCard key={`skeleton-${i}`} />
+          ) : (
+            <ContentCard key={item.id} item={item} />
+          ),
+        )}
       </div>
 
       <p className="mt-3 text-xs text-ink-subtle">
@@ -177,7 +213,7 @@ function RecentActivity() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {recent.map((article) => (
           <ArticleCard key={article.id} article={article} />
         ))}
@@ -188,6 +224,8 @@ function RecentActivity() {
 
 // ---------- Upcoming events ----------
 function UpcomingEvents() {
+  const { events, loading, error } = useHomeEvents()
+
   return (
     <section aria-labelledby="events-heading">
       <SectionHeader
@@ -198,11 +236,28 @@ function UpcomingEvents() {
         subtitle="Conventions, festivals and fan meetups"
       />
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        {UPCOMING_EVENTS.map((event) => (
-          <EventCard key={event.id} event={event} />
-        ))}
-      </div>
+      {error ? (
+        <InlineError message={error} />
+      ) : loading ? (
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          {Array.from({ length: 3 }, (_, i) => (
+            <div
+              key={i}
+              className="h-28 animate-pulse rounded-xl border border-line bg-surface-sunken"
+            />
+          ))}
+        </div>
+      ) : events.length === 0 ? (
+        <p className="rounded-lg border border-dashed border-line-strong bg-surface-sunken px-4 py-8 text-center text-sm text-ink-subtle">
+          No events are scheduled yet. Check back soon.
+        </p>
+      ) : (
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          {events.slice(0, 3).map((event) => (
+            <EventCard key={event.id} event={event} />
+          ))}
+        </div>
+      )}
     </section>
   )
 }
@@ -211,8 +266,11 @@ function UpcomingEvents() {
 // Geolocation is opt-in: browsers prompt on load, so we ask only on click.
 function EventsNearYou() {
   const { coordinates, error, loading, requestLocation } = useGeolocation()
+  const { events } = useHomeEvents()
 
-  const nearby = UPCOMING_EVENTS.filter((event) => event.location !== 'Online')
+  // Online-only events are not "near you", so they are filtered out. Capped to
+  // three because the row is a 3-up grid, not a full listing.
+  const nearby = events.filter((event) => !event.isOnline).slice(0, 3)
 
   return (
     <section aria-labelledby="nearby-heading">
@@ -262,6 +320,9 @@ function EventsNearYou() {
 
 // ---------- Page ----------
 export default function Home() {
+  const { categories } = useHomeCategories()
+  const { items: featured, loading: featuredLoading } = useFeatured()
+
   return (
     <div className="mx-auto w-full max-w-7xl space-y-10 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
       <HeroCarousel />
@@ -279,17 +340,21 @@ export default function Home() {
         />
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8">
-          {CATEGORIES.map((category) => (
+          {sortCategories(categories).map((category) => (
             <Link
               key={category.slug}
               to={`/category/${category.slug}`}
               className="group relative block aspect-square overflow-hidden rounded-xl border border-line transition hover:-translate-y-0.5 hover:border-accent hover:shadow-lg hover:shadow-accent/15"
             >
-              <CategoryArt slug={category.slug} name={category.name} icon={category.icon} />
+              <CategoryArt
+                slug={category.slug}
+                name={category.name}
+                icon={categoryIcon(category.slug)}
+              />
               {/* Screen-reader label: the tile's visible text sits inside the
                   artwork, so give the link an explicit name. */}
               <span className="sr-only">
-                {category.name} — {category.description}
+                {category.name} — {category.description ?? `${category.contentCount} titles`}
               </span>
             </Link>
           ))}
@@ -309,10 +374,14 @@ export default function Home() {
           viewAllHref="/explore"
           subtitle="Hand-picked by the community"
         />
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {FEATURED_CONTENT.slice(0, 4).map((item) => (
-            <ContentCard key={item.id} item={item} />
-          ))}
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {(featuredLoading ? placeholders() : featured).map((item, i) =>
+            item.id < 0 ? (
+              <SkeletonCard key={`skeleton-${i}`} />
+            ) : (
+              <ContentCard key={item.id} item={item} />
+            ),
+          )}
         </div>
       </section>
 
@@ -329,7 +398,7 @@ export default function Home() {
           viewAllHref="/articles"
           subtitle="Fresh from the fan press"
         />
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {ARTICLES.slice(0, 4).map((article) => (
             <ArticleCard key={article.id} article={article} />
           ))}
@@ -341,7 +410,7 @@ export default function Home() {
       <section aria-labelledby="browse-heading">
         <SectionHeader id="browse-heading" title="Browse by Fandom" icon={Compass} />
         <div className="flex flex-wrap gap-2">
-          {CATEGORIES.map((category) => (
+          {sortCategories(categories).map((category) => (
             <Link
               key={category.slug}
               to={`/category/${category.slug}`}

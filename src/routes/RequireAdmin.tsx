@@ -10,9 +10,11 @@
 // an admin who was logged out lands back on /admin after signing in rather than
 // on the homepage.
 import { useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { Link, useNavigate } from 'react-router-dom'
 import { ShieldAlert } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
+import { useModalLayer } from '../hooks/useModalLayer'
 import type { ReactNode } from 'react'
 
 export type GateReason = 'signin' | 'forbidden'
@@ -63,7 +65,12 @@ function AdminGateDialog({ from, reason }: { from: string; reason: GateReason })
     return () => document.removeEventListener('keydown', onKeyDown)
   }, [navigate])
 
-  return (
+  // The app behind stops scrolling and goes inert — the admin layout included.
+  useModalLayer(true)
+
+  // Portalled to <body> so the overlay is a sibling of the app root and always
+  // covers the full viewport, whatever the admin layout does with stacking.
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
@@ -113,6 +120,7 @@ function AdminGateDialog({ from, reason }: { from: string; reason: GateReason })
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }

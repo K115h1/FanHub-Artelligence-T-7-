@@ -3,6 +3,7 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
+import type { ReactNode } from 'react'
 
 export default function SectionHeader({
   title,
@@ -10,6 +11,7 @@ export default function SectionHeader({
   viewAllHref,
   subtitle,
   id,
+  action,
 }: {
   title: string
   icon?: LucideIcon
@@ -18,6 +20,9 @@ export default function SectionHeader({
   /** Set this and point the wrapping <section aria-labelledby> at it, so the
       heading is announced once rather than twice. */
   id?: string
+  /** A control on the right, e.g. a sort dropdown. Takes precedence over the
+      "View all" link, since a section rarely needs both. */
+  action?: ReactNode
 }) {
   return (
     <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
@@ -30,14 +35,15 @@ export default function SectionHeader({
         {subtitle && <p className="mt-1 ml-3.5 text-sm text-ink-muted">{subtitle}</p>}
       </div>
 
-      {viewAllHref && (
-        <Link
-          to={viewAllHref}
-          className="inline-flex items-center gap-1 text-sm font-medium text-accent transition hover:gap-2"
-        >
-          View all <ArrowRight size={14} aria-hidden="true" />
-        </Link>
-      )}
+      {action ??
+        (viewAllHref && (
+          <Link
+            to={viewAllHref}
+            className="inline-flex items-center gap-1 text-sm font-medium text-accent transition hover:gap-2"
+          >
+            View all <ArrowRight size={14} aria-hidden="true" />
+          </Link>
+        ))}
     </div>
   )
 }

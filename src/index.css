@@ -101,6 +101,22 @@ html.dark {
   --color-cat-cosplay: var(--cat-cosplay);
 }
 
+/* ---- Corner radius scale ------------------------------------------- */
+/* Overrides Tailwind's default `rounded-*` scale with a tighter one. The
+   defaults (xl = 12px, 2xl = 16px) made every card and button read soft; these
+   pull each step down so the whole app tightens at once. `rounded-full` is
+   untouched — pills and avatars should stay circular. */
+@theme {
+  --radius-xs: 0.125rem;
+  --radius-sm: 0.1875rem;
+  --radius-md: 0.25rem;
+  --radius-lg: 0.3125rem;
+  --radius-xl: 0.4375rem;
+  --radius-2xl: 0.5rem;
+  --radius-3xl: 0.75rem;
+  --radius-4xl: 1rem;
+}
+
 /* ---- Page base ------------------------------------------------------ */
 
 html {
@@ -125,7 +141,7 @@ html.dark {
 .surface-card {
   background-color: var(--surface-raised);
   border: 1px solid var(--line);
-  border-radius: 0.75rem;
+  border-radius: var(--radius-2xl);
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease,
