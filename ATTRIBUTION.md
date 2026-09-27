@@ -4,10 +4,14 @@ Competition rule: AI may assist the process, but must not replace the team's own
 
 ## Tools Used
 
-| Tool                    | Where it was used                                              | Human review/verification |
-| ----------------------- | -------------------------------------------------------------- | ------------------------- |
-| OpenCode (MiMo agent)   | Project scaffolding, folder structure, README/summary drafting | Team reviewed every file  |
-| _Add more below_        |                                                                |                           |
+| Tool                          | Where it was used                                                                                          | Human review/verification                                                                    |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------- |
+| OpenCode (MiMo agent)          | Project scaffolding, folder structure, README.md, summary.md, config files                                  | Team edited and reviewed                                                                       |
+| OpenCode (MiMo agent)          | First-draft implementation of core components/pages/context (e.g. AuthContext, AdminLayout, Login, routing guards) | AI generated the initial working code, team then modified logic, styling, and behavior |
+| OpenCode (Space Bunny agent)   | Helped with layout inconsistencies and debugging                                                             | Team reviewed every file                                                                        |
+| OpenCode (MiMo agent)          | Added descriptive comments to updated sections for teammates to understand the updates pulled from the repo  | Team reviewed every file                                                                        |
+| OpenCode (MiMo agent)          | Removed unnecessary comments at the end of production                                                        | Team reviewed every file, removed ones missed, and added more where necessary                  |
+| —                              | Remaining files are placeholder stubs, not yet implemented                                                   | For now, still `export {}` files                                                                |
 
 ## Image assets — provenance disclosure
 
@@ -44,4 +48,6 @@ deliberately left unattached: **[docs/poster-assets.md](./docs/poster-assets.md)
 
 **Rule of thumb:** AI is our assistant, not our developer. The team must be able to explain and defend every design decision and every line of submitted code before the jury.
 
-_Last updated: scaffold creation date_
+_Created: 25/09/26_
+
+_Last updated: 27/09/26_
