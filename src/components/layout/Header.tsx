@@ -11,6 +11,7 @@ import { useGSAP } from '@gsap/react'
 import { useAuth } from '../../context/AuthContext'
 import AccountMenu from '../auth/AccountMenu'
 import { SearchBar } from '../common/SearchBar'
+import { FontSizeControl } from '../common/FontSizeControl'
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
 
@@ -103,12 +104,9 @@ export default function Header({
             />
           </div>
 
-          {/* Font-size control (wired up in a later phase) */}
-          <div className="hidden shrink-0 items-center gap-1 rounded-full border border-line px-2 py-1.5 text-ink-muted transition hover:border-accent sm:flex">
-            <span className="px-1 text-xs">A-</span>
-            <span className="h-5 w-px bg-line" />
-            <span className="px-1 text-base font-medium">A+</span>
-          </div>
+          {/* Text size — hidden on the narrowest screens, where the header
+              only has room for the logo, search and account button. */}
+          <FontSizeControl className="hidden sm:flex" />
 
           {/* Guests get Login; signed-in users get the account menu
               (avatar + username + chevron → accounts on device). */}

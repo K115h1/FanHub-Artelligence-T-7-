@@ -15,7 +15,7 @@ export default function SettingsTab() {
       {/* ---- Appearance ---- */}
       <SettingRow
         title="Appearance"
-        description="How Fan Hub Plus looks on this device."
+        description="How Fan Hub Plus looks."
         footnote="The theme is stored separately from these settings — see ThemeProvider."
       >
         <div className="flex items-center justify-between gap-4 py-3">

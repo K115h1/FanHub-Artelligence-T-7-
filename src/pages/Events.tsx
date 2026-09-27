@@ -354,7 +354,7 @@ export default function Events() {
           ) : coordinates ? (
             <span>
               Location found ({coordinates.latitude.toFixed(2)}, {coordinates.longitude.toFixed(2)}).
-              Distance sorting arrives with the events API — every city is listed for now.
+              Showing every city — pick a fandom to narrow it down.
             </span>
           ) : error === 'unsupported' ? (
             <span>Your browser does not support location sharing.</span>

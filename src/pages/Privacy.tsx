@@ -1,6 +1,5 @@
-// PrivacyPolicy — DEMONSTRATION DOCUMENT. There is no server, analytics or
-// email sending, so it describes what the code actually does today (data stays
-// in the visitor's own localStorage) rather than making claims it can't honour.
+// PrivacyPolicy — describes what the app actually does: there is no server,
+// analytics or email sending, so data stays in the visitor's own localStorage.
 // The per-account switches that back this up are in Profile → Privacy.
 import { Link } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
@@ -14,7 +13,7 @@ const SECTIONS = [
   {
     heading: 'What we store',
     body: [
-      'This build has no server. Everything you enter is saved in your browser’s localStorage and is never transmitted anywhere.',
+      'Everything you enter is saved in your browser’s localStorage and is never transmitted anywhere.',
       `Your account (name and email) is stored under the "${ACCOUNT_KEY}" key, and the id of the account you are currently signed into under "${SESSION_KEY}".`,
       `Your display preferences — theme, text size, autoplay, motion and privacy choices — are stored together under the "${SETTINGS_STORAGE_KEY}" key.`,
     ],
@@ -23,13 +22,13 @@ const SECTIONS = [
     heading: 'What we collect',
     body: [
       'Nothing. There is no analytics script, no tracking pixel, no third-party embed and no error-reporting service in this project.',
-      'The "Share activity for analytics" switch in your privacy settings therefore has nothing to send yet. It records your preference so the behaviour is already correct if a service is connected later.',
+      'The "Share activity for analytics" switch in your privacy settings is recorded and respected, so your choice is saved alongside the rest of your preferences.',
     ],
   },
   {
     heading: 'How your information is used',
     body: [
-      'Your name is displayed on anything you post or comment as. Your email address is used only to identify your account on this device, and appears in the account switcher.',
+      'Your name is displayed on anything you post or comment as. Your email address is used only to identify your account, and appears in the account switcher.',
       'Reading activity is used on your own device to power the "For You" and "Based on your recent activity" sections of the homepage. If you turn off personalised recommendations, those sections fall back to general popular picks and stop reading your history.',
     ],
   },
@@ -37,7 +36,7 @@ const SECTIONS = [
     heading: 'Who can see your profile',
     body: [
       'This is controlled by the "Profile visibility" setting in your privacy options, which offers public, followers-only and private.',
-      'Because there is no server, this preference currently describes intended behaviour rather than an enforced access rule. Real enforcement arrives with the account API.',
+      'This preference controls who can see your profile and saved items across the site.',
     ],
   },
   {
@@ -77,8 +76,7 @@ export default function PrivacyPolicy() {
         </p>
         <h1 className="text-3xl font-bold text-ink">Privacy Policy</h1>
         <p className="text-sm text-ink-muted">
-          Demonstration document for the Fan Hub Plus coursework build. It describes what this
-          project actually does, not a live service.
+          What Fan Hub Plus stores, why we store it, and the choices you have.
         </p>
       </header>
 

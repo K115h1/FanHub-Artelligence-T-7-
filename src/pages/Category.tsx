@@ -3,7 +3,7 @@
 // page just looks up its own slug: one read per list, no filtering per render.
 // Same glassy purple design language as the homepage (low roundness, blur).
 import { Link, useParams } from 'react-router-dom'
-import { Eye, MapPin } from 'lucide-react'
+import { Eye, Film, MapPin } from 'lucide-react'
 import {
   ARTICLES_BY_CATEGORY,
   CATEGORIES,
@@ -137,11 +137,10 @@ export default function Category() {
                     to={`/content/${item.id}`}
                     className={`${glassCard} overflow-hidden`}
                   >
-                    {/* Artwork placeholder — purple gradient stand-in for real media */}
+                    {/* Artwork band — a neutral media glyph rather than the
+                        title's initial, which reads as a broken image. */}
                     <div className={`flex h-32 items-center justify-center ${purpleGradient}`}>
-                      <span className="text-4xl font-black text-white/30">
-                        {item.title.charAt(0)}
-                      </span>
+                      <Film size={48} className="text-white/30" strokeWidth={1.25} aria-hidden="true" />
                     </div>
                     <div className="space-y-1.5 p-4">
                       <h3 className="font-semibold text-black dark:text-white">{item.title}</h3>

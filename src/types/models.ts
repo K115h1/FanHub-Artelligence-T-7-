@@ -1,8 +1,42 @@
 // Shared domain models, mirroring database/01_schema.sql and the C# entities.
 // Naming per rubric: PascalCase, no "I" prefix on types.
 
+/** Mirrors the `roles` table. Visitor is implicit — it means not signed in. */
+export type UserRole = 'registered' | 'admin'
+
 /** How prominently an account appears in public lists and recommendations. */
 export type ProfileVisibility = 'public' | 'followers' | 'private'
+
+/** Mirrors `fan_submissions.status`. */
+export type SubmissionStatus = 'pending' | 'approved' | 'rejected'
+
+/** Mirrors `feedback.status`. */
+export type FeedbackStatus = 'open' | 'reviewed' | 'resolved' | 'dismissed'
+
+/** A fan submission moving through the moderation queue. */
+export interface FanSubmission {
+  id: string
+  userId: string
+  userName: string
+  categorySlug: string
+  title: string
+  body: string
+  status: SubmissionStatus
+  createdAt: string
+}
+
+/** A feedback entry in the moderation queue. */
+export interface FeedbackItem {
+  id: string
+  userId: string | null
+  userName: string
+  type: 'bug' | 'suggestion' | 'query' | 'content'
+  message: string
+  email: string
+  rating: number
+  status: FeedbackStatus
+  createdAt: string
+}
 
 /**
  * Per-account preferences, persisted to localStorage by SettingsProvider.

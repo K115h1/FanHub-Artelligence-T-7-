@@ -3,12 +3,18 @@
 // Glass style, purple accents, low roundness — same design language as Home.
 import { Link } from 'react-router-dom'
 import { toSlug } from '../../lib/mockData'
+import { useAuth } from '../../context/AuthContext'
 
 const glassPanel =
   'border-t border-purple-500/20 bg-white/60 backdrop-blur-xl dark:bg-white/[0.04]'
 
 // Sitemap — every route in the app, grouped by area (the SRS sitemap item).
-const SITEMAP: { heading: string; links: { to: string; label: string }[] }[] = [
+const SITEMAP: {
+  heading: string
+  links: { to: string; label: string }[]
+  /** Hidden from anyone who is not an administrator. */
+  adminOnly?: boolean
+}[] = [
   {
     heading: 'Browse',
     links: [
@@ -41,7 +47,9 @@ const SITEMAP: { heading: string; links: { to: string; label: string }[] }[] = [
     ],
   },
   {
+    // Rendered only for administrators — see the isAdmin check in Footer.
     heading: 'Admin',
+    adminOnly: true,
     links: [
       { to: '/admin', label: 'Admin Dashboard' },
       { to: '/admin/content', label: 'Content Manager' },
@@ -66,12 +74,16 @@ const CATEGORY_SHORTCUTS = [
 ]
 
 export default function Footer() {
+  const { isAdmin } = useAuth()
+
   return (
     <footer className={glassPanel}>
       <div className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        {/* Sitemap */}
+        {/* Sitemap. The Admin column is only rendered for administrators —
+            a registered user following "Admin Dashboard" would just hit the
+            gate, so the link is dead weight for them. */}
         <nav aria-label="Site map" className="grid grid-cols-2 gap-8 sm:grid-cols-4">
-          {SITEMAP.map(({ heading, links }) => (
+          {SITEMAP.filter((group) => !group.adminOnly || isAdmin).map(({ heading, links }) => (
             <div key={heading}>
               <h3 className="mb-3 text-sm font-bold tracking-wide text-black uppercase dark:text-white">
                 {heading}

@@ -5,7 +5,7 @@
 // otherwise be interactive content nested inside an anchor, which is invalid and
 // breaks keyboard use. The title carries the link instead.
 import { Link } from 'react-router-dom'
-import { Eye } from 'lucide-react'
+import { Eye, Film } from 'lucide-react'
 import type { ContentItem } from '../../lib/mockData'
 import { CategoryDot } from './CategoryArt'
 import BookmarkButton from './BookmarkButton'
@@ -21,9 +21,13 @@ export default function ContentCard({ item, rank }: { item: ContentItem; rank?: 
           a page of cards reads as one system rather than a patchwork. */}
       <div className="relative flex h-32 items-center justify-center overflow-hidden bg-surface-sunken">
         <div aria-hidden="true" className="accent-wash absolute inset-0 opacity-85" />
-        <span className="relative text-4xl font-black text-white/25 transition-transform duration-300 group-hover:scale-110">
-          {item.title.charAt(0)}
-        </span>
+        {/* A neutral media glyph, not the title's initial — a letter reads as a
+            broken image rather than as artwork. */}
+        <Film
+          aria-hidden="true"
+          className="relative h-12 w-12 text-white/25 transition-transform duration-300 group-hover:scale-110"
+          strokeWidth={1.25}
+        />
 
         {rank !== undefined && (
           <span className="absolute top-2 left-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/70 text-xs font-bold text-white backdrop-blur-sm">

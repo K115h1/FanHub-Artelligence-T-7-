@@ -7,6 +7,7 @@ import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Eye, Calendar, Clock, Users, Film, Tag, ArrowRight, Share2, Check } from 'lucide-react'
 import PageHero from '../components/common/PageHero'
+import BackButton from '../components/common/BackButton'
 import SectionHeader from '../components/common/SectionHeader'
 import ContentCard from '../components/common/ContentCard'
 import ArticleCard from '../components/common/ArticleCard'
@@ -91,6 +92,14 @@ export default function ContentDetail() {
 
   return (
     <div className="mx-auto w-full max-w-7xl space-y-8 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+      {/* Returns to wherever the visitor came from — a category grid, a
+          bookmark, a search result — and falls back to this title's category
+          when the page was opened directly. */}
+      <BackButton
+        fallbackTo={category ? `/category/${toSlug(item.type)}` : '/'}
+        fallbackLabel={category ? `Back to ${category.name}` : 'Back to home'}
+      />
+
       <PageHero
         kicker={item.type}
         title={item.title}

@@ -111,7 +111,7 @@ export default function Bookmarks() {
         kicker="Your library"
         title="Bookmarks"
         icon={BookmarkIcon}
-        blurb="Everything you have saved, in one place. Bookmarks are stored on this device and stay with your account."
+        blurb="Everything you have saved, in one place. Bookmarks stay with your account."
       >
         <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1.5 text-sm font-semibold text-white backdrop-blur-md">
           <Layers size={15} aria-hidden="true" />
@@ -224,7 +224,7 @@ export default function Bookmarks() {
       <ConfirmDialog
         isOpen={confirmClear}
         title="Clear all bookmarks?"
-        body={`This removes all ${count} saved items from this device. It can't be undone.`}
+        body={`This removes all ${count} saved items. It can't be undone.`}
         confirmText="Clear everything"
         isWarning
         onConfirm={() => {

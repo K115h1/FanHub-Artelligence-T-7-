@@ -238,14 +238,13 @@ function EventsNearYou() {
         ) : coordinates ? (
           <span>
             Location found ({coordinates.latitude.toFixed(2)},{' '}
-            {coordinates.longitude.toFixed(2)}) — sorted by distance once the events API is
-            connected.
+            {coordinates.longitude.toFixed(2)}). Showing events from every city.
           </span>
         ) : error === 'unsupported' ? (
           <span>Your browser does not support location sharing.</span>
         ) : (
           <>
-            <span>Events are not yet sorted by distance.</span>
+            <span>Events from every city.</span>
             <button
               type="button"
               onClick={requestLocation}

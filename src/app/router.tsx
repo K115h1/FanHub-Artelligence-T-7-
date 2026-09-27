@@ -33,7 +33,7 @@ export const router = createBrowserRouter([
         lazy: async () => ({ Component: (await import('../pages/Login')).default }),
         handle: { title: 'Login' },
       },
-      { path: 'register', ...placeholder('Register') },
+      { path: 'register', lazy: async () => ({ Component: (await import('../pages/Register')).default }), handle: { title: 'Register' } },
       { path: 'forgot-password', ...placeholder('Forgot Password') },
       { path: 'reset-password', ...placeholder('Reset Password') },
 
@@ -68,23 +68,29 @@ export const router = createBrowserRouter([
           { path: 'bookmarks', lazy: async () => ({ Component: (await import('../pages/Bookmarks')).default }), handle: { title: 'Bookmarks' } },
           { path: 'profile', lazy: async () => ({ Component: (await import('../pages/Profile')).default }), handle: { title: 'Profile' } },
 
-          // Admin. Login-gated for now; the role check arrives with this panel.
-          {
-            path: 'admin',
-            children: [
-              { index: true, ...placeholder('Admin Dashboard') },
-              { path: 'content', ...placeholder('Admin · Content Manager') },
-              { path: 'users', ...placeholder('Admin · User Manager') },
-              { path: 'feedback', ...placeholder('Admin · Feedback Moderator') },
-              { path: 'submissions', ...placeholder('Admin · Submissions') },
-              { path: 'stats', ...placeholder('Admin · Statistics') },
-            ],
-          },
         ],
       },
 
       // 404
       { path: '*', ...placeholder('Page Not Found') },
+    ],
+  },
+
+  // Admin control panel — a SIBLING of the site route, not a child of it, so it
+  // does not inherit the public Header/Sidebar/Footer. AdminLayout supplies its
+  // own chrome and AdminRoutes owns the role gate, so this branch is not also
+  // wrapped in RequireAuth: the gate shows its own sign-in prompt instead.
+  {
+    path: '/admin',
+    lazy: async () => ({ Component: (await import('../routes/AdminRoutes')).default }),
+    handle: { title: 'Admin' },
+    children: [
+      { index: true, lazy: async () => ({ Component: (await import('../pages/admin/AdminDashboard')).default }), handle: { title: 'Admin · Overview' } },
+      { path: 'content', lazy: async () => ({ Component: (await import('../pages/admin/ContentManager')).default }), handle: { title: 'Admin · Content' } },
+      { path: 'users', lazy: async () => ({ Component: (await import('../pages/admin/UserManager')).default }), handle: { title: 'Admin · Users' } },
+      { path: 'feedback', lazy: async () => ({ Component: (await import('../pages/admin/FeedbackModerator')).default }), handle: { title: 'Admin · Feedback' } },
+      { path: 'submissions', lazy: async () => ({ Component: (await import('../pages/admin/Submissions')).default }), handle: { title: 'Admin · Submissions' } },
+      { path: 'stats', lazy: async () => ({ Component: (await import('../pages/admin/Stats')).default }), handle: { title: 'Admin · Statistics' } },
     ],
   },
 ])

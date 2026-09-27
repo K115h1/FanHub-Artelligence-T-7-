@@ -24,7 +24,7 @@ export default function PrivacyTab() {
       {/* ---- Who can see you ---- */}
       <SettingRow
         title="Profile visibility"
-        description="Applies to this account on this device."
+        description="Applies to this account."
       >
         <div className="py-3">
           <div
@@ -84,8 +84,7 @@ export default function PrivacyTab() {
       <div className="surface-card p-5">
         <h3 className="text-sm font-semibold text-ink">Privacy policy</h3>
         <p className="mt-1 text-xs text-ink-subtle">
-          How Fan Hub Plus collects, stores and shares information. This is a demonstration
-          document and does not describe a live service.
+          How Fan Hub Plus collects, stores and shares your information.
         </p>
         <div className="mt-4 flex flex-wrap items-center gap-3">
           <Link
@@ -97,7 +96,7 @@ export default function PrivacyTab() {
           </Link>
           {current && (
             <span className="text-xs text-ink-subtle">
-              Applies to {current.email} on this device.
+              Applies to {current.email}.
             </span>
           )}
         </div>

@@ -1,0 +1,30 @@
+{
+  "titles": 2934,
+  "posters": 2696,
+  "perFandom": {
+    "movies": {
+      "titles": 513,
+      "posters": 507
+    },
+    "anime": {
+      "titles": 509,
+      "posters": 436
+    },
+    "games": {
+      "titles": 575,
+      "posters": 556
+    },
+    "comics": {
+      "titles": 484,
+      "posters": 404
+    },
+    "kpop": {
+      "titles": 405,
+      "posters": 346
+    },
+    "tvshows": {
+      "titles": 448,
+      "posters": 447
+    }
+  }
+}

@@ -149,7 +149,7 @@ export default function EventDetail() {
 
           <p className="mt-4 rounded-lg border border-dashed border-line-strong bg-surface-sunken p-3 text-xs text-ink-subtle">
             Ticket links and RSVP handling arrive with the events API. Marking interest is stored
-            on this device for now.
+            so you can find it again later.
           </p>
         </section>
 
@@ -179,7 +179,7 @@ export default function EventDetail() {
             <section className="surface-card p-5">
               <h2 className="text-sm font-semibold text-ink">You're on the list</h2>
               <p className="mt-1.5 text-xs text-ink-muted">
-                {event.title} has been added to your interests on this device.
+                {event.title} has been added to your interests.
               </p>
               <Link
                 to="/events"

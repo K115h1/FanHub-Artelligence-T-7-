@@ -127,7 +127,7 @@ export default function Feedback() {
       >
         <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1.5 text-sm font-semibold text-white backdrop-blur-md">
           <Send size={15} aria-hidden="true" />
-          {entries.length} sent from this device
+          {entries.length} sent
         </span>
       </PageHero>
 
@@ -250,7 +250,7 @@ export default function Feedback() {
 
             {!current && (
               <p className="text-xs text-ink-subtle">
-                You're not signed in, so this is saved on this device only.{' '}
+                Sign in to keep your feedback tied to your account.{' '}
                 <Link to="/login" className="font-semibold text-accent underline-offset-2 hover:underline">
                   Sign in
                 </Link>{' '}
@@ -265,7 +265,7 @@ export default function Feedback() {
           <SectionHeader
             title="What you've sent"
             icon={Clock}
-            subtitle={current ? `Signed in as ${current.name}` : 'Anonymous, on this device'}
+            subtitle={current ? `Signed in as ${current.name}` : 'Anonymous'}
           />
 
           {sorted.length === 0 ? (
@@ -318,7 +318,7 @@ export default function Feedback() {
       <ConfirmDialog
         isOpen={confirmClear}
         title="Clear feedback history?"
-        body={`This removes all ${entries.length} entries from this device.`}
+        body={`This removes all ${entries.length} entries.`}
         confirmText="Clear"
         isWarning
         onConfirm={() => {

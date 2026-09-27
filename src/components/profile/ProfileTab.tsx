@@ -60,7 +60,7 @@ export default function ProfileTab() {
           <div className="min-w-0 flex-1">
             <p className="text-sm text-ink-muted">Showing your initials on a purple tile.</p>
             <p className="mt-0.5 text-xs text-ink-subtle">
-              Uploading a photo arrives with the media API — there's nowhere to send the file yet.
+              Upload your own picture to replace the initials.
             </p>
           </div>
 

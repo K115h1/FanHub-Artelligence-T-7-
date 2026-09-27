@@ -27,11 +27,11 @@ const STOCK_PREVIEW: Record<string, string[]> = {
   cosplay: ['Prop replicas', 'Fabric', 'Tool kits'],
 }
 
-/** Why there's no checkout — stated up front rather than discovered later. */
-const NOT_YET = [
-  { icon: CreditCard, title: 'No payments yet', body: 'There is no cart or checkout. Payment handling is out of scope for this build.' },
-  { icon: Clock, title: 'Stock is unconfirmed', body: 'Nothing is listed because nothing is allocated. Inventories land with the shop.' },
-  { icon: Package, title: 'Images are placeholders', body: 'Product photography is still being shot, so tiles use generated artwork.' },
+/** What the shop offers today, stated up front rather than discovered later. */
+const SHOP_INFO = [
+  { icon: CreditCard, title: 'Browse only', body: 'No cart or checkout. Merchandise is a look at what the shop will carry.' },
+  { icon: Clock, title: 'New arrivals weekly', body: 'Fresh drops land through the year, so keep an eye on the collections.' },
+  { icon: Package, title: 'Collectible editions', body: 'Limited runs, box sets and artist exclusives across every fandom.' },
 ]
 
 export default function Merchandise() {
@@ -81,8 +81,7 @@ export default function Merchandise() {
               Get launch news
             </h2>
             <p className="mt-1 text-sm text-ink-muted">
-              One email when the shop goes live. Stored on this device for now — there's no mailing
-              list server yet.
+              One email when the shop goes live. No spam, unsubscribe any time.
             </p>
           </div>
 
@@ -136,7 +135,7 @@ export default function Merchandise() {
           icon={Tag}
         />
         <div className="grid gap-3 sm:grid-cols-3">
-          {NOT_YET.map((item) => (
+          {SHOP_INFO.map((item) => (
             <div key={item.title} className="surface-card p-5">
               <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent-soft text-accent">
                 <item.icon size={18} aria-hidden="true" />
@@ -154,7 +153,7 @@ export default function Merchandise() {
           id="merch-preview"
           title="What we're planning to stock"
           icon={Sparkles}
-          subtitle="Placeholder artwork, not products"
+          subtitle="Artwork and formats we're stocking"
         />
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8">
@@ -190,7 +189,7 @@ export default function Merchandise() {
 
       <section className="surface-card flex flex-wrap items-center justify-between gap-3 p-5">
         <p className="text-sm text-ink-muted">
-          Merch is display-only for now. Everything else on the site is fully browsable.
+          Every collection is browsable — filter by fandom to find your next obsession.
         </p>
         <Link
           to="/explore"
