@@ -7,7 +7,7 @@
 --   1. The 8 fandom categories:
 --      Anime, Gaming, Movies, TV Shows, K-Pop, Comics, Manga, Cosplay
 --   2. Demo accounts (passwords also documented in docs/credentials.md):
---      * admin@fanhubplus.test      (Admin role)
+--      * admin@fanhubplus.com      (Admin role — Ada Lovelace, the only admin)
 --      * user@fanhubplus.test       (Registered role)
 --      * — visitors need no account
 --   3. Sample content per category (articles, videos, audio, images)

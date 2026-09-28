@@ -6,7 +6,7 @@ This document is your reference map: what the project is, which decisions have b
 
 ## 1. What We Are Building
 
-**FanHub Plus** is an end-to-end web application — a unified "Fandom Universe" portal serving eight communities: **Anime, Gaming, Movies, TV Shows, K-Pop, Comics, Manga, and Cosplay**.
+**FanHub Plus** is an end-to-end web application: a unified "Fandom Universe" portal serving eight communities: **Anime, Gaming, Movies, TV Shows, K-Pop, Comics, Manga, and Cosplay**.
 
 Three user roles:
 

@@ -15,6 +15,10 @@ public interface IContentService
     /// "akira" exists in both Anime and Comics.
     Task<ContentDetailDto?> GetDetailAsync(string slug, string? categorySlug, uint? currentUserId, CancellationToken ct = default);
     Task<ContentDetailDto?> GetByIdAsync(uint contentId, uint? currentUserId, CancellationToken ct = default);
+
+    /// Records one view. Returns false when the id does not exist, which the
+    /// controller turns into a 404.
+    Task<bool> RecordViewAsync(uint contentId, CancellationToken ct = default);
     Task<List<CategoryDto>> GetCategoriesAsync(CancellationToken ct = default);
     Task<List<GenreDto>> GetGenresAsync(byte? categoryId, CancellationToken ct = default);
     Task<ContentDetailDto> CreateAsync(CreateContentRequest request, uint adminUserId, CancellationToken ct = default);
@@ -74,6 +78,14 @@ public class ContentService : IContentService
     {
         var content = await _content.GetByIdAsync(contentId, ct);
         return content is null ? null : await ToDetailAsync(content, currentUserId, ct);
+    }
+
+    public async Task<bool> RecordViewAsync(uint contentId, CancellationToken ct = default)
+    {
+        // The affected-row count is the existence check, so this is one UPDATE
+        // and no read. The previous version built a full ContentDetailDto — genre
+        // join, category join and a rating lookup — purely to test for null.
+        return await _content.IncrementViewCountAsync(contentId, ct) > 0;
     }
 
     public async Task<List<CategoryDto>> GetCategoriesAsync(CancellationToken ct = default)
@@ -258,6 +270,7 @@ public class ContentService : IContentService
             content.ExternalId,
             content.ExternalSource,
             content.ContentGenres.Select(cg => cg.Genre.Name).ToList(),
+            content.ContentGenres.Select(cg => cg.GenreId).ToList(),
             userRating);
     }
 

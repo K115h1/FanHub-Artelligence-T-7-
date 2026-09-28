@@ -27,11 +27,19 @@ public class CommunityRepository : ICommunityRepository
         _db.FanEvents.AsNoTracking().Include(e => e.Category).FirstOrDefaultAsync(e => e.EventId == eventId, ct);
 
     public async Task<PagedResult<Feedback>> GetFeedbackAsync(
-        FeedbackStatus? status, int page, int pageSize, CancellationToken ct = default)
+        FeedbackStatus? status, int page, int pageSize, uint? userId = null,
+        CancellationToken ct = default)
     {
         var q = _db.Feedback.AsNoTracking().Include(f => f.User).AsQueryable();
         if (status.HasValue)
             q = q.Where(f => f.Status == status.Value);
+
+        // Filtered in SQL, for the same reason submissions are: the "mine"
+        // endpoint has to scope to the token's own user, and paging over
+        // everyone's feedback first would leak rows once there are more than a
+        // page. Anonymous feedback has a null user_id and so never matches.
+        if (userId.HasValue)
+            q = q.Where(f => f.UserId == userId.Value);
 
         var total = await q.CountAsync(ct);
         var p = page < 1 ? 1 : page;
@@ -159,6 +167,83 @@ public class CommunityRepository : ICommunityRepository
 
         return q.OrderByDescending(m => m.IsUpcoming).ThenBy(m => m.Name).ToListAsync(ct);
     }
+
+    public async Task<PagedResult<MerchandiseItem>> BrowseMerchandiseAsync(
+        MerchandiseQuery query, CancellationToken ct = default)
+    {
+        IQueryable<MerchandiseItem> q = _db.MerchandiseItems
+            .AsNoTracking()
+            .Include(m => m.Category);
+
+        if (query.CategoryId.HasValue)
+            q = q.Where(m => m.CategoryId == query.CategoryId.Value);
+
+        if (query.IsUpcoming.HasValue)
+            q = q.Where(m => m.IsUpcoming == query.IsUpcoming.Value);
+
+        if (!string.IsNullOrWhiteSpace(query.Search))
+        {
+            var term = query.Search.Trim();
+            q = q.Where(m =>
+                m.Name.Contains(term) ||
+                m.Description!.Contains(term) ||
+                m.Tag!.Contains(term));
+        }
+
+        var total = await q.CountAsync(ct);
+
+        q = query.SortBy switch
+        {
+            "newest" => q.OrderByDescending(m => m.CreatedAt).ThenBy(m => m.Name),
+            "views" => q.OrderByDescending(m => m.ViewCount).ThenBy(m => m.Name),
+            _ => q.OrderByDescending(m => m.IsUpcoming).ThenBy(m => m.Name),
+        };
+
+        var page = query.Page < 1 ? 1 : query.Page;
+        var size = query.PageSize is < 1 or > 100 ? 24 : query.PageSize;
+
+        return new PagedResult<MerchandiseItem>
+        {
+            Items = await q.Skip((page - 1) * size).Take(size).ToListAsync(ct),
+            TotalCount = total,
+            Page = page,
+            PageSize = size,
+        };
+    }
+
+    public Task<MerchandiseItem?> GetMerchandiseByIdAsync(uint itemId, CancellationToken ct = default) =>
+        _db.MerchandiseItems
+            .AsNoTracking()
+            .Include(m => m.Category)
+            .FirstOrDefaultAsync(m => m.ItemId == itemId, ct);
+
+    public async Task<MerchandiseItem> AddMerchandiseAsync(MerchandiseItem item, CancellationToken ct = default)
+    {
+        _db.MerchandiseItems.Add(item);
+        await _db.SaveChangesAsync(ct);
+        return item;
+    }
+
+    public async Task UpdateMerchandiseAsync(MerchandiseItem item, CancellationToken ct = default)
+    {
+        _db.MerchandiseItems.Update(item);
+        await _db.SaveChangesAsync(ct);
+    }
+
+    public async Task<bool> DeleteMerchandiseAsync(uint itemId, CancellationToken ct = default)
+    {
+        var item = await _db.MerchandiseItems.FirstOrDefaultAsync(m => m.ItemId == itemId, ct);
+        if (item is null) return false;
+        _db.MerchandiseItems.Remove(item);
+        await _db.SaveChangesAsync(ct);
+        return true;
+    }
+
+    public Task<bool> MerchandiseSlugExistsAsync(
+        string slug, uint? excludeItemId = null, CancellationToken ct = default) =>
+        _db.MerchandiseItems
+            .AsNoTracking()
+            .AnyAsync(m => m.Slug == slug && (!excludeItemId.HasValue || m.ItemId != excludeItemId.Value), ct);
 
     public Task<List<UpcomingRelease>> GetUpcomingReleasesAsync(CancellationToken ct = default) =>
         _db.UpcomingReleases.AsNoTracking()

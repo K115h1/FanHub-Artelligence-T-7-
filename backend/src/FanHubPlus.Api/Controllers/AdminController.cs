@@ -112,11 +112,13 @@ public class AdminController : ApiControllerBase
 
     // ---- moderation ----
 
+    /// The admin queue is every submission, so userId stays null. Named, because
+    /// the optional userId filter sits before the cancellation token.
     [HttpGet("feedback")]
     public Task<IActionResult> Feedback(
         [FromQuery] string? status, [FromQuery] int page = 1, [FromQuery] int pageSize = 25) =>
         Guarded(async () => Ok(await _community.GetFeedbackAsync(
-            ParseFeedbackStatus(status), page, pageSize, HttpContext.RequestAborted)));
+            ParseFeedbackStatus(status), page, pageSize, userId: null, HttpContext.RequestAborted)));
 
     [HttpPut("feedback/{id:int}/status")]
     public Task<IActionResult> SetFeedbackStatus(uint id, UpdateFeedbackStatusRequest request) =>
@@ -165,6 +167,46 @@ public class AdminController : ApiControllerBase
                 id, status, RequireUserId(), request.Note, HttpContext.RequestAborted);
             return NoContent();
         });
+
+    [HttpGet("merchandise")]
+    public Task<IActionResult> BrowseMerchandise(
+        [FromQuery] byte? categoryId,
+        [FromQuery] string? search,
+        [FromQuery] bool? isUpcoming,
+        [FromQuery] string? sort,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 25) =>
+        Guarded(async () => Ok(await _community.BrowseMerchandiseAsync(
+            new MerchandiseQuery
+            {
+                CategoryId = categoryId,
+                Search = search,
+                IsUpcoming = isUpcoming,
+                SortBy = sort ?? "name",
+                Page = page,
+                PageSize = pageSize,
+            },
+            HttpContext.RequestAborted)));
+
+    [HttpPost("merchandise")]
+    public Task<IActionResult> CreateMerchandise(CreateMerchandiseRequest request) =>
+        Guarded(async () => Ok(await _community.CreateMerchandiseAsync(
+            request, HttpContext.RequestAborted)));
+
+    [HttpPut("merchandise/{id:int}")]
+    public Task<IActionResult> UpdateMerchandise(uint id, UpdateMerchandiseRequest request) =>
+        Guarded(async () =>
+        {
+            var updated = await _community.UpdateMerchandiseAsync(
+                id, request, HttpContext.RequestAborted);
+            return updated is null ? NotFound() : Ok(updated);
+        });
+
+    [HttpDelete("merchandise/{id:int}")]
+    public Task<IActionResult> DeleteMerchandise(uint id) =>
+        Guarded(async () => await _community.DeleteMerchandiseAsync(id, HttpContext.RequestAborted)
+            ? NoContent()
+            : NotFound());
 
     private static FeedbackStatus? ParseFeedbackStatus(string? value) =>
         EnumConverter.TryParse<FeedbackStatus>(value, out var parsed) ? parsed : null;

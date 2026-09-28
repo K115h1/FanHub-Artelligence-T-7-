@@ -4,6 +4,7 @@
 import { Link } from 'react-router-dom'
 import { toSlug } from '../../lib/mockData'
 import { useAuth } from '../../context/AuthContext'
+import { useAuthModal, type AuthMode } from '../../context/AuthModalContext'
 
 const glassPanel =
   'border-t border-purple-500/20 bg-white/60 backdrop-blur-xl dark:bg-white/[0.04]'
@@ -11,7 +12,7 @@ const glassPanel =
 // Sitemap — every route in the app, grouped by area (the SRS sitemap item).
 const SITEMAP: {
   heading: string
-  links: { to: string; label: string }[]
+  links: { to: string; label: string; auth?: AuthMode }[]
   /** Hidden from anyone who is not an administrator. */
   adminOnly?: boolean
 }[] = [
@@ -19,7 +20,7 @@ const SITEMAP: {
     heading: 'Browse',
     links: [
       { to: '/', label: 'Home' },
-      { to: '/explorer', label: 'Explorer' },
+      { to: '/explore', label: 'Explorer' },
       { to: '/characters', label: 'Characters' },
       { to: '/articles', label: 'Articles' },
       { to: '/merchandise', label: 'Merchandise' },
@@ -29,8 +30,10 @@ const SITEMAP: {
   {
     heading: 'Account',
     links: [
-      { to: '/login', label: 'Login' },
-      { to: '/register', label: 'Register' },
+      // `to` is still the React key, so the two auth rows keep distinct keys
+      // even though they navigate nowhere.
+      { to: '/login', label: 'Log in', auth: 'login' },
+      { to: '/register', label: 'Sign up', auth: 'register' },
       { to: '/forgot-password', label: 'Forgot Password' },
       { to: '/dashboard', label: 'Dashboard' },
       { to: '/bookmarks', label: 'Bookmarks' },
@@ -75,6 +78,7 @@ const CATEGORY_SHORTCUTS = [
 
 export default function Footer() {
   const { isAdmin } = useAuth()
+  const { open: openAuth } = useAuthModal()
 
   return (
     <footer className={glassPanel}>
@@ -89,14 +93,29 @@ export default function Footer() {
                 {heading}
               </h3>
               <ul className="space-y-2">
-                {links.map(({ to, label }) => (
+                {links.map(({ to, label, auth }) => (
                   <li key={to}>
-                    <Link
-                      to={to}
-                      className="text-sm text-black/60 transition hover:text-purple-600 dark:text-white/60 dark:hover:text-purple-400"
-                    >
-                      {label}
-                    </Link>
+                    {/* `auth` links open the overlay instead of navigating. A
+                        footer link is a dead end by nature — the visitor clicked
+                        to look something up, not to leave — so a dialog that
+                        closes back to where they were is the better behaviour
+                        than a route change. */}
+                    {auth ? (
+                      <button
+                        type="button"
+                        onClick={() => openAuth(auth)}
+                        className="text-sm text-black/60 transition hover:text-purple-600 dark:text-white/60 dark:hover:text-purple-400"
+                      >
+                        {label}
+                      </button>
+                    ) : (
+                      <Link
+                        to={to}
+                        className="text-sm text-black/60 transition hover:text-purple-600 dark:text-white/60 dark:hover:text-purple-400"
+                      >
+                        {label}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>

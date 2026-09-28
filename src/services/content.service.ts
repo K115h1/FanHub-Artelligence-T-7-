@@ -70,6 +70,21 @@ export function getGenres(categoryId?: number): Promise<Genre[]> {
   return http.get<Genre[]>('/contents/genres', { categoryId })
 }
 
+// --- view counting ---
+
+/**
+ * Records that a title was opened. Fire-and-forget: the page never waits on it
+ * and never surfaces a failure, because a view that failed to save is not
+ * something a reader can act on.
+ *
+ * [AllowAnonymous] on the endpoint, deliberately — view counts are meant to
+ * describe the whole audience, and asking for a token would only ever count the
+ * signed-in slice of it.
+ */
+export function recordView(contentId: number): Promise<void> {
+  return http.post<void>(`/contents/${contentId}/view`)
+}
+
 // --- per-user actions, all of these need a token ---
 
 /** Rate 1–5. Re-rating replaces the previous value rather than adding a row. */

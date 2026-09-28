@@ -67,6 +67,14 @@ export interface ContentDetail extends ContentSummary {
   popularityScore: number
   externalId: string | null
   externalSource: string | null
+  /**
+   * Genre ids, parallel to `genres` on ContentSummary.
+   *
+   * Present because the explorer filters by genre_id, not by name. A
+   * "more like this" link needs an id to filter on, and without this the only
+   * way to get one would be to fetch every genre and match on the label.
+   */
+  genreIds: number[]
   /** Null unless the request carried a token. */
   userRating: number | null
 }
@@ -105,7 +113,32 @@ export interface MerchandiseItem {
   priceNote: string | null
   isUpcoming: boolean
   categorySlug: string
+  viewCount: number
+  createdAt: string
 }
+
+export interface MerchandiseFilters {
+  categoryId?: number
+  search?: string
+  isUpcoming?: boolean
+  sort?: MerchandiseSort
+  page?: number
+  pageSize?: number
+}
+
+export type MerchandiseSort = 'name' | 'newest' | 'views'
+
+export interface MerchandisePayload {
+  categoryId: number
+  name: string
+  description: string | null
+  imagePath: string | null
+  tag: string | null
+  priceNote: string | null
+  isUpcoming: boolean
+}
+
+export type MerchandiseEdit = Partial<Omit<MerchandisePayload, 'categoryId'>>
 
 export interface UpcomingRelease {
   id: number

@@ -3,6 +3,7 @@
 using FanHubPlus.Application.DTOs;
 using FanHubPlus.Application.Services;
 using FanHubPlus.Domain;
+using FanHubPlus.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,17 +34,58 @@ public class CommunityController : ApiControllerBase
         });
 
     /// Feedback is public by design — visitors can send it without an account,
-    /// which is why CurrentUserId is optional here.
+    /// which is why CurrentUserId is optional here. An anonymous submission lands
+    /// in the admin queue with a null author, which is intended: the queue has to
+    /// see a bug report from someone who never made an account.
     [HttpPost("feedback")]
     [AllowAnonymous]
     public Task<IActionResult> SubmitFeedback(CreateFeedbackRequest request) =>
         Guarded(async () => Ok(await _community.SubmitFeedbackAsync(
             request, CurrentUserId, HttpContext.RequestAborted)));
 
+    /// <summary>
+    /// The signed-in fan's own feedback, newest first.
+    /// </summary>
+    /// <remarks>
+    /// This is what the "What you've sent" panel on the feedback page reads. That
+    /// panel used to be a localStorage array written on submit, so a report was
+    /// only ever visible on the browser that sent it and never reached an
+    /// administrator at all. It needs an account, unlike the POST above, because
+    /// anonymous rows have no user id to filter on.
+    /// </remarks>
+    [HttpGet("feedback/mine")]
+    [Authorize]
+    public Task<IActionResult> MyFeedback([FromQuery] int pageSize = 25) =>
+        Guarded(async () =>
+        {
+            var result = await _community.GetFeedbackAsync(
+                null, 1, pageSize, RequireUserId(), HttpContext.RequestAborted);
+
+            // Unwrapped to a bare array, matching the submissions "mine" endpoint.
+            return Ok(result.Items);
+        });
+
+    /// GET /api/community/merchandise?category=&search=&isUpcoming=&sort=&page=&pageSize=
     [HttpGet("merchandise")]
     [AllowAnonymous]
-    public Task<IActionResult> Merchandise([FromQuery] byte? categoryId) =>
-        Guarded(async () => Ok(await _community.GetMerchandiseAsync(categoryId, HttpContext.RequestAborted)));
+    public Task<IActionResult> Merchandise(
+        [FromQuery] byte? categoryId,
+        [FromQuery] string? search,
+        [FromQuery] bool? isUpcoming,
+        [FromQuery] string? sort,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 24) =>
+        Guarded(async () => Ok(await _community.BrowseMerchandiseAsync(
+            new MerchandiseQuery
+            {
+                CategoryId = categoryId,
+                Search = search,
+                IsUpcoming = isUpcoming,
+                SortBy = sort ?? "name",
+                Page = page,
+                PageSize = pageSize,
+            },
+            HttpContext.RequestAborted)));
 
     [HttpGet("characters")]
     [AllowAnonymous]

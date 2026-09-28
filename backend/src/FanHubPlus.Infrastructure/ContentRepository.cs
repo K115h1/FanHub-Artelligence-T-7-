@@ -178,11 +178,12 @@ public class ContentRepository : IContentRepository
         return true;
     }
 
-    public async Task IncrementViewCountAsync(uint contentId, CancellationToken ct = default)
+    public async Task<int> IncrementViewCountAsync(uint contentId, CancellationToken ct = default)
     {
         // Single UPDATE rather than read-modify-write, so two concurrent views
-        // cannot overwrite each other.
-        await _db.Contents
+        // cannot overwrite each other. The affected-row count doubles as the
+        // existence check the controller needs for its 404.
+        return await _db.Contents
             .Where(c => c.ContentId == contentId)
             .ExecuteUpdateAsync(s => s.SetProperty(c => c.ViewCount, c => c.ViewCount + 1), ct);
     }

@@ -48,7 +48,11 @@ public interface IContentRepository
     Task<Content> CreateAsync(Content content, CancellationToken ct = default);
     Task UpdateAsync(Content content, CancellationToken ct = default);
     Task<bool> DeleteAsync(uint contentId, CancellationToken ct = default);
-    Task IncrementViewCountAsync(uint contentId, CancellationToken ct = default);
+    /// Bumps view_count by one. Returns the number of rows affected, which is 0
+    /// when the id does not exist — the caller needs that to answer 404, and
+    /// learning it here is far cheaper than building a whole detail DTO to
+    /// check for null.
+    Task<int> IncrementViewCountAsync(uint contentId, CancellationToken ct = default);
 
     Task<List<Category>> GetCategoriesAsync(CancellationToken ct = default);
     Task<Category?> GetCategoryBySlugAsync(string slug, CancellationToken ct = default);

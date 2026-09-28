@@ -87,14 +87,16 @@ public class ContentsController : ApiControllerBase
 
     /// Records a view. Fire-and-forget from the client, so a failure here is
     /// not worth surfacing.
+    ///
+    /// [AllowAnonymous] on purpose: view counts describe how many people opened a
+    /// title, and requiring an account would count only the signed-in slice of
+    /// the audience, which is the opposite of what the number is for.
     [HttpPost("{id:int}/view")]
     [AllowAnonymous]
-    public async Task<IActionResult> RecordView(uint id)
-    {
-        var dto = await _content.GetByIdAsync(id, null, HttpContext.RequestAborted);
-        if (dto is null) return NotFound();
-        return NoContent();
-    }
+    public Task<IActionResult> RecordView(uint id) =>
+        Guarded(async () => await _content.RecordViewAsync(id, HttpContext.RequestAborted)
+            ? NoContent()
+            : NotFound());
 
     [HttpPost("{id:int}/rating")]
     [Authorize]

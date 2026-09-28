@@ -1,15 +1,7 @@
 // Feature: Admin Control Panel — business logic layer.
 //
-// Pages under pages/admin/ read data through these hooks and never touch
-// services or localStorage directly, so the data source is swappable in one
-// file. It used to be: a bundled 2,934-row catalogue JSON with edits layered on
-// in localStorage, and seeded moderation queues. It is now the API, which means
-// an administrator's edits are real rows that the public site reads and that the
-// next administrator sees.
-//
-// The catalogue is paged in SQL. It is ~2,934 rows, and the content manager
-// already showed 25 at a time, so filtering 2,934 strings per keystroke in the
-// browser was paying for a bundle the server already indexes.
+// Pages under pages/admin/ read through these hooks, so the data source is
+// swappable in one file. Filtering and paging happen in SQL.
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
@@ -57,12 +49,6 @@ export interface CatalogResult {
   refresh: () => void
 }
 
-/**
- * The category slug to send when filtering by fandom is resolved from the
- * server's own category list, not hardcoded — see categorySlugs.ts for why the
- * database and the seed file disagree about the TV Shows slug.
- */
-
 /** Map a browse row onto the admin's row shape. */
 function toCatalogRow(row: adminApi.BrowseRow): CatalogRow {
   return {
@@ -75,8 +61,6 @@ function toCatalogRow(row: adminApi.BrowseRow): CatalogRow {
     releaseYear: row.releaseYear,
     genres: row.genres,
     posterPath: row.posterPath,
-    // The list endpoint returns the short synopsis; the long one is only on the
-    // detail endpoint, and the table shows a one-line preview either way.
     synopsis: row.shortSynopsis,
     status: row.status as ContentStatus,
   }
@@ -90,13 +74,11 @@ export function useCatalog(): CatalogResult {
   const [genres, setGenres] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  // Bumped on every query/page change so a slow request cannot overwrite a
-  // newer one. Without it, typing quickly shows results for an earlier prefix.
+  // Bumped on every query/page change so a slow request cannot overwrite a newer one.
   const runId = useRef(0)
 
-  // The server's own category slugs, so a filter sends the slug the database
-  // actually holds rather than the one the seed file writes. Falls back to the
-  // hardcoded map only if the category request failed.
+  // The server's own slugs, since the database and the seed file disagree about
+  // TV Shows. Falls back to the hardcoded map if the request failed.
   const [serverSlugByFandom, setServerSlugByFandom] = useState<Partial<Record<FandomKey, string>>>({})
   useEffect(() => {
     let cancelled = false
@@ -124,9 +106,8 @@ export function useCatalog(): CatalogResult {
     [serverSlugByFandom],
   )
 
-  // Genre names for the filter dropdown, plus the name->id map the query needs.
-  // Fetched once and never re-fetched: the set of genres is a property of the
-  // catalogue, not of the current filters.
+  // Genre names for the dropdown, plus the name->id map the query needs. Fetched
+  // once: the genre set is a property of the catalogue, not of the filters.
   const [genreIdByName, setGenreIdByName] = useState<Record<string, number>>({})
   useEffect(() => {
     let cancelled = false
@@ -137,8 +118,7 @@ export function useCatalog(): CatalogResult {
         setGenreIdByName(Object.fromEntries(all.map((g) => [g.name, g.id])))
       })
       .catch(() => {
-        // A missing genre dropdown is a smaller problem than an error banner
-        // over a working table, and the filter is optional.
+        // A missing dropdown beats an error banner over a working table.
         if (!cancelled) {
           setGenres([])
           setGenreIdByName({})
@@ -149,10 +129,9 @@ export function useCatalog(): CatalogResult {
     }
   }, [])
 
-  // The query holds a genre NAME because that is what the dropdown shows, while
-  // the API filters by id. Until the genre list has loaded this is null, so the
-  // first render with a genre selected fetches everything rather than the wrong
-  // subset — a wrong answer that looked filtered was the worse failure.
+  // The query holds a genre NAME (what the dropdown shows) while the API filters
+  // by id. Null until the list loads, so the first fetch returns everything
+  // rather than a wrong subset.
   const genreId = useMemo(
     () => (query.genre ? (genreIdByName[query.genre] ?? null) : null),
     [query.genre, genreIdByName],
@@ -185,8 +164,7 @@ export function useCatalog(): CatalogResult {
       })
   }, [query, page, genreId, slugFor])
 
-  // Any filter change returns to page 1 — staying on page 7 of a new, much
-  // shorter result set is disorienting.
+  // Any filter change returns to page 1.
   const setQuery = useCallback((patch: Partial<CatalogQuery>) => {
     setQueryState((prev) => ({ ...prev, ...patch }))
     setPage(1)
@@ -261,13 +239,7 @@ export interface AdminStats {
   refresh: () => void
 }
 
-/**
- * Dashboard figures, straight from /admin/stats.
- *
- * These used to be derived by counting a bundled array, which meant they
- * described the seed data rather than the database: a title an administrator had
- * added or deleted moved no number here. The API computes them with COUNTs.
- */
+/** Dashboard figures, from /admin/stats. */
 export function useAdminStats(): AdminStats {
   const { accounts } = useAuth()
   const { feedback, submissions, refresh: refreshQueues } = useAdminData()
@@ -296,11 +268,9 @@ export function useAdminStats(): AdminStats {
     load()
   }, [load])
 
-  // The per-category rows arrive keyed by slug; the table wants them in the
-  // canonical fandom order with display names, and a category the API knows
-  // about but FANDOM_ORDER does not still gets a row rather than vanishing.
-  // Matched through FANDOM_BY_SLUG so the live database's 'tv-shows' and the
-  // seed's 'tvshows' both land on the TV Shows row instead of doubling it.
+  // Rows arrive keyed by slug; the table wants canonical order with display
+  // names. Matched through FANDOM_BY_SLUG so the live 'tv-shows' and the seed's
+  // 'tvshows' land on one row instead of doubling it.
   const categoryRows = useMemo<CategoryStat[]>(() => {
     const grouped = new Map<FandomKey, adminApi.AdminCategoryStat>()
     for (const row of perCategory) {
@@ -319,8 +289,7 @@ export function useAdminStats(): AdminStats {
       }
     })
 
-    // Manga and Cosplay exist in the categories table but are not fandoms the
-    // panel filters on, so they are appended rather than dropped.
+    // Manga and Cosplay are categories but not panel fandoms; appended, not dropped.
     const extra = perCategory
       .filter((c) => FANDOM_BY_SLUG[c.slug] === undefined)
       .map((c) => ({
@@ -356,14 +325,7 @@ export function useAdminStats(): AdminStats {
   }
 }
 
-/**
- * Most-used genres, from /admin/stats/genres.
- *
- * This used to be counted in the browser by walking every row of the bundled
- * catalogue. With paging in SQL the browser no longer holds the catalogue, so
- * counting what is on screen would report 25 rows' worth of genres as if it were
- * the whole thing. The server groups the join table instead.
- */
+/** Most-used genres, from /admin/stats/genres. */
 export function useTopGenres(): { label: string; value: number }[] {
   const [genres, setGenres] = useState<adminApi.AdminGenreStat[]>([])
 
@@ -375,7 +337,7 @@ export function useTopGenres(): { label: string; value: number }[] {
         if (!cancelled) setGenres(all)
       })
       .catch(() => {
-        // The page renders its other panels fine without this table.
+        // The page renders its other panels fine without this.
         if (!cancelled) setGenres([])
       })
     return () => {

@@ -40,7 +40,8 @@ public class AdminService : IAdminService
         var genres = await _content.CountDistinctGenreNamesAsync(ct);
         var categories = await _content.GetCategoriesAsync(ct);
         var users = await _users.GetAllAsync(ct);
-        var feedback = await _community.GetFeedbackAsync(null, 1, 1, ct);
+        // Named for the same reason as the submissions call below.
+        var feedback = await _community.GetFeedbackAsync(null, 1, 1, userId: null, ct);
         // Named, because the repository gained an optional userId filter between
         // pageSize and ct — passing ct positionally no longer binds.
         var submissions = await _community.GetSubmissionsAsync(null, 1, 1, userId: null, kind: null, ct);

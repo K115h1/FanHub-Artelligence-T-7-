@@ -9,7 +9,11 @@ public interface ICommunityRepository
     Task<List<FanEvent>> GetEventsAsync(byte? categoryId = null, CancellationToken ct = default);
     Task<FanEvent?> GetEventByIdAsync(uint eventId, CancellationToken ct = default);
 
-    Task<PagedResult<Feedback>> GetFeedbackAsync(FeedbackStatus? status, int page, int pageSize, CancellationToken ct = default);
+    /// <summary>
+    /// One page of the feedback queue. Pass <paramref name="userId"/> for the
+    /// signed-in fan's own entries; the admin queue leaves it null for everyone's.
+    /// </summary>
+    Task<PagedResult<Feedback>> GetFeedbackAsync(FeedbackStatus? status, int page, int pageSize, uint? userId = null, CancellationToken ct = default);
     Task<Feedback?> GetFeedbackByIdAsync(uint feedbackId, CancellationToken ct = default);
     Task<Feedback> AddFeedbackAsync(Feedback feedback, CancellationToken ct = default);
     Task SetFeedbackStatusAsync(uint feedbackId, FeedbackStatus status, CancellationToken ct = default);
@@ -26,7 +30,24 @@ public interface ICommunityRepository
     Task<Dictionary<string, int>> GetSubmissionCountsAsync(CancellationToken ct = default);
 
     Task<List<MerchandiseItem>> GetMerchandiseAsync(byte? categoryId = null, CancellationToken ct = default);
+    Task<PagedResult<MerchandiseItem>> BrowseMerchandiseAsync(MerchandiseQuery query, CancellationToken ct = default);
+    Task<MerchandiseItem?> GetMerchandiseByIdAsync(uint itemId, CancellationToken ct = default);
+    Task<MerchandiseItem> AddMerchandiseAsync(MerchandiseItem item, CancellationToken ct = default);
+    Task UpdateMerchandiseAsync(MerchandiseItem item, CancellationToken ct = default);
+    Task<bool> DeleteMerchandiseAsync(uint itemId, CancellationToken ct = default);
+    Task<bool> MerchandiseSlugExistsAsync(string slug, uint? excludeItemId = null, CancellationToken ct = default);
+
     Task<List<UpcomingRelease>> GetUpcomingReleasesAsync(CancellationToken ct = default);
     Task<List<CharacterProfile>> GetCharactersAsync(byte? categoryId = null, CancellationToken ct = default);
     Task<CharacterProfile?> GetCharacterBySlugAsync(string slug, CancellationToken ct = default);
+}
+
+public class MerchandiseQuery
+{
+    public byte? CategoryId { get; set; }
+    public string? Search { get; set; }
+    public bool? IsUpcoming { get; set; }
+    public int Page { get; set; } = 1;
+    public int PageSize { get; set; } = 24;
+    public string SortBy { get; set; } = "name";
 }

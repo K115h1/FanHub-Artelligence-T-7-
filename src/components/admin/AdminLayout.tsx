@@ -14,6 +14,7 @@ import {
   Library,
   LogOut,
   MessageSquare,
+  ShoppingBag,
   Users,
 } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
@@ -23,6 +24,7 @@ import { useAdminStats } from '../../features/admin/hooks'
 const LINKS = [
   { to: '/admin', label: 'Overview', icon: LayoutDashboard, end: true },
   { to: '/admin/content', label: 'Content', icon: Library, end: false },
+  { to: '/admin/merchandise', label: 'Merchandise', icon: ShoppingBag, end: false },
   { to: '/admin/submissions', label: 'Submissions', icon: Inbox, end: false },
   { to: '/admin/feedback', label: 'Feedback', icon: MessageSquare, end: false },
   { to: '/admin/users', label: 'Users', icon: Users, end: false },

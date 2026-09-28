@@ -67,6 +67,11 @@ export function SearchBar({
     onSubmitRef.current?.(query.trim())
   }
 
+  // The custom clear button. `type="search"` also gives the field the browser's
+  // own cancel control, which Chrome and Safari render at the input's right edge
+  // — so an unstyled search field ends up with two of them side by side. The
+  // inputs below suppress it with appearance-none on the pseudo-element; this
+  // styled one is the only clear affordance the field should have.
   const clearButton = query && (
     <button
       type="button"
@@ -97,7 +102,7 @@ export function SearchBar({
           placeholder={placeholder}
           aria-label="Search"
           autoFocus={autoFocus}
-          className="w-full min-w-0 border-0 bg-transparent py-2 text-ink outline-none placeholder:text-ink-subtle"
+          className="w-full min-w-0 border-0 bg-transparent py-2 text-ink outline-none placeholder:text-ink-subtle [&::-webkit-search-cancel-button]:appearance-none"
         />
         {clearButton}
         <button
@@ -125,7 +130,7 @@ export function SearchBar({
         placeholder={placeholder}
         aria-label="Search"
         autoFocus={autoFocus}
-        className="w-full rounded-xl border border-purple-500/40 bg-linear-0 from-purple-950 to-purple-900 py-3 pl-10 pr-10 text-sm text-purple-50 placeholder:text-purple-400/50 transition focus:border-purple-400"
+        className="w-full rounded-xl border border-purple-500/40 bg-linear-0 from-purple-950 to-purple-900 py-3 pl-10 pr-10 text-sm text-purple-50 placeholder:text-purple-400/50 transition focus:border-purple-400 [&::-webkit-search-cancel-button]:appearance-none"
       />
       {clearButton}
     </div>

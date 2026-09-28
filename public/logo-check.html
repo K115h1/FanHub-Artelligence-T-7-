@@ -1,0 +1,26 @@
+<!doctype html>
+<!--
+  Throwaway comparison harness for the new logo.svg. Not part of the app; delete
+  when the mark is signed off. Kept out of src/ so it never reaches a route.
+-->
+<meta charset="utf-8" />
+<title>logo.svg check</title>
+<style>
+  body { margin: 0; background: #f4f4f5; font: 13px/1.4 system-ui, sans-serif; color: #18181b; }
+  h1 { font-size: 15px; padding: 16px 20px 0; margin: 0; }
+  .row { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-end; padding: 16px 20px 28px; }
+  figure { margin: 0; background: #fff; border: 1px solid #e4e4e7; border-radius: 8px; padding: 10px; }
+  figcaption { margin-top: 6px; font-size: 11px; color: #71717a; text-align: center; }
+  .dark { background: #15001f; border-color: #3b0764; color: #fafafa; }
+  /* Light and dark, because the mark has to hold up on the app's dark header. */
+</style>
+
+<h1>logo.svg — light and dark, at real usage sizes</h1>
+<div class="row">
+  <figure><img src="/logo.svg" width="200" /><figcaption>200 · light</figcaption></figure>
+  <figure><img src="/logo.svg" width="120" /><figcaption>120 · light</figcaption></figure>
+  <figure><img src="/logo.svg" width="64" /><figcaption>64 · light</figcaption></figure>
+  <figure><img src="/logo.svg" width="32" /><figcaption>32 · light</figcaption></figure>
+  <figure class="dark"><img src="/logo.svg" width="120" /><figcaption>120 · dark</figcaption></figure>
+  <figure class="dark"><img src="/logo.svg" width="32" /><figcaption>32 · dark</figcaption></figure>
+</div>

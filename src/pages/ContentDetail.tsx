@@ -3,8 +3,8 @@
 // Reachable from every content card, and the place bookmarks and ratings are
 // actually written. Signed out, the write controls become a login prompt rather
 // than silently doing nothing.
-import { useMemo, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { Eye, Calendar, Clock, Users, Film, Tag, ArrowRight, Share2, Check, Star } from 'lucide-react'
 import PageHero from '../components/common/PageHero'
 import BackButton from '../components/common/BackButton'
@@ -20,7 +20,7 @@ import { CategoryDot } from '../components/common/CategoryArt'
 import { useAuth } from '../context/AuthContext'
 import { useRatings } from '../context/RatingsContext'
 import { useAsync } from '../hooks/useAsync'
-import { getContentBySlug, getContents } from '../services/content.service'
+import { getContentBySlug, getContents, recordView } from '../services/content.service'
 import { categoryIcon } from '../lib/categoryIcons'
 
 // ARTICLES is still local: the schema has no articles table.
@@ -54,9 +54,20 @@ function CopyLinkButton() {
 
 export default function ContentDetail() {
   // The route param is a slug, because a slug is what the cards link to and it
-  // survives an id renumber. "akira" exists under three fandoms, so the category
-  // is passed alongside it where the page can tell.
-  const { slug, category: categoryParam } = useParams()
+  // survives an id renumber. The category comes from the query string, NOT from
+  // a route segment: the route is `content/:slug` and has no `:category`, so the
+  // `category` this used to pull out of useParams() was permanently undefined and
+  // the API was always asked for a bare slug.
+  //
+  // That mattered because slug is unique per category and not globally — 273
+  // slugs in this catalogue exist in more than one, and "akira" is four separate
+  // titles (movies, anime, comics, manga). The repository resolves a bare slug
+  // with FirstOrDefault, so a link without a category lands on an arbitrary one
+  // of them. The backend has always accepted `?category=` for exactly this; the
+  // page just never sent it.
+  const { slug } = useParams()
+  const [searchParams] = useSearchParams()
+  const categoryParam = searchParams.get('category') ?? undefined
   const { isAuthed } = useAuth()
   const { get, set } = useRatings()
 
@@ -65,14 +76,75 @@ export default function ContentDetail() {
     [slug, categoryParam],
   )
 
-  // Related titles come from the same category, which the API can do properly
-  // rather than filtering a fixed local list.
+  // ---- view counting ----
+  //
+  // One POST per title per opening, after the detail has loaded so the id is
+  // known. The guard is a ref rather than a state flag because StrictMode
+  // double-invokes effects in development, and a flag set in an effect would
+  // still see itself unset on the second pass — the ref survives it. Keying on
+  // the id rather than a bare boolean means moving between two titles in the
+  // same mount records both, while a re-render of the same title records once.
+  const recordedId = useRef<number | null>(null)
+  // Seeded from the fetched count, then bumped locally so the number on screen
+  // moves when the view is recorded. Refetching the whole detail to pick up a
+  // single increment would be a second round trip for one digit.
+  const [views, setViews] = useState<number | null>(null)
+
+  useEffect(() => {
+    if (!item || recordedId.current === item.id) return
+    recordedId.current = item.id
+
+    let cancelled = false
+    void recordView(item.id)
+      .then(() => {
+        if (!cancelled) setViews((current) => (current ?? item.viewCount) + 1)
+      })
+      .catch(() => {
+        // Deliberately swallowed: a view that did not save is not a problem the
+        // reader can act on, and the number on screen stays at the fetched
+        // count, which is still true.
+      })
+
+    return () => { cancelled = true }
+  }, [item?.id])
+
+  // Re-seed when a different title loads, so navigating title -> title does not
+  // leave the previous title's local bump showing on the new one.
+  useEffect(() => {
+    setViews(null)
+  }, [item?.id])
+
+  const viewCount = views ?? item?.viewCount ?? 0
+
+  // "More like this" means SHARED GENRE, not merely the same fandom. Asking for
+  // the category sorted by popularity returned whatever else was popular, which
+  // for a broad fandom is mostly unrelated — a Batman film surfaced under an
+  // anime series. So the first shared genre becomes the filter, and the category
+  // stays as the scope so results never leak into a different fandom.
+  const leadGenreId = useMemo(() => item?.genreIds?.[0] ?? null, [item])
+
+  // The label the section wears, so it says WHY these were chosen. A title with
+  // no genres falls back to the category wording, which is then honest.
+  const relatedLabel = useMemo(() => {
+    if (!item) return 'More like this'
+    if (!leadGenreId) return `More ${item.categoryName}`
+    const genre = item.genres?.[0]
+    return genre ? `More in ${genre}` : 'More like this'
+  }, [item, leadGenreId])
+
   const { data: relatedPage } = useAsync(
     () =>
       item
-        ? getContents({ category: item.categorySlug, pageSize: 5, sort: 'popular' })
+        ? getContents({
+            category: item.categorySlug,
+            // Null when the title has no genres, which leaves the query as
+            // category-only rather than sending genreId=0 and matching nothing.
+            genreId: leadGenreId ?? undefined,
+            pageSize: 8,
+            sort: 'popular',
+          })
         : Promise.resolve(null),
-    [item?.categorySlug],
+    [item?.categorySlug, leadGenreId],
   )
 
   const related = useMemo(
@@ -135,6 +207,10 @@ export default function ContentDetail() {
         title={item.title}
         icon={categoryIcon(item.categorySlug)}
         blurb={item.shortSynopsis ?? undefined}
+        // The poster the originating card showed, so the banner and the card
+        // are visibly the same title. Null for roughly one title in eight, and
+        // PageHero falls back to the wash in that case.
+        image={item.posterPath}
       >
         <div className="flex flex-wrap items-center gap-2">
           <BookmarkButton kind="content" refId={item.id} title={item.title} size="md" />
@@ -150,112 +226,115 @@ export default function ContentDetail() {
               About
             </h2>
 
+            {/* The synopsis is the one genuinely optional part of this panel.
+                It used to wrap everything below it, so a title with no
+                description also lost its year, genres and cast. No row in
+                `contents` carries a synopsis yet, so every About panel on the
+                site collapsed to a single line. The metadata below therefore
+                always renders and only the prose is conditional. */}
             {item.synopsis ? (
-              <>
-                <p className="mt-2 text-sm leading-relaxed text-ink-muted">{item.synopsis}</p>
-
-                {/* Only the fields this title actually has are shown, so the
-                    block never fills with "—". */}
-                <dl className="mt-4 grid gap-3 sm:grid-cols-2">
-                  {item.creator && (
-                    <div className="flex items-start gap-2">
-                      <Film size={15} className="mt-0.5 shrink-0 text-ink-subtle" aria-hidden="true" />
-                      <div>
-                        <dt className="text-xs text-ink-subtle">
-                          {item.contentType === 'Movie' ? 'Director' : 'Created by'}
-                        </dt>
-                        <dd className="text-sm text-ink">{item.creator}</dd>
-                      </div>
-                    </div>
-                  )}
-                  {item.releaseYear && (
-                    <div className="flex items-start gap-2">
-                      <Calendar size={15} className="mt-0.5 shrink-0 text-ink-subtle" aria-hidden="true" />
-                      <div>
-                        <dt className="text-xs text-ink-subtle">Year</dt>
-                        <dd className="text-sm text-ink">{item.releaseYear}</dd>
-                      </div>
-                    </div>
-                  )}
-                  {item.runtimeMinutes && (
-                    <div className="flex items-start gap-2">
-                      <Clock size={15} className="mt-0.5 shrink-0 text-ink-subtle" aria-hidden="true" />
-                      <div>
-                        <dt className="text-xs text-ink-subtle">Length</dt>
-                        <dd className="text-sm text-ink">
-                          {Math.floor(item.runtimeMinutes / 60)}h {item.runtimeMinutes % 60}m
-                        </dd>
-                      </div>
-                    </div>
-                  )}
-                  {item.episodeCount && (
-                    <div className="flex items-start gap-2">
-                      <Clock size={15} className="mt-0.5 shrink-0 text-ink-subtle" aria-hidden="true" />
-                      <div>
-                        <dt className="text-xs text-ink-subtle">
-                          {item.contentType === 'Manga' ? 'Chapters' : 'Episodes'}
-                        </dt>
-                        <dd className="text-sm text-ink">{item.episodeCount}</dd>
-                      </div>
-                    </div>
-                  )}
-                  <div className="flex items-start gap-2">
-                    <Eye size={15} className="mt-0.5 shrink-0 text-ink-subtle" aria-hidden="true" />
-                    <div>
-                      <dt className="text-xs text-ink-subtle">Views</dt>
-                      <dd className="text-sm text-ink">{item.viewCount.toLocaleString()}</dd>
-                    </div>
-                  </div>
-                  {item.communityRating && (
-                    <div className="flex items-start gap-2">
-                      <Star size={15} className="mt-0.5 shrink-0 text-ink-subtle" aria-hidden="true" />
-                      <div>
-                        <dt className="text-xs text-ink-subtle">Community score</dt>
-                        <dd className="text-sm text-ink">
-                          {item.communityRating.toFixed(1)}
-                          {item.communityRatingCount ? ` (${item.communityRatingCount.toLocaleString()} votes)` : ''}
-                        </dd>
-                      </div>
-                    </div>
-                  )}
-                </dl>
-
-                {item.genres.length > 0 && (
-                  <div className="mt-4">
-                    <h3 className="text-xs font-medium text-ink-subtle">Genres</h3>
-                    <div className="mt-1.5 flex flex-wrap gap-1.5">
-                      {item.genres.map((genre) => (
-                        <span
-                          key={genre}
-                          className="inline-flex items-center gap-1 rounded-full bg-accent-soft px-2.5 py-1 text-xs font-medium text-accent"
-                        >
-                          <Tag size={10} aria-hidden="true" />
-                          {genre}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {cast.length > 0 && (
-                  <div className="mt-4">
-                    <h3 className="flex items-center gap-1.5 text-xs font-medium text-ink-subtle">
-                      <Users size={12} aria-hidden="true" />
-                      {item.contentType === 'Movie' || item.contentType === 'Series'
-                        ? 'Cast'
-                        : 'Featuring'}
-                    </h3>
-                    <p className="mt-1.5 text-sm text-ink-muted">{cast.join(' · ')}</p>
-                  </div>
-                )}
-              </>
+              <p className="mt-2 text-sm leading-relaxed text-ink-muted">{item.synopsis}</p>
+            ) : item.shortSynopsis ? (
+              <p className="mt-2 text-sm leading-relaxed text-ink-muted">{item.shortSynopsis}</p>
             ) : (
-              /* No synopsis yet — the enrichment pass fills these in. Say so
-                 plainly rather than showing an empty About panel. */
               <p className="mt-2 text-sm text-ink-muted">
-                {item.shortSynopsis ?? `${item.genres.join(', ') || 'No description yet.'}`}{' '}
-                Full details are still being written.
+                No description yet — the details for this title are still being written.
               </p>
+            )}
+
+            {/* Only the fields this title actually has are shown, so the
+                block never fills with "—". */}
+            <dl className="mt-4 grid gap-3 sm:grid-cols-2">
+              {item.creator && (
+                <div className="flex items-start gap-2">
+                  <Film size={15} className="mt-0.5 shrink-0 text-ink-subtle" aria-hidden="true" />
+                  <div>
+                    <dt className="text-xs text-ink-subtle">
+                      {item.contentType === 'Movie' ? 'Director' : 'Created by'}
+                    </dt>
+                    <dd className="text-sm text-ink">{item.creator}</dd>
+                  </div>
+                </div>
+              )}
+              {item.releaseYear && (
+                <div className="flex items-start gap-2">
+                  <Calendar size={15} className="mt-0.5 shrink-0 text-ink-subtle" aria-hidden="true" />
+                  <div>
+                    <dt className="text-xs text-ink-subtle">Year</dt>
+                    <dd className="text-sm text-ink">{item.releaseYear}</dd>
+                  </div>
+                </div>
+              )}
+              {item.runtimeMinutes && (
+                <div className="flex items-start gap-2">
+                  <Clock size={15} className="mt-0.5 shrink-0 text-ink-subtle" aria-hidden="true" />
+                  <div>
+                    <dt className="text-xs text-ink-subtle">Length</dt>
+                    <dd className="text-sm text-ink">
+                      {Math.floor(item.runtimeMinutes / 60)}h {item.runtimeMinutes % 60}m
+                    </dd>
+                  </div>
+                </div>
+              )}
+              {item.episodeCount && (
+                <div className="flex items-start gap-2">
+                  <Clock size={15} className="mt-0.5 shrink-0 text-ink-subtle" aria-hidden="true" />
+                  <div>
+                    <dt className="text-xs text-ink-subtle">
+                      {item.contentType === 'Manga' ? 'Chapters' : 'Episodes'}
+                    </dt>
+                    <dd className="text-sm text-ink">{item.episodeCount}</dd>
+                  </div>
+                </div>
+              )}
+              <div className="flex items-start gap-2">
+                <Eye size={15} className="mt-0.5 shrink-0 text-ink-subtle" aria-hidden="true" />
+                <div>
+                  <dt className="text-xs text-ink-subtle">Views</dt>
+                  <dd className="text-sm text-ink">{viewCount.toLocaleString()}</dd>
+                </div>
+              </div>
+              {item.communityRating && (
+                <div className="flex items-start gap-2">
+                  <Star size={15} className="mt-0.5 shrink-0 text-ink-subtle" aria-hidden="true" />
+                  <div>
+                    <dt className="text-xs text-ink-subtle">Community score</dt>
+                    <dd className="text-sm text-ink">
+                      {item.communityRating.toFixed(1)}
+                      {item.communityRatingCount ? ` (${item.communityRatingCount.toLocaleString()} votes)` : ''}
+                    </dd>
+                  </div>
+                </div>
+              )}
+            </dl>
+
+            {item.genres.length > 0 && (
+              <div className="mt-4">
+                <h3 className="text-xs font-medium text-ink-subtle">Genres</h3>
+                <div className="mt-1.5 flex flex-wrap gap-1.5">
+                  {item.genres.map((genre) => (
+                    <span
+                      key={genre}
+                      className="inline-flex items-center gap-1 rounded-full bg-accent-soft px-2.5 py-1 text-xs font-medium text-accent"
+                    >
+                      <Tag size={10} aria-hidden="true" />
+                      {genre}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {cast.length > 0 && (
+              <div className="mt-4">
+                <h3 className="flex items-center gap-1.5 text-xs font-medium text-ink-subtle">
+                  <Users size={12} aria-hidden="true" />
+                  {item.contentType === 'Movie' || item.contentType === 'Series'
+                    ? 'Cast'
+                    : 'Featuring'}
+                </h3>
+                <p className="mt-1.5 text-sm text-ink-muted">{cast.join(' · ')}</p>
+              </div>
             )}
           </section>
 
@@ -329,11 +408,19 @@ export default function ContentDetail() {
 
       {related.length > 0 && (
         <section aria-labelledby="related-content">
+          {/* viewAllHref carries the genre, so "view all" lands on the same
+              filtered set this section is showing rather than the whole fandom.
+              Omitted when there is no genre to filter on, which leaves the plain
+              category browse: the only thing that would be truthful. */}
           <SectionHeader
             id="related-content"
-            title="More like this"
+            title={relatedLabel}
             icon={Film}
-            viewAllHref={`/explore?category=${item.categorySlug}`}
+            viewAllHref={
+              leadGenreId
+                ? `/explore?category=${item.categorySlug}&genre=${leadGenreId}`
+                : `/explore?category=${item.categorySlug}`
+            }
           />
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {related.map((rel) => (

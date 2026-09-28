@@ -4,9 +4,9 @@
 // from also following the card's link. Signed out it shows a login hint instead
 // of accepting a save that would be lost.
 import { Bookmark } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
 import { useBookmarks } from '../../context/BookmarksContext'
 import { useAuth } from '../../context/AuthContext'
+import { useAuthModal } from '../../context/AuthModalContext'
 import type { BookmarkKind } from '../../lib/bookmarks'
 
 export default function BookmarkButton({
@@ -23,7 +23,10 @@ export default function BookmarkButton({
 }) {
   const { isSaved, toggle } = useBookmarks()
   const { isAuthed } = useAuth()
-  const navigate = useNavigate()
+  // Opens the overlay over the page rather than navigating to a sign-in page.
+  // This button sits on a card the visitor is already reading, and the save
+  // they attempted is about the item on it — replacing the page would lose both.
+  const { open } = useAuthModal()
 
   const saved = isSaved(kind, refId)
   const box = size === 'sm' ? 'h-7 w-7' : 'h-9 w-9'
@@ -37,7 +40,7 @@ export default function BookmarkButton({
         e.preventDefault()
         e.stopPropagation()
         if (!isAuthed) {
-          navigate('/login')
+          open('login')
           return
         }
         toggle(kind, refId)

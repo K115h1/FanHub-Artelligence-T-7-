@@ -300,7 +300,7 @@ export function formatRelative(iso: string): string {
  * Placeholder rows for a table awaiting its first page.
  *
  * The admin tables fetch on mount, so without this they render an
- * "EmptyState � no titles match those filters" for the duration of the request,
+ * "EmptyState — no titles match those filters" for the duration of the request,
  * which reads as "your filters matched nothing" and invites the administrator to
  * clear filters that were fine. Showing table-shaped rows is the honest state.
  */

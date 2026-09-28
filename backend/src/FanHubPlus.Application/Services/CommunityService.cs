@@ -10,7 +10,7 @@ public interface ICommunityService
     Task<List<EventDto>> GetEventsAsync(byte? categoryId, CancellationToken ct = default);
     Task<EventDto?> GetEventAsync(uint eventId, CancellationToken ct = default);
 
-    Task<PagedResponse<FeedbackDto>> GetFeedbackAsync(FeedbackStatus? status, int page, int pageSize, CancellationToken ct = default);
+    Task<PagedResponse<FeedbackDto>> GetFeedbackAsync(FeedbackStatus? status, int page, int pageSize, uint? userId = null, CancellationToken ct = default);
     Task<FeedbackDto> SubmitFeedbackAsync(CreateFeedbackRequest request, uint? userId, CancellationToken ct = default);
     Task SetFeedbackStatusAsync(uint feedbackId, FeedbackStatus status, uint adminUserId, CancellationToken ct = default);
     Task DeleteFeedbackAsync(uint feedbackId, uint adminUserId, CancellationToken ct = default);
@@ -21,6 +21,11 @@ public interface ICommunityService
     Task<Dictionary<string, int>> GetSubmissionCountsAsync(CancellationToken ct = default);
 
     Task<List<MerchandiseDto>> GetMerchandiseAsync(byte? categoryId, CancellationToken ct = default);
+    Task<PagedResponse<MerchandiseDto>> BrowseMerchandiseAsync(MerchandiseQuery query, CancellationToken ct = default);
+    Task<MerchandiseDto?> GetMerchandiseByIdAsync(uint itemId, CancellationToken ct = default);
+    Task<MerchandiseDto> CreateMerchandiseAsync(CreateMerchandiseRequest request, CancellationToken ct = default);
+    Task<MerchandiseDto?> UpdateMerchandiseAsync(uint itemId, UpdateMerchandiseRequest request, CancellationToken ct = default);
+    Task<bool> DeleteMerchandiseAsync(uint itemId, CancellationToken ct = default);
     Task<List<CharacterDto>> GetCharactersAsync(byte? categoryId, CancellationToken ct = default);
     Task<List<UpcomingReleaseDto>> GetUpcomingReleasesAsync(CancellationToken ct = default);
 }
@@ -62,9 +67,10 @@ public class CommunityService : ICommunityService
     }
 
     public async Task<PagedResponse<FeedbackDto>> GetFeedbackAsync(
-        FeedbackStatus? status, int page, int pageSize, CancellationToken ct = default)
+        FeedbackStatus? status, int page, int pageSize, uint? userId = null,
+        CancellationToken ct = default)
     {
-        var result = await _community.GetFeedbackAsync(status, page, pageSize, ct);
+        var result = await _community.GetFeedbackAsync(status, page, pageSize, userId, ct);
         return new PagedResponse<FeedbackDto>(
             result.Items.Select(f => new FeedbackDto(
                 f.FeedbackId, EnumConverter.ToWireString(f.Type), f.Message, f.Email, f.Rating,
@@ -85,25 +91,41 @@ public class CommunityService : ICommunityService
             throw new ValidationException("A rating runs from 1 to 5.");
 
         // An unrecognised type would fail at the database, so reject it here
-        // with a message the caller can act on.
-        if (!Enum.TryParse<FeedbackType>(request.Type, ignoreCase: true, out var type))
+        // with a message the caller can act on. Parsed with EnumConverter rather
+        // than Enum.TryParse, so this path and the wire format cannot drift.
+        if (!EnumConverter.TryParse<FeedbackType>(request.Type, out var type))
             throw new ValidationException("Pick a feedback type: bug, suggestion, query or content.");
+
+        // The email is a column with a length limit, and an over-long one
+        // surfaces as a truncation error the caller cannot act on.
+        var email = string.IsNullOrWhiteSpace(request.Email) ? null : request.Email.Trim();
+        if (email is { Length: > 255 })
+            throw new ValidationException("That email address is too long.");
 
         var row = await _community.AddFeedbackAsync(new Feedback
         {
             UserId = userId,
             Type = type,
             Message = request.Message.Trim(),
-            Email = request.Email,
+            Email = email,
             Rating = request.Rating.HasValue ? (byte)request.Rating.Value : null,
             Status = FeedbackStatus.Open,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
         }, ct);
 
+        // Both enums go out through EnumConverter, as the list endpoint does.
+        // They used to be serialised with ToString(), which returned "Bug" and
+        // "Open" — so the row the submitter was handed disagreed with the row
+        // the same user saw a moment later in the queue, and any client
+        // comparing against the lowercase values the admin panel uses read
+        // nothing at all. The author is filled in from data already in hand so
+        // the response is complete rather than nulling the field.
+        var author = userId.HasValue ? await _users.GetByIdAsync(userId.Value, ct) : null;
+
         return new FeedbackDto(
-            row.FeedbackId, row.Type.ToString(), row.Message, row.Email, row.Rating,
-            row.Status.ToString(), null, row.CreatedAt);
+            row.FeedbackId, EnumConverter.ToWireString(row.Type), row.Message, row.Email, row.Rating,
+            EnumConverter.ToWireString(row.Status), author?.Name, row.CreatedAt);
     }
 
     public async Task SetFeedbackStatusAsync(
@@ -194,13 +216,92 @@ public class CommunityService : ICommunityService
         s.Category?.Slug ?? string.Empty, s.User?.Name ?? "Unknown",
         s.ModeratorNote, s.DecidedAt, s.CreatedAt);
 
+    private static MerchandiseDto ToMerchandiseDto(MerchandiseItem m) => new(
+        m.ItemId, m.Name, m.Slug, m.Description, m.ImagePath, m.Tag, m.PriceNote,
+        m.IsUpcoming, m.Category?.Slug ?? string.Empty, m.ViewCount, m.CreatedAt);
+
     public async Task<List<MerchandiseDto>> GetMerchandiseAsync(byte? categoryId, CancellationToken ct = default)
     {
         var items = await _community.GetMerchandiseAsync(categoryId, ct);
-        return items.Select(m => new MerchandiseDto(
-            m.ItemId, m.Name, m.Slug, m.Description, m.ImagePath, m.Tag, m.PriceNote,
-            m.IsUpcoming, m.Category?.Slug ?? string.Empty)).ToList();
+        return items.Select(ToMerchandiseDto).ToList();
     }
+
+    public async Task<PagedResponse<MerchandiseDto>> BrowseMerchandiseAsync(
+        MerchandiseQuery query, CancellationToken ct = default)
+    {
+        var result = await _community.BrowseMerchandiseAsync(query, ct);
+        return new PagedResponse<MerchandiseDto>(
+            result.Items.Select(ToMerchandiseDto).ToList(),
+            result.TotalCount, result.Page, result.PageSize, result.PageCount);
+    }
+
+    public async Task<MerchandiseDto?> GetMerchandiseByIdAsync(uint itemId, CancellationToken ct = default)
+    {
+        var item = await _community.GetMerchandiseByIdAsync(itemId, ct);
+        return item is null ? null : ToMerchandiseDto(item);
+    }
+
+    public async Task<MerchandiseDto> CreateMerchandiseAsync(
+        CreateMerchandiseRequest request, CancellationToken ct = default)
+    {
+        if (string.IsNullOrWhiteSpace(request.Name))
+            throw new ValidationException("Give the product a name.");
+
+        var category = await _content.GetCategoryByIdAsync(request.CategoryId, ct)
+            ?? throw new ValidationException("Pick a fandom for this product.");
+
+        var name = request.Name.Trim();
+        var slug = Slugify(name);
+
+        if (await _community.MerchandiseSlugExistsAsync(slug, null, ct))
+            throw new ValidationException($"\"{name}\" is already in the catalogue.");
+
+        var row = await _community.AddMerchandiseAsync(new MerchandiseItem
+        {
+            CategoryId = category.CategoryId,
+            Name = name,
+            Slug = slug,
+            Description = request.Description?.Trim(),
+            ImagePath = request.ImagePath?.Trim(),
+            Tag = request.Tag?.Trim(),
+            PriceNote = request.PriceNote?.Trim(),
+            IsUpcoming = request.IsUpcoming ?? true,
+            CreatedAt = DateTime.UtcNow,
+        }, ct);
+
+        return ToMerchandiseDto(row);
+    }
+
+    public async Task<MerchandiseDto?> UpdateMerchandiseAsync(
+        uint itemId, UpdateMerchandiseRequest request, CancellationToken ct = default)
+    {
+        var item = await _community.GetMerchandiseByIdAsync(itemId, ct);
+        if (item is null) return null;
+
+        if (!string.IsNullOrWhiteSpace(request.Name))
+        {
+            var name = request.Name.Trim();
+            var slug = Slugify(name);
+            if (await _community.MerchandiseSlugExistsAsync(slug, itemId, ct))
+                throw new ValidationException($"\"{name}\" is already in the catalogue.");
+            item.Name = name;
+            item.Slug = slug;
+        }
+
+        if (request.Description is not null) item.Description = request.Description.Trim();
+        if (request.ImagePath is not null) item.ImagePath = request.ImagePath.Trim();
+        if (request.Tag is not null) item.Tag = request.Tag.Trim();
+        if (request.PriceNote is not null) item.PriceNote = request.PriceNote.Trim();
+        if (request.IsUpcoming.HasValue) item.IsUpcoming = request.IsUpcoming.Value;
+
+        await _community.UpdateMerchandiseAsync(item, ct);
+        return ToMerchandiseDto(item);
+    }
+
+    public Task<bool> DeleteMerchandiseAsync(uint itemId, CancellationToken ct = default) =>
+        _community.DeleteMerchandiseAsync(itemId, ct);
+
+    private static string Slugify(string name) => ContentService.Slugify(name);
 
     public async Task<List<CharacterDto>> GetCharactersAsync(byte? categoryId, CancellationToken ct = default)
     {

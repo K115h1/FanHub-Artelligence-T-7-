@@ -2,6 +2,7 @@
 // Stands in for the C# API until the backend is connected; swapping to real
 // data later means replacing these arrays with service calls (see src/services).
 import { toSlug } from './slug'
+import { categoryBanner } from './categoryBanners'
 import type { LucideIcon } from 'lucide-react'
 import {
   Gamepad2,
@@ -81,6 +82,19 @@ export interface Slide {
   kicker: string // small text above the headline
   title: string
   blurb: string
+  /**
+   * Backdrop photograph, taken from the category banner set rather than shipped
+   * separately — the same file already on the category page, so the homepage and
+   * the category it advertises look like one place.
+   *
+   * Optional. Absent means "the purple wash alone", which is what a general
+   * marketing slide wants: putting a photo behind "Every Fandom, One Home"
+   * would quietly contradict it by singling one out.
+   */
+  image?: string
+  /** Where the call to action goes. Defaults to /explore. */
+  ctaHref?: string
+  ctaLabel?: string
 }
 
 export const SLIDES: Slide[] = [
@@ -89,18 +103,31 @@ export const SLIDES: Slide[] = [
     kicker: 'Welcome to',
     title: 'FanHub Plus',
     blurb: 'Your all-in-one destination for Anime, Gaming, Movies, TV Shows, K-Pop, Comics, Manga and Cosplay!',
+    // The opening frame, so the first thing a visitor sees is a real fandom
+    // rather than a gradient.
+    image: categoryBanner('anime'),
+    ctaHref: '/category/anime',
+    ctaLabel: 'Start with Anime',
   },
   {
     id: 2,
     kicker: 'Explore',
     title: 'Every Fandom, One Home',
     blurb: 'Browse characters, articles, events and community picks — all in one glassy place.',
+    // Movies rather than a seventh fandom, so the three slides are visually
+    // distinct: warm photographic red/amber, cool blue, dark neon.
+    image: categoryBanner('movies'),
+    ctaHref: '/explore',
+    ctaLabel: 'Browse Everything',
   },
   {
     id: 3,
     kicker: 'Community',
     title: 'Share What You Love',
     blurb: 'Rate content, build bookmarks, join fan events and submit your own creations.',
+    image: categoryBanner('gaming'),
+    ctaHref: '/category/gaming',
+    ctaLabel: 'See Gaming',
   },
 ]
 

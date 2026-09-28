@@ -54,6 +54,7 @@ foreach ($f in @('04_movies','04_anime','04_games','04_comics','04_kpop','04_tvs
 & $mysql -u root --default-character-set=utf8mb4 fanhubplus -e "SOURCE $db/05_reference_data.sql;"
 & $mysql -u root --default-character-set=utf8mb4 fanhubplus -e "SOURCE $db/06_community_seed.sql;"
 & $mysql -u root --default-character-set=utf8mb4 fanhubplus -e "SOURCE $db/07_submission_kind.sql;"
+& $mysql -u root --default-character-set=utf8mb4 fanhubplus -e "SOURCE $db/08_supplied_art_seed.sql;"
 ```
 
 `05_reference_data.sql` goes **after** the `04_*` files because they insert
@@ -62,6 +63,30 @@ duplicate key. It is safe to re-run, because it upserts.
 
 That file seeds the three roles and all eight categories. Without it the
 `roles` table is empty and the first registration fails on a foreign key.
+
+`08_supplied_art_seed.sql` also goes after `05`, for the same reason: it looks
+categories up by slug to fill in `merchandise_items.category_id` and
+`character_profiles.category_id`. It is safe to re-run — every statement is
+`INSERT ... SELECT ... WHERE NOT EXISTS`, so a second run adds nothing.
+
+Regenerate it with `node scripts/buildSuppliedArtSeed.mjs` rather than editing it
+by hand. It derives every row from the image files actually present in
+`public/images/`, so a path in the SQL cannot point at a file that is not there
+— the failure `scripts/fixPosterPaths.mjs` exists to repair, after every movie
+poster went dead at once. Add or remove artwork on disk, re-run the generator,
+reload the file. `--check` reports the counts without writing.
+
+`scripts/importSuppliedArt.mjs` is still what fetches and places the images;
+this file is only the step that turns what landed on disk into rows.
+
+**`09_cosplay_pictures_catalog.sql` and `10_merchandise_catalog.sql` are
+deliberately not in that list.** They are the raw image manifests the artwork
+importer produced from the supplied zips, written in SQLite dialect
+(`INTEGER PRIMARY KEY`, `TEXT`, no `ENGINE`/`CHARSET`), so `SOURCE`-ing them
+against MySQL will fail. They are kept for provenance only: every image they
+list is already bound to `merchandise_items.image_path` and
+`character_profiles.image_path` by `08_supplied_art_seed.sql`, and the app
+reads only those two tables.
 
 ### Use `SOURCE`, never a PowerShell pipe
 
@@ -247,7 +272,7 @@ the composite keys and the per-category uniqueness rules.
 hashes the API can verify. To regenerate a hash:
 
 ```powershell
-dotnet run --project src\FanHubPlus.Api -- --hash-password admin123 --user "Ada Lovelace"
+dotnet run --project src\FanHubPlus.Api -- --hash-password admin --user "Ada Lovelace"
 ```
 
 Hashes are salted per user, so generate one per account. The plaintext demo

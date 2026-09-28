@@ -69,23 +69,38 @@ ON DUPLICATE KEY UPDATE
 -- before any real deployment.
 --
 -- Each hash is salted per user, so they differ even though both passwords are
--- six characters. Regenerate with:
---   dotnet run --project src/FanHubPlus.Api -- --hash-password admin123 --user "Ada Lovelace"
---   dotnet run --project src/FanHubPlus.Api -- --hash-password user123  --user "Grace Hopper"
+-- short. Regenerate with:
+--   dotnet run --project src/FanHubPlus.Api -- --hash-password admin  --user "Ada Lovelace"
+--   dotnet run --project src/FanHubPlus.Api -- --hash-password user123 --user "Grace Hopper"
 
+-- Ada Lovelace (user_id 1) is the ONLY administrator. She is the single
+-- original admin account: she is what the control panel is reached through, and
+-- no other account is granted the admin role by any seed. Everyone else who
+-- signs up is 'registered' by AuthService.RegisterAsync, and promotion to admin
+-- is a deliberate act inside the panel by an existing admin.
 INSERT INTO users (user_id, name, email, password_hash, is_verified, created_at, updated_at) VALUES
-  (1, 'Ada Lovelace', 'admin@fanhubplus.test',
-   'AQAAAAIAAYagAAAAEMIkbykOCHYGhrI/J85mV/f0Nz2bgrluKc1Etyq+aFwQWEBcERt4LkVwmu8fvgwtWg==',
+  (1, 'Ada Lovelace', 'admin@fanhubplus.com',
+   'AQAAAAIAAYagAAAAEAvquVz5BICql3YYmHa1+hyiTD4UXYhiFu4VfhtOVZ65D4aqx2GNKxQN+6vIBSSScA==',
    1, NOW(), NOW()),
   (2, 'Grace Hopper', 'user@fanhubplus.test',
    'AQAAAAIAAYagAAAAEH1MSvGSlZsMdxwso1jsNovHjxXpTvOWSYEPE7jvW9Zu4xhUzO9ihnd5BHamRLryvg==',
    1, NOW(), NOW())
 ON DUPLICATE KEY UPDATE
   name          = VALUES(name),
+  -- email is included so re-running this file actually renames the account.
+  -- Without it a database seeded under the previous address kept the old one
+  -- and the documented credentials silently stopped working.
+  email         = VALUES(email),
   password_hash = VALUES(password_hash),
   is_verified   = VALUES(is_verified);
 
 -- 3 = admin, 2 = registered
+--
+-- Only user 1 is an admin. Every other account — Grace included — is
+-- 'registered', which is also the only role RegisterAsync ever assigns. The
+-- ON DUPLICATE KEY UPDATE below is what makes this file re-runnable as a
+-- demotion: a database where somebody was promoted to admin in the panel goes
+-- back to one admin when this is run again.
 INSERT INTO user_roles (user_id, role_id) VALUES
   (1, 3),
   (2, 2)

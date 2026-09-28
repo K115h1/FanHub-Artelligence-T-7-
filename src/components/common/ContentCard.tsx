@@ -70,9 +70,15 @@ export default function ContentCard({
       <div className="flex flex-1 flex-col gap-1.5 p-4">
         <h3 className="line-clamp-2 font-semibold text-ink">
           {/* Stretched link: the ::after covers the card so the whole tile is
-              clickable. The bookmark button sets z-10 to sit above it. */}
+              clickable. The bookmark button sets z-10 to sit above it.
+
+              The category rides along in the query string because slug is unique
+              per fandom and not globally — 273 slugs here exist in more than one,
+              and "akira" is four separate titles. Without it the API resolves an
+              ambiguous slug with FirstOrDefault and a card can open the wrong
+              title. See ContentDetail for where the param is read. */}
           <Link
-            to={`/content/${item.slug}`}
+            to={`/content/${item.slug}?category=${encodeURIComponent(item.categorySlug)}`}
             className="transition after:absolute after:inset-0 hover:text-accent"
           >
             {item.title}

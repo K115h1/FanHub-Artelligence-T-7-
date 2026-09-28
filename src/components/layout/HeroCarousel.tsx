@@ -67,12 +67,34 @@ export default function HeroCarousel() {
           // Each panel is position:relative so its own scrim and copy stack
           // against it, independent of the track.
           <div key={slide.id} className="relative w-full shrink-0 overflow-hidden">
-            {/* Artwork: the purple wash, hue-shifted per slide so each one
-                reads as a distinct frame. */}
+            {/* Artwork, back to front: the category photograph (when the slide
+                has one), then the purple wash over it, then the left-weighted
+                scrim, then the copy.
+
+                The photograph sits UNDER the wash rather than replacing it, and
+                the wash is scaled back to 60% opacity, so the brand colour still
+                ties the photo to the rest of the site. Dropping the wash
+                entirely would have made these panels look like a different site
+                from the purple ones above the fold.
+
+                Set as a CSS background rather than an <img> on purpose: a
+                missing file then fails to paint and the wash shows through,
+                instead of leaving a broken-image icon in the middle of the
+                homepage. */}
+            {slide.image && (
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 bg-cover bg-center"
+                style={{ backgroundImage: `url(${slide.image})` }}
+              />
+            )}
             <div
               aria-hidden="true"
               className="accent-wash absolute inset-0"
-              style={{ filter: `hue-rotate(${(slide.id - 1) * 18}deg)` }}
+              style={{
+                filter: `hue-rotate(${(slide.id - 1) * 18}deg)`,
+                opacity: slide.image ? 0.6 : 1,
+              }}
             />
             {/* Left-weighted scrim — keeps the white text legible over the
                 artwork at every viewport width. */}
@@ -92,11 +114,13 @@ export default function HeroCarousel() {
                 {slide.blurb}
               </p>
               <div className="mt-2">
+                {/* Per-slide destination, so a slide advertising one fandom
+                    lands on that fandom rather than on the generic explorer. */}
                 <Link
-                  to="/explore"
+                  to={slide.ctaHref ?? '/explore'}
                   className="inline-flex items-center gap-2 rounded-lg bg-white px-5 py-2.5 text-sm font-semibold text-purple-700 shadow-lg shadow-black/20 transition hover:bg-purple-50"
                 >
-                  Explore Now <ArrowRight size={16} />
+                  {slide.ctaLabel ?? 'Explore Now'} <ArrowRight size={16} />
                 </Link>
               </div>
             </div>

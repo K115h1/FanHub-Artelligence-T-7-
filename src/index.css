@@ -194,6 +194,25 @@ html {
   font-size: calc(100% * var(--app-font-scale));
 }
 
+/* Search overlay drop-in. A short slide from the top, which is the affordance
+   that tells you the panel belongs to the header rather than being a new page.
+   The reduced-motion block below already forces animation-duration to ~0, so
+   this needs no media query of its own to be respected. */
+@keyframes overlay-drop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.75rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-overlay-drop-in {
+  animation: overlay-drop-in 160ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 /* "Reduce motion" setting. The OS-level query is honoured too, so the in-app
    toggle isn't the only way to get this. */
 @media (prefers-reduced-motion: reduce) {

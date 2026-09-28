@@ -1,8 +1,17 @@
-// CategoryArt — generated artwork for any category, so the app needs no remote
-// images. Each tile is the purple wash plus its category hue, so the grid still
-// reads as one system. When real artwork lands, swap the body for an <img> —
-// every call site goes through here.
+// CategoryArt — artwork for a category tile, so the app needs no remote images.
+//
+// A fandom photograph is used when one is on disk (see lib/categoryBanners),
+// over the same generated wash the site shipped with. The wash is not a
+// placeholder to be removed: it sits UNDER the photograph and shows through
+// wherever the photograph fails to load, and the hue tint sits over both so the
+// grid still reads as one system rather than eight unrelated pictures.
+//
+// The photograph is a CSS background rather than an <img> on purpose. A missing
+// file then fails silently and the gradient shows through, where an <img> would
+// paint a broken-image glyph. A fandom with no photograph — manga — is a missing
+// decoration, not a broken tile.
 import type { LucideIcon } from 'lucide-react'
+import { categoryBanner } from '../../lib/categoryBanners'
 
 // slug → colour token for that category.
 const HUE_BY_SLUG: Record<string, string> = {
@@ -25,8 +34,8 @@ export function CategoryDot({ slug, className = '' }: { slug: string; className?
   )
 }
 
-// The big square tile: hue-tinted gradient, oversized ghosted icon, and a
-// name label along the bottom.
+// The big square tile: the fandom photograph over the wash, the hue tint, a
+// bottom scrim so the label stays readable, and a name label.
 export default function CategoryArt({
   slug,
   name,
@@ -36,18 +45,38 @@ export default function CategoryArt({
   name: string
   icon: LucideIcon
 }) {
+  const banner = categoryBanner(slug)
+
   return (
     <div className="relative h-full w-full overflow-hidden bg-surface-sunken">
-      {/* Purple wash + a hue tint layered on top at low opacity, so the tile
-          is recognisably "ours" while still carrying the category colour. */}
+      {/* Purple wash + a hue tint, layered under the photograph. Still drawn
+          when there is a photograph, so a 404 falls back to exactly the tile
+          this component used to render. */}
       <div aria-hidden="true" className="accent-wash absolute inset-0 opacity-90" />
       <div
         aria-hidden="true"
         className={`absolute inset-0 bg-current opacity-25 mix-blend-overlay ${HUE_BY_SLUG[slug] ?? 'text-accent'}`}
       />
 
+      {banner && (
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+          style={{ backgroundImage: `url(${banner})` }}
+        />
+      )}
+
+      {/* Bottom-weighted scrim. Without it the name chip fights a bright
+          photograph; with a full-bleed one the fandom would stop being the
+          subject of its own tile. */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent"
+      />
+
       {/* Ghosted icon — oversized and clipped by the tile, which reads as
-          artwork rather than as an icon in a box. */}
+          artwork rather than as an icon in a box. Kept over the photograph as
+          a watermark, at low opacity, so the silhouette adds texture. */}
       <Icon
         aria-hidden="true"
         className={`absolute -right-3 -bottom-3 h-24 w-24 opacity-30 ${HUE_BY_SLUG[slug] ?? 'text-white'}`}

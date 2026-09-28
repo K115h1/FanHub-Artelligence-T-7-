@@ -173,11 +173,30 @@ it with no flag to see the damage first, `--apply` to write.
 ## Schema load order
 
 `01_schema.sql` → `04_*_seed.sql` → `05_reference_data.sql` → `06_community_seed.sql`
+→ `07_submission_kind.sql` → `08_supplied_art_seed.sql`
 
 `05` must come **after** the `04_*` files: those plain-INSERT categories 1-5, so
 loading `05` first makes all five fail on a duplicate key. `05` seeds the
 `roles` table, which is empty otherwise — and registration inserts a row that
 foreign-keys onto it, so a database without `05` cannot accept a sign-up.
+
+`08` needs `05` for the same reason: it resolves `category_id` by slug for the
+merchandise and character rows. It is written by
+`scripts/buildSuppliedArtSeed.mjs` and is idempotent, so regenerate rather than
+hand-editing.
+
+That script reads the image files in `public/images/` and writes one row per
+file, rather than carrying its own copy of the filenames. That is deliberate:
+paths and filenames were once generated in two separate runs, the database took
+one convention and the disk the other, and all 513 movie posters became dead
+links. Deriving the SQL from the directory listing makes that divergence
+impossible to express.
+
+`09_cosplay_pictures_catalog.sql` and `10_merchandise_catalog.sql` are **not**
+part of the load order. They are SQLite-dialect image manifests kept for
+provenance; `SOURCE`-ing them into MySQL fails, and the app has no use for them
+because `08` already binds every one of those images to `merchandise_items` and
+`character_profiles`.
 
 ## `Include` everything a DTO reads, or the field serialises empty
 

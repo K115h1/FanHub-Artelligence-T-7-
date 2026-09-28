@@ -9,11 +9,16 @@ import { MapPin } from 'lucide-react'
 import { useAsync } from '../hooks/useAsync'
 import { getCategories, getContents, getGenres } from '../services/content.service'
 import { getEvents } from '../services/event.service'
+import { getCharacters } from '../services/character.service'
+import { getMerchandise } from '../services/merchandise.service'
 import ContentCard from '../components/common/ContentCard'
+import CharacterCard from '../components/characters/CharacterCard'
+import MerchandiseCard from '../components/common/MerchandiseCard'
 import { CategoryPageSkeleton } from '../components/common/skeletons'
 import Pagination from '../components/common/Pagination'
 import { CONTENT_SORT_OPTIONS } from '../services/content.service'
 import { categoryIcon, sortCategories } from '../lib/categoryIcons'
+import { categoryBanner } from '../lib/categoryBanners'
 import { ARTICLES_BY_CATEGORY } from '../lib/mockData'
 
 // Shared card look (same as Home): translucent glass panel, purple edge.
@@ -38,6 +43,35 @@ function StatTile({ label, value }: { label: string; value: string | number }) {
 // The sorts /api/contents accepts. Defined in the service so this page and the
 // Explorer cannot drift apart.
 const SORT_OPTIONS = CONTENT_SORT_OPTIONS
+
+/**
+ * The category page's native <select> styling, shared by the Sort and Genre
+ * controls.
+ *
+ * The `[&>option]:` variants reach the option ELEMENTS, which is the part that
+ * actually needed fixing: the open dropdown list is painted by the operating
+ * system, so without them it appeared as a plain grey list against the purple
+ * theme. They take the theme tokens, so light and dark are both correct from one
+ * class string with no `dark:` twin to keep in sync.
+ *
+ * `accent-*` sets accent-color, which tints the selected row in the open list;
+ * without it that row is the OS highlight blue, the one part of the popup that
+ * no amount of option background will reach.
+ *
+ * Scoped to this file on purpose — see the note on the selects below.
+ */
+const SELECT_CLASS = [
+  'rounded-lg border border-accent/40 px-3 py-1.5 text-sm transition focus:border-accent',
+  // Closed control: the theme's own raised surface and ink.
+  'bg-[var(--surface-raised)] text-[var(--ink)]',
+  // Open list: the same tokens, so the popup matches the control around it.
+  '[&>option]:bg-[var(--surface-raised)]',
+  '[&>option]:text-[var(--ink)]',
+  // Native option lists bold the active row on some platforms; the page uses
+  // medium weight for labels, so left alone it looks like a rendering fault.
+  '[&>option]:font-normal',
+  'accent-[var(--accent)]',
+].join(' ')
 
 // Section heading with the little purple bar (matches Home).
 function SectionTitle({ title, count }: { title: string; count?: number }) {
@@ -142,10 +176,30 @@ export default function Category() {
     [category?.id],
   )
 
+  // Characters and merchandise, per fandom. Both endpoints take a categoryId and
+  // filter in SQL, so this asks the database for one fandom's rows rather than
+  // fetching everything and discarding most of it in the browser.
+  //
+  // This is what makes a fandom like Cosplay work at all: it has no titles, so
+  // without these two the page had nothing to show despite holding 14 costume
+  // profiles and 9 products. The client-side re-filter is belt-and-braces — the
+  // API already filters, but a page that quietly shows another fandom's rows
+  // because a query param was dropped is worse than one that shows none.
+  const { data: apiCharacters } = useAsync(
+    () => (category ? getCharacters(category.id) : Promise.resolve([])),
+    [category?.id],
+  )
+  const { data: apiMerch } = useAsync(
+    () => (category ? getMerchandise({ categoryId: category.id, pageSize: 12 }) : Promise.resolve(null)),
+    [category?.id],
+  )
+
   // Articles are still local: the schema has no articles table.
   const articles = ARTICLES_BY_CATEGORY[slug] ?? []
   const content = result?.items ?? []
   const events = (apiEvents ?? []).filter((e) => e.categorySlug === slug)
+  const characters = (apiCharacters ?? []).filter((c) => c.categorySlug === slug)
+  const merchandise = (apiMerch?.items ?? []).filter((m) => m.categorySlug === slug)
 
   function setParam(patch: Record<string, string | null>) {
     const next = new URLSearchParams(searchParams)
@@ -184,7 +238,13 @@ export default function Category() {
   }
 
   const Icon = categoryIcon(slug)
-  const isEmpty = content.length + articles.length + events.length === 0
+  // Undefined for a fandom with no banner, which falls back to the gradient.
+  const banner = categoryBanner(slug)
+  // Counts every kind of thing this page can render. Leaving characters and
+  // merchandise out is what made Cosplay look empty while holding 23 rows.
+  const isEmpty =
+    content.length + articles.length + events.length + characters.length + merchandise.length ===
+    0
   const totalTitles = result?.totalCount ?? 0
   const pageCount = result?.pageCount ?? 1
 
@@ -201,10 +261,29 @@ export default function Category() {
 
   return (
     <div className="mx-auto w-full max-w-7xl space-y-10 px-4 py-8 sm:px-6 lg:px-8">
-      {/* Banner — same gradient treatment as the homepage hero */}
+      {/* Banner — a photograph of the fandom where one exists, over the same
+          purple gradient the homepage hero uses.
+
+          The image is a CSS background on its own layer, with the gradient
+          beneath it and a scrim above. A path that 404s simply fails to paint
+          and the gradient shows through, so a fandom without a banner (manga)
+          is a missing decoration rather than a broken page. */}
       <section className="relative overflow-hidden rounded-lg border border-purple-500/20">
         <div className="absolute inset-0 bg-gradient-to-br from-purple-700 via-purple-600 to-purple-500" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.25),transparent_45%)]" />
+        {banner && (
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url(${banner})` }}
+          />
+        )}
+        {/* Two scrims. The first is a left-weighted wash so the title, blurb and
+            chips stay legible over any photograph; the second is a flat purple
+            multiply, which keeps the palette on-brand without hiding the fandom
+            behind the artwork. */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/45 to-black/20" />
+        <div className="absolute inset-0 bg-purple-900/35 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.18),transparent_45%)]" />
         <div className="relative flex flex-col gap-3 p-6 sm:p-10">
           <span className="flex h-14 w-14 items-center justify-center rounded-md border border-white/30 bg-white/10 text-white backdrop-blur-md">
             <Icon size={26} />
@@ -213,22 +292,39 @@ export default function Category() {
           <p className="max-w-xl text-sm text-white/80 sm:text-base">{category.description}</p>
           <div className="mt-1 flex flex-wrap gap-2">
             <CountChip n={totalTitles} label="titles" />
+            {/* Only shown when this fandom actually has them, so the strip does
+                not read "0 costumes" on a fandom that has no such concept. */}
+            {characters.length > 0 && <CountChip n={characters.length} label="costumes" />}
+            {merchandise.length > 0 && <CountChip n={merchandise.length} label="products" />}
             <CountChip n={articles.length} label="articles" />
             <CountChip n={events.length} label="events" />
           </div>
         </div>
       </section>
 
-      {/* At-a-glance numbers. Scoped to the titles on this page, and labelled as
-          such, so a 24-row sample is never presented as the whole fandom. */}
-      {totalTitles > 0 && (
-        <section aria-label={`${category.name} at a glance`}>          <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <StatTile label="Titles" value={totalTitles.toLocaleString()} />
-            <StatTile label="Genres" value={(genres ?? []).length} />
-            <StatTile label="With artwork" value={percent(withPoster)} />
-            <StatTile label="Avg views" value={avgViews.toLocaleString()} />
+      {/* At-a-glance numbers. Which tiles appear depends on what this fandom
+          actually holds: a title fandom gets artwork coverage and average
+          views, and a fandom with no titles at all — Cosplay — gets its
+          costume and product counts instead of four zeroes. */}
+      {(totalTitles > 0 || characters.length > 0 || merchandise.length > 0) && (
+        <section aria-label={`${category.name} at a glance`}>
+          <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {totalTitles > 0 && (
+              <>
+                <StatTile label="Titles" value={totalTitles.toLocaleString()} />
+                <StatTile label="Genres" value={(genres ?? []).length} />
+                <StatTile label="With artwork" value={percent(withPoster)} />
+                <StatTile label="Avg views" value={avgViews.toLocaleString()} />
+              </>
+            )}
+            {characters.length > 0 && (
+              <StatTile label="Costumes" value={characters.length.toLocaleString()} />
+            )}
+            {merchandise.length > 0 && (
+              <StatTile label="Products" value={merchandise.length.toLocaleString()} />
+            )}
           </dl>
-          {withYear > 0 && (
+          {totalTitles > 0 && withYear > 0 && (
             <p className="mt-2 text-xs text-black/50 dark:text-white/50">
               {percent(withYear)} of these titles list a release year.
             </p>
@@ -279,14 +375,34 @@ export default function Category() {
               <SectionTitle title="Content" count={totalTitles} />
 
               {/* Sort + genre. Hidden entirely for a fandom with one genre
-                  bucket, so a thin category does not show a pointless select. */}
+                  bucket, so a thin category does not show a pointless select.
+
+                  The two selects below share one class string, so it is built
+                  once rather than repeated and drifting.
+
+                  WHY THE OPTION ELEMENTS ARE STYLED EXPLICITLY. The closed
+                  control is an ordinary box the page can style, but the OPEN
+                  list is painted by the OS, not the page: browsers render the
+                  popup with the platform's own list colours, which on Windows is
+                  a near-neutral grey. Against a purple-black dark theme that
+                  popup reads as a different application entirely, even though
+                  the control around it is correct. Setting the option background
+                  and ink is the only way to pull the list back onto the theme.
+
+                  The values are the theme's own tokens rather than fixed hex, so
+                  both themes follow automatically and neither needs a `dark:`
+                  twin: --surface-raised is #faf9ff light and #1e0533 dark, and
+                  --ink is #0a0a0a / #ffffff. accent-color tints the selected
+                  row purple instead of the OS blue. `color-scheme` on <html>
+                  already tells the popup which palette to use, so the closed
+                  control follows the theme too. */}
               <div className="mb-4 flex flex-wrap items-center gap-3">
-                <label className="flex items-center gap-2 text-xs font-medium text-black/60 dark:text-white/60">
+                <label className="flex items-center gap-2 text-xs font-medium text-ink-muted">
                   Sort
                   <select
                     value={sort}
                     onChange={(event) => setParam({ sort: event.target.value })}
-                    className="rounded-lg border border-purple-500/30 bg-white/70 px-3 py-1.5 text-sm text-black transition focus:border-purple-500 dark:bg-white/[0.06] dark:text-white"
+                    className={SELECT_CLASS}
                   >
                     {SORT_OPTIONS.map((option) => (
                       <option key={option.value} value={option.value}>
@@ -297,14 +413,14 @@ export default function Category() {
                 </label>
 
                 {(genres ?? []).length > 1 && (
-                  <label className="flex items-center gap-2 text-xs font-medium text-black/60 dark:text-white/60">
+                  <label className="flex items-center gap-2 text-xs font-medium text-ink-muted">
                     Genre
                     <select
                       value={genreId ?? ''}
                       onChange={(event) =>
                         setParam({ genre: event.target.value || null })
                       }
-                      className="rounded-lg border border-purple-500/30 bg-white/70 px-3 py-1.5 text-sm text-black transition focus:border-purple-500 dark:bg-white/[0.06] dark:text-white"
+                      className={SELECT_CLASS}
                     >
                       <option value="">All genres</option>
                       {(genres ?? []).map((genre) => (
@@ -356,6 +472,35 @@ export default function Category() {
                   />
                 </div>
               )}
+            </section>
+          )}
+
+          {/* Costumes — the character_profiles rows for this fandom. Sits after
+              Content and before Articles so that a fandom with no titles
+              (Cosplay) still leads with the thing it actually has, while a
+              title fandom keeps its titles first. */}
+          {characters.length > 0 && (
+            <section aria-label={`${category.name} costumes`}>
+              <SectionTitle title="Costumes" count={characters.length} />
+              <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+                {characters.map((character) => (
+                  <CharacterCard key={character.id} character={character} />
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {/* Products — merchandise_items for this fandom. Display only; the
+              shop has no cart, so these are the same cards as /merchandise and
+              deliberately not links. */}
+          {merchandise.length > 0 && (
+            <section aria-label={`${category.name} products`}>
+              <SectionTitle title="Products" count={merchandise.length} />
+              <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+                {merchandise.map((item) => (
+                  <MerchandiseCard key={item.id} item={item} />
+                ))}
+              </ul>
             </section>
           )}
 

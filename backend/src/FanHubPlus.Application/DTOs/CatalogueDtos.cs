@@ -56,6 +56,10 @@ public record ContentDetailDto(
     string? ExternalId,
     string? ExternalSource,
     List<string> Genres,
+    // Genre ids alongside the names. The explorer filters by genre_id, so a
+    // "more like this" link cannot be built from names alone: it would have to
+    // round-trip a name through a lookup to arrive at the id the API wants.
+    List<ushort> GenreIds,
     double? UserRating);
 
 public record PagedResponse<T>(
@@ -161,7 +165,26 @@ public record MerchandiseDto(
     string? Tag,
     string? PriceNote,
     bool IsUpcoming,
-    string CategorySlug);
+    string CategorySlug,
+    uint ViewCount,
+    DateTime CreatedAt);
+
+public record CreateMerchandiseRequest(
+    byte CategoryId,
+    string Name,
+    string? Description,
+    string? ImagePath,
+    string? Tag,
+    string? PriceNote,
+    bool? IsUpcoming);
+
+public record UpdateMerchandiseRequest(
+    string? Name,
+    string? Description,
+    string? ImagePath,
+    string? Tag,
+    string? PriceNote,
+    bool? IsUpcoming);
 
 public record CharacterDto(
     uint Id,

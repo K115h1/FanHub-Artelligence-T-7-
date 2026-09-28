@@ -329,7 +329,7 @@ internal class FakeContentRepository : IContentRepository
     public Task<Content> CreateAsync(Content content, CancellationToken ct = default) => throw NotUsed();
     public Task UpdateAsync(Content content, CancellationToken ct = default) => throw NotUsed();
     public Task<bool> DeleteAsync(uint contentId, CancellationToken ct = default) => throw NotUsed();
-    public Task IncrementViewCountAsync(uint contentId, CancellationToken ct = default) => throw NotUsed();
+    public Task<int> IncrementViewCountAsync(uint contentId, CancellationToken ct = default) => throw NotUsed();
     public Task<Category?> GetCategoryBySlugAsync(string slug, CancellationToken ct = default) => throw NotUsed();
     public Task<List<Genre>> GetGenresAsync(byte? categoryId = null, CancellationToken ct = default) => throw NotUsed();
     public Task SetGenresAsync(uint contentId, byte categoryId, IEnumerable<string> genreNames, CancellationToken ct = default) => throw NotUsed();

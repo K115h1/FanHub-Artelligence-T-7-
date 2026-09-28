@@ -3,17 +3,16 @@
 // carrot"), opening a dropdown that lists every account saved on this
 // device, plus "Add another account" and "Sign out".
 import { useEffect, useRef, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
 import { Check, ChevronDown, LogOut, Plus } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
+import { useAuthModal } from '../../context/AuthModalContext'
 import Avatar from '../common/Avatar'
 
 export default function AccountMenu() {
   const { accounts, current, switchTo, signOut } = useAuth()
+  const { open: openAuth } = useAuthModal()
   const [open, setOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
-  const location = useLocation()
-  const navigate = useNavigate()
 
   // Close when clicking anywhere outside the menu.
   useEffect(() => {
@@ -104,13 +103,15 @@ export default function AccountMenu() {
 
           <div className="my-1.5 h-px bg-purple-500/20" />
 
-          {/* Add another → the login form; come back here afterwards. */}
+          {/* Add another → the auth overlay, opened on the sign-in form. The
+              overlay replaces its own view in place, so this closes the menu
+              first and the page underneath is untouched. */}
           <button
             type="button"
             role="menuitem"
             onClick={() => {
               setOpen(false)
-              navigate('/login', { state: { from: location.pathname + location.search } })
+              openAuth('login')
             }}
             className="flex w-full items-center gap-3 rounded-md px-2 py-2 text-sm font-medium text-black/80 transition hover:bg-purple-500/10 dark:text-white/80"
           >

@@ -14,8 +14,9 @@ import { createPortal } from 'react-dom'
 import { Link, useNavigate } from 'react-router-dom'
 import { ShieldAlert } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
+import { useAuthModal } from '../context/AuthModalContext'
 import { useModalLayer } from '../hooks/useModalLayer'
-import type { ReactNode } from 'react'
+import type { ReactNode, Ref } from 'react'
 
 export type GateReason = 'signin' | 'forbidden'
 
@@ -50,7 +51,10 @@ export function AdminGate({
 
 function AdminGateDialog({ from, reason }: { from: string; reason: GateReason }) {
   const navigate = useNavigate()
-  const primaryRef = useRef<HTMLAnchorElement>(null)
+  const { open: openAuth } = useAuthModal()
+  // Either a link or a button depending on the branch, so the ref is typed as
+  // the common base.
+  const primaryRef = useRef<HTMLElement>(null)
   const forbidden = reason === 'forbidden'
 
   useEffect(() => {
@@ -95,21 +99,26 @@ function AdminGateDialog({ from, reason }: { from: string; reason: GateReason })
         <div className="flex flex-col gap-2 sm:flex-row">
           {forbidden ? (
             <Link
-              ref={primaryRef}
+              ref={primaryRef as Ref<HTMLAnchorElement>}
               to="/profile"
               className="flex-1 rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-accent-ink transition hover:bg-accent-hover"
             >
               Go to my profile
             </Link>
           ) : (
-            <Link
-              ref={primaryRef}
-              to="/login"
-              state={{ from }}
+            /* Opens the auth overlay in place rather than linking to a sign-in
+               page. `from` is carried through, so signing in still lands back on
+               /admin — and because RequireAuth is layered above this route, a
+               guest normally never reaches this branch: they are already looking
+               at the shared prompt. */
+            <button
+              ref={primaryRef as Ref<HTMLButtonElement>}
+              type="button"
+              onClick={() => openAuth('login', from, { prompt: true })}
               className="flex-1 rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-accent-ink transition hover:bg-accent-hover"
             >
               Log in
-            </Link>
+            </button>
           )}
           <button
             type="button"

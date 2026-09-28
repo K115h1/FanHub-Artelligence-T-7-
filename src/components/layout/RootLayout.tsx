@@ -8,17 +8,17 @@ import Breadcrumbs from './Breadcrumbs'
 import Footer from './Footer'
 import ScrollToTop from './ScrollToTop'
 import { useSidebar } from '../../hooks/useSidebar'
-import LoginModalProvider from '../auth/LoginModalProvider'
+import AuthModalProvider from '../auth/AuthModalProvider'
 
 export default function RootLayout() {
   const { isOpen, isDesktop, toggle, close } = useSidebar()
 
   return (
-    // The sign-in overlay is mounted here rather than in the header so it
-    // survives navigating between pages, and rather than in app/providers/ so
-    // it can use the router. It portals to <body> on its own, so nesting it
-    // inside the page column does not put it behind the header or sidebar.
-    <LoginModalProvider>
+    // The auth overlay is mounted here rather than in the header so it survives
+    // navigating between pages, and rather than in app/providers/ so it can use
+    // the router. It portals to <body> on its own, so nesting it inside the page
+    // column does not put it behind the header or sidebar.
+    <AuthModalProvider>
       <div className="flex min-h-screen flex-col bg-surface">
         {/* Sits above the page so any navigation starts at the top. */}
         <ScrollToTop />
@@ -57,6 +57,6 @@ export default function RootLayout() {
           />
         )}
       </div>
-    </LoginModalProvider>
+    </AuthModalProvider>
   )
 }

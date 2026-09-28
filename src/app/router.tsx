@@ -10,6 +10,7 @@ import ComingSoon from '../components/common/ComingSoon'
 import { RouteFallback } from '../components/common/skeletons'
 import RouteBootFailure from '../components/common/RouteBootFailure'
 import RequireAuth from '../components/auth/RequireAuth'
+import LoginRedirect from '../components/auth/LoginRedirect'
 
 // Route entry for a page that hasn't been built yet.
 const placeholder = (title: string) => ({
@@ -43,9 +44,17 @@ export const router = createBrowserRouter([
       },
 
       // Auth
+      //
+      // There is deliberately no /login route. Signing in happens in the auth
+      // overlay, which layers over the page rather than replacing it, so a
+      // visitor never loses their place. /register is kept as a route for deep
+      // links; the header's Sign up button opens the same form in the overlay.
+      //
+      // /login still resolves rather than 404ing, so an old bookmark or a link
+      // from a confirmation email lands somewhere useful: it opens the overlay.
       {
         path: 'login',
-        lazy: async () => ({ Component: (await import('../pages/Login')).default }),
+        element: <LoginRedirect />,
         handle: { title: 'Login' },
       },
       { path: 'register', lazy: async () => ({ Component: (await import('../pages/Register')).default }), handle: { title: 'Register' } },
@@ -117,6 +126,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, lazy: async () => ({ Component: (await import('../pages/admin/AdminDashboard')).default }), handle: { title: 'Admin · Overview' } },
       { path: 'content', lazy: async () => ({ Component: (await import('../pages/admin/ContentManager')).default }), handle: { title: 'Admin · Content' } },
+      { path: 'merchandise', lazy: async () => ({ Component: (await import('../pages/admin/MerchandiseManager')).default }), handle: { title: 'Admin · Merchandise' } },
       { path: 'users', lazy: async () => ({ Component: (await import('../pages/admin/UserManager')).default }), handle: { title: 'Admin · Users' } },
       { path: 'feedback', lazy: async () => ({ Component: (await import('../pages/admin/FeedbackModerator')).default }), handle: { title: 'Admin · Feedback' } },
       { path: 'submissions', lazy: async () => ({ Component: (await import('../pages/admin/Submissions')).default }), handle: { title: 'Admin · Submissions' } },
