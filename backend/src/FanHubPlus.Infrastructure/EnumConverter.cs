@@ -7,13 +7,59 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FanHubPlus.Infrastructure;
 
-internal static class EnumConverter
+/// <summary>
+/// Maps enum members to and from the snake_case words the MySQL ENUM columns and
+/// the JSON API use. Public so the Application and Api layers can parse an
+/// incoming string with the same rules EF uses when reading a row.
+/// </summary>
+public static class EnumConverter
 {
     public static ValueConverter<TEnum, string> SnakeCase<TEnum>() where TEnum : struct, Enum =>
         new(
             value => ToSnakeCase(value.ToString()!),
-            // ignoreCase so a hand-edited row like 'Music_Artist' still reads.
-            text => (TEnum)Enum.Parse(typeof(TEnum), ToPascalCase(text), ignoreCase: true));
+            text => Parse<TEnum>(text));
+
+    /// <summary>
+    /// Parses the snake_case word the database and the API use
+    /// ('character_profile', 'music_artist') into the enum member
+    /// (CharacterProfile, MusicArtist).
+    /// </summary>
+    /// <remarks>
+    /// Enum.TryParse with ignoreCase handles casing but not the underscore, so
+    /// "character_profile" does NOT match CharacterProfile and a query filter
+    /// silently returns everything instead of nothing. This is the one parser
+    /// for both directions, so a value that round-trips through the database
+    /// always round-trips back.
+    /// </remarks>
+    public static bool TryParse<TEnum>(string? text, out TEnum value) where TEnum : struct, Enum
+    {
+        value = default;
+        if (string.IsNullOrWhiteSpace(text)) return false;
+
+        if (Enum.TryParse<TEnum>(ToPascalCase(text.Trim()), ignoreCase: true, out var parsed))
+        {
+            value = parsed;
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// The value to put on the wire: the same snake_case word the database
+    /// column stores, e.g. "pending" and "character_profile".
+    /// </summary>
+    /// <remarks>
+    /// Not a stylistic choice. The frontend keeps its filters and status lists in
+    /// lowercase, so serialising "Pending" instead of "pending" makes every count
+    /// read zero and every status comparison silently fail. Sending the stored
+    /// form means the wire format and the column always agree.
+    /// </remarks>
+    public static string ToWireString<TEnum>(TEnum value) where TEnum : struct, Enum =>
+        ToSnakeCase(value.ToString()!);
+
+    private static TEnum Parse<TEnum>(string text) where TEnum : struct, Enum =>
+        TryParse<TEnum>(text, out var value) ? value : default;
 
     private static string ToSnakeCase(string name)
     {

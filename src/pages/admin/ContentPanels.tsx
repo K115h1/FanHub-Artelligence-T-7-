@@ -9,29 +9,23 @@ import { createPortal } from 'react-dom'
 import { X } from 'lucide-react'
 import type { CatalogEdit, CatalogRow, ContentStatus, FandomKey } from '../../features/admin/types'
 import { FANDOM_LABELS } from '../../features/admin/AdminDataProvider'
+import { CONTENT_TYPE_BY_FANDOM, SLUG_BY_FANDOM } from '../../features/admin/categorySlugs'
 import { useCatalog } from '../../features/admin/hooks'
 import { AdminButton } from '../../components/admin/shared'
 import PosterThumb from '../../components/common/PosterThumb'
 
-const CONTENT_TYPES: Record<FandomKey, string> = {
-  movies: 'movie',
-  anime: 'series',
-  games: 'game',
-  comics: 'comic',
-  kpop: 'music_artist',
-  tvshows: 'series',
-}
+// The fandom -> content_type and fandom -> category-slug maps live in
+// features/admin/categorySlugs, shared with the hooks that read the same values
+// back. They used to be duplicated here, which is how the create form could
+// disagree with the filter about which category a title belonged to.
+const CONTENT_TYPES = CONTENT_TYPE_BY_FANDOM
+const CATEGORY_SLUGS = SLUG_BY_FANDOM
 
-const CATEGORY_SLUGS: Record<FandomKey, string> = {
-  movies: 'movies',
-  anime: 'anime',
-  games: 'gaming',
-  comics: 'comics',
-  kpop: 'k-pop',
-  tvshows: 'tvshows',
-}
-
-const STATUSES: ContentStatus[] = ['released', 'announced', 'discontinued']
+// The contents.status column: ENUM('released','upcoming','ongoing','ended',
+// 'cancelled'). This list used to say 'announced' and 'discontinued', which are
+// not values the column accepts — the API now rejects them, and a status that
+// cannot be saved is worse than one that is never offered.
+const STATUSES: ContentStatus[] = ['released', 'upcoming', 'ongoing', 'ended', 'cancelled']
 
 // ---------- shared modal shell ----------
 
@@ -221,16 +215,15 @@ function YearField({
 
 export function EditPanel({
   row,
+  busy,
   onClose,
   onSave,
-  onRevert,
-  canRevert,
 }: {
   row: CatalogRow
+  /** A save is in flight; the buttons disable so it cannot be double-submitted. */
+  busy?: boolean
   onClose: () => void
   onSave: (patch: Partial<CatalogEdit>) => void
-  onRevert: () => void
-  canRevert: boolean
 }) {
   const { genres: known } = useCatalog()
   const [title, setTitle] = useState(row.title)
@@ -265,16 +258,11 @@ export function EditPanel({
       onClose={onClose}
       footer={
         <>
-          {canRevert && (
-            <AdminButton variant="secondary" onClick={onRevert} className="mr-auto">
-              Revert this row
-            </AdminButton>
-          )}
-          <AdminButton variant="secondary" onClick={onClose}>
+          <AdminButton variant="secondary" onClick={onClose} disabled={busy}>
             Cancel
           </AdminButton>
-          <AdminButton variant="primary" onClick={save} disabled={invalid}>
-            Save changes
+          <AdminButton variant="primary" onClick={save} disabled={invalid || busy}>
+            {busy ? 'Saving…' : 'Save changes'}
           </AdminButton>
         </>
       }
@@ -362,9 +350,11 @@ export function EditPanel({
 // ---------- create panel ----------
 
 export function CreatePanel({
+  busy,
   onClose,
   onCreate,
 }: {
+  busy?: boolean
   onClose: () => void
   onCreate: (draft: Omit<CatalogRow, 'id'>) => void
 }) {
@@ -408,11 +398,11 @@ export function CreatePanel({
       onClose={onClose}
       footer={
         <>
-          <AdminButton variant="secondary" onClick={onClose}>
+          <AdminButton variant="secondary" onClick={onClose} disabled={busy}>
             Cancel
           </AdminButton>
-          <AdminButton variant="primary" onClick={submit} disabled={invalid}>
-            Add title
+          <AdminButton variant="primary" onClick={submit} disabled={invalid || busy}>
+            {busy ? 'Adding…' : 'Add title'}
           </AdminButton>
         </>
       }

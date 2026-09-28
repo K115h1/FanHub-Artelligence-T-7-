@@ -8,6 +8,7 @@
 import { ChevronLeft, ChevronRight, Search } from 'lucide-react'
 import type { ReactNode } from 'react'
 import type { LucideIcon } from 'lucide-react'
+import { Skeleton } from '../ui/Skeleton'
 
 // ---------- page header ----------
 
@@ -94,10 +95,15 @@ const PILL_TONES = {
   pending: 'bg-amber-500/15 text-amber-700 dark:text-amber-300',
   approved: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300',
   rejected: 'bg-rose-500/15 text-rose-700 dark:text-rose-300',
-  // Content
+  // Content — the contents.status column:
+  // ENUM('released','upcoming','ongoing','ended','cancelled').
+  // 'announced' and 'discontinued' were here and matched no column, so a title
+  // in any real non-released state fell through to the muted default.
   released: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300',
-  announced: 'bg-sky-500/15 text-sky-700 dark:text-sky-300',
-  discontinued: 'bg-line-strong/40 text-ink-muted',
+  upcoming: 'bg-sky-500/15 text-sky-700 dark:text-sky-300',
+  ongoing: 'bg-violet-500/15 text-violet-700 dark:text-violet-300',
+  ended: 'bg-line-strong/40 text-ink-muted',
+  cancelled: 'bg-rose-500/15 text-rose-700 dark:text-rose-300',
   // Roles
   admin: 'bg-accent-soft text-accent',
   registered: 'bg-line-strong/40 text-ink-muted',
@@ -288,4 +294,36 @@ export function formatRelative(iso: string): string {
   if (days === 1) return 'Yesterday'
   if (days < 30) return `${days} days ago`
   return formatDate(iso)
+}
+
+/**
+ * Placeholder rows for a table awaiting its first page.
+ *
+ * The admin tables fetch on mount, so without this they render an
+ * "EmptyState � no titles match those filters" for the duration of the request,
+ * which reads as "your filters matched nothing" and invites the administrator to
+ * clear filters that were fine. Showing table-shaped rows is the honest state.
+ */
+export function TableSkeleton({ rows = 8, columns = 6 }: { rows?: number; columns?: number }) {
+  return (
+    <div className="surface-card overflow-hidden" aria-busy="true" aria-live="polite">
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[820px] text-left text-sm">
+          <caption className="sr-only">Loading</caption>
+          <tbody className="divide-y divide-line">
+            {Array.from({ length: rows }, (_, r) => (
+              <tr key={r}>
+                {Array.from({ length: columns }, (_, c) => (
+                  <td key={c} className="px-4 py-3">
+                    <Skeleton className="h-4 w-full max-w-24" />
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="sr-only">Loading rows</p>
+    </div>
+  )
 }

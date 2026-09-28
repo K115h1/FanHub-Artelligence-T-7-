@@ -102,21 +102,21 @@ export default function AdminDashboard() {
         />
       </div>
 
-      {/* Alerts — only rendered when there is genuinely something to act on. */}
-      {stats.changeCount > 0 && (
-        <div className="mt-4 flex flex-wrap items-center gap-3 rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-3">
-          <AlertTriangle size={16} className="text-amber-600 dark:text-amber-400" aria-hidden="true" />
-          <p className="flex-1 text-sm text-ink">
-            <span className="font-semibold">{stats.changeCount}</span> pending change
-            {stats.changeCount === 1 ? '' : 's'} to the catalogue. Review and save them to
-            publish.
-          </p>
-          <Link
-            to="/admin/content"
-            className="rounded-lg border border-amber-500/50 px-3 py-1.5 text-xs font-semibold text-amber-700 transition hover:bg-amber-500/10 dark:text-amber-300"
+      {/* Alerts — only rendered when there is genuinely something to act on.
+          This used to count un-committed localStorage edits waiting to be
+          "published". Writes go straight to the database now, so there is no
+          such queue; the moderation alerts below are the real pending work. */}
+      {stats.error && (
+        <div className="mt-4 flex flex-wrap items-center gap-3 rounded-lg border border-rose-500/40 bg-rose-500/10 px-4 py-3">
+          <AlertTriangle size={16} className="text-rose-600 dark:text-rose-400" aria-hidden="true" />
+          <p className="flex-1 text-sm text-ink">{stats.error}</p>
+          <button
+            type="button"
+            onClick={stats.refresh}
+            className="rounded-lg border border-rose-500/50 px-3 py-1.5 text-xs font-semibold text-rose-700 transition hover:bg-rose-500/10 dark:text-rose-300"
           >
-            Review changes
-          </Link>
+            Retry
+          </button>
         </div>
       )}
 

@@ -13,6 +13,7 @@ public interface IAdminService
 {
     Task<AdminStatsDto> GetStatsAsync(CancellationToken ct = default);
     Task<List<AdminStatsCategoryDto>> GetCategoryStatsAsync(CancellationToken ct = default);
+    Task<List<AdminGenreStatDto>> GetGenreStatsAsync(int take = 20, CancellationToken ct = default);
     Task<List<UserDto>> GetUsersAsync(CancellationToken ct = default);
     Task SetUserRoleAsync(uint userId, string role, uint adminUserId, CancellationToken ct = default);
 }
@@ -40,7 +41,9 @@ public class AdminService : IAdminService
         var categories = await _content.GetCategoriesAsync(ct);
         var users = await _users.GetAllAsync(ct);
         var feedback = await _community.GetFeedbackAsync(null, 1, 1, ct);
-        var submissions = await _community.GetSubmissionsAsync(null, 1, 1, ct);
+        // Named, because the repository gained an optional userId filter between
+        // pageSize and ct — passing ct positionally no longer binds.
+        var submissions = await _community.GetSubmissionsAsync(null, 1, 1, userId: null, kind: null, ct);
 
         return new AdminStatsDto(
             counts.Total,
@@ -48,9 +51,18 @@ public class AdminService : IAdminService
             genres,
             counts.WithPoster,
             counts.WithSynopsis,
+            counts.WithYear,
             users.Count,
             (int)feedback.TotalCount,
             (int)submissions.TotalCount);
+    }
+
+    /// <summary>Most-used genres across the whole catalogue, for the stats page.</summary>
+    public async Task<List<AdminGenreStatDto>> GetGenreStatsAsync(
+        int take = 20, CancellationToken ct = default)
+    {
+        var usage = await _content.GetGenreUsageAsync(take, ct);
+        return usage.Select(u => new AdminGenreStatDto(u.Name, u.Count)).ToList();
     }
 
     public async Task<List<AdminStatsCategoryDto>> GetCategoryStatsAsync(CancellationToken ct = default)

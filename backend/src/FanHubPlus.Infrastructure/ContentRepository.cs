@@ -52,6 +52,12 @@ public class ContentRepository : IContentRepository
         if (query.Status.HasValue)
             q = q.Where(c => c.Status == query.Status.Value);
 
+        if (query.YearFrom.HasValue)
+            q = q.Where(c => c.ReleaseYear != null && c.ReleaseYear >= query.YearFrom.Value);
+
+        if (query.YearTo.HasValue)
+            q = q.Where(c => c.ReleaseYear != null && c.ReleaseYear <= query.YearTo.Value);
+
         var total = await q.CountAsync(ct);
 
         q = query.SortBy switch
@@ -109,6 +115,57 @@ public class ContentRepository : IContentRepository
     public async Task UpdateAsync(Content content, CancellationToken ct = default)
     {
         _db.Contents.Update(content);
+        await _db.SaveChangesAsync(ct);
+    }
+
+    /// <summary>
+    /// Replace a title's genres with the named set, creating any that do not
+    /// exist yet.
+    /// </summary>
+    /// <remarks>
+    /// A replace rather than an append, because the admin editor shows genres as
+    /// a complete list and saving it back means "these and only these". Names
+    /// arrive as strings from the form, so each one is resolved to (or created
+    /// as) a row in `genres` — the join table can only carry ids.
+    ///
+    /// Genre is shared across the catalogue rather than owned by a content row,
+    /// so a new name here also becomes selectable on every other title in the
+    /// same category. That is the same behaviour as the seed importer.
+    /// </remarks>
+    public async Task SetGenresAsync(
+        uint contentId, byte categoryId, IEnumerable<string> genreNames, CancellationToken ct = default)
+    {
+        var wanted = genreNames
+            .Where(n => !string.IsNullOrWhiteSpace(n))
+            .Select(n => n.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        var content = await _db.Contents
+            .Include(c => c.ContentGenres)
+            .FirstOrDefaultAsync(c => c.ContentId == contentId, ct);
+        if (content is null) return;
+
+        // Orphan the existing links rather than deleting them: the genres
+        // themselves are shared and must survive the edit.
+        _db.ContentGenres.RemoveRange(content.ContentGenres);
+        content.ContentGenres.Clear();
+
+        if (wanted.Count > 0)
+        {
+            var existing = await _db.Genres
+                .Where(g => g.CategoryId == categoryId && wanted.Contains(g.Name))
+                .ToListAsync(ct);
+
+            var known = existing.Select(g => g.Name).ToHashSet(StringComparer.OrdinalIgnoreCase);
+            foreach (var name in wanted.Where(n => !known.Contains(n)))
+                content.ContentGenres.Add(new ContentGenre { Genre = new Genre { Name = name, CategoryId = categoryId } });
+            foreach (var name in wanted.Where(known.Contains))
+                content.ContentGenres.Add(new ContentGenre { Genre = existing.First(g => g.Name.Equals(name, StringComparison.OrdinalIgnoreCase)) });
+
+            await _db.SaveChangesAsync(ct);
+        }
+
         await _db.SaveChangesAsync(ct);
     }
 
@@ -182,4 +239,32 @@ public class ContentRepository : IContentRepository
     // filter on the frontend offers.
     public async Task<int> CountDistinctGenreNamesAsync(CancellationToken ct = default) =>
         await _db.Genres.AsNoTracking().Select(g => g.Name).Distinct().CountAsync(ct);
+
+    /// <summary>
+    /// How many titles carry each genre, most used first.
+    /// </summary>
+    /// <remarks>
+    /// A GROUP BY over the join table rather than a walk of the catalogue. The
+    /// frontend used to derive this by counting a bundled array holding every
+    /// row, which was only possible because it had the whole catalogue; with
+    /// paging done in SQL it could only ever have counted the 25 rows on screen
+    /// while presenting the result as a catalogue-wide figure.
+    /// </remarks>
+    public async Task<List<(string Name, int Count)>> GetGenreUsageAsync(
+        int take = 20, CancellationToken ct = default)
+    {
+        var query =
+            from cg in _db.ContentGenres.AsNoTracking()
+            join g in _db.Genres.AsNoTracking() on cg.GenreId equals g.GenreId
+            group cg by g.Name into grouped
+            select new { Name = grouped.Key, Count = grouped.Count() };
+
+        var rows = await query
+            .OrderByDescending(x => x.Count)
+            .ThenBy(x => x.Name)
+            .Take(take is < 1 or > 100 ? 20 : take)
+            .ToListAsync(ct);
+
+        return rows.Select(x => (x.Name, x.Count)).ToList();
+    }
 }

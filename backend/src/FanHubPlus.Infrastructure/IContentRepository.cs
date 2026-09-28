@@ -17,6 +17,15 @@ public class ContentQuery
     public ushort? GenreId { get; set; }
     public ContentType? Type { get; set; }
     public ContentStatus? Status { get; set; }
+
+    /// Inclusive release-year bounds, for the Explorer's era filter. Either
+    /// alone is a half-open range.
+    ///
+    /// A null ReleaseYear is excluded whenever a bound is set. A title with no
+    /// year cannot be inside any range, and letting the comparison decide would
+    /// mean the result depends on how the database happens to sort NULLs.
+    public int? YearFrom { get; set; }
+    public int? YearTo { get; set; }
     public int Page { get; set; } = 1;
     public int PageSize { get; set; } = 24;
     public string SortBy { get; set; } = "popular";
@@ -45,12 +54,14 @@ public interface IContentRepository
     Task<Category?> GetCategoryBySlugAsync(string slug, CancellationToken ct = default);
     Task<Category?> GetCategoryByIdAsync(byte categoryId, CancellationToken ct = default);
     Task<List<Genre>> GetGenresAsync(byte? categoryId = null, CancellationToken ct = default);
+    Task SetGenresAsync(uint contentId, byte categoryId, IEnumerable<string> genreNames, CancellationToken ct = default);
     Task<List<Content>> GetByIdsAsync(IEnumerable<uint> ids, CancellationToken ct = default);
 
     /// Catalogue totals for the admin dashboard, computed in the database rather
     /// than by paging every row into memory. Pass a categoryId to scope it.
     Task<CatalogCounts> GetCountsAsync(byte? categoryId = null, CancellationToken ct = default);
     Task<int> CountDistinctGenreNamesAsync(CancellationToken ct = default);
+    Task<List<(string Name, int Count)>> GetGenreUsageAsync(int take = 20, CancellationToken ct = default);
 }
 
 public record CatalogCounts(int Total, int WithPoster, int WithSynopsis, int WithYear);

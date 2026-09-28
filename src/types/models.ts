@@ -131,8 +131,13 @@ export interface SubmissionEntry {
   title: string
   body: string
   status: string
+  /** SubmissionKind as the API spells it: article | character_profile | event_highlight. */
+  kind: string
   categorySlug: string
   userName: string
+  /** The admin's reason, shown back to the fan. Null until a decision is made. */
+  moderatorNote: string | null
+  decidedAt: string | null
   createdAt: string
 }
 
@@ -152,30 +157,15 @@ export type SubmissionStatus = 'pending' | 'approved' | 'rejected'
 /** Mirrors `feedback.status`. */
 export type FeedbackStatus = 'open' | 'reviewed' | 'resolved' | 'dismissed'
 
-/** A fan submission moving through the moderation queue. */
-export interface FanSubmission {
-  id: string
-  userId: string
-  userName: string
-  categorySlug: string
-  title: string
-  body: string
-  status: SubmissionStatus
-  createdAt: string
-}
-
-/** A feedback entry in the moderation queue. */
-export interface FeedbackItem {
-  id: string
-  userId: string | null
-  userName: string
-  type: 'bug' | 'suggestion' | 'query' | 'content'
-  message: string
-  email: string
-  rating: number
-  status: FeedbackStatus
-  createdAt: string
-}
+/**
+ * The moderation queue row shapes are `SubmissionEntry` and `FeedbackEntry`
+ * above, which carry the API's numeric ids and nullable author/rating.
+ *
+ * The string-id `FanSubmission` and `FeedbackItem` interfaces that used to sit
+ * here described the localStorage seed arrays, and are gone with the seed. They
+ * were not just unused: their ids were strings, so a moderation call built
+ * against them could not have addressed a real database row.
+ */
 
 /**
  * Per-account preferences, persisted to localStorage by SettingsProvider.

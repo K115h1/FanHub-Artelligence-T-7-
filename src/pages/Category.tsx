@@ -10,6 +10,7 @@ import { useAsync } from '../hooks/useAsync'
 import { getCategories, getContents, getGenres } from '../services/content.service'
 import { getEvents } from '../services/event.service'
 import ContentCard from '../components/common/ContentCard'
+import { CategoryPageSkeleton } from '../components/common/skeletons'
 import Pagination from '../components/common/Pagination'
 import { CONTENT_SORT_OPTIONS } from '../services/content.service'
 import { categoryIcon, sortCategories } from '../lib/categoryIcons'
@@ -179,16 +180,7 @@ export default function Category() {
   // Wait for the category list before deciding the slug is unknown, otherwise
   // every direct visit flashes the "not found" panel.
   if (loading || !category) {
-    return (
-      <div className="mx-auto w-full max-w-7xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
-        <div className="h-44 animate-pulse rounded-lg bg-surface-sunken" />
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          {Array.from({ length: 8 }, (_, i) => (
-            <div key={i} className="h-64 animate-pulse rounded-xl bg-surface-sunken" />
-          ))}
-        </div>
-      </div>
-    )
+    return <CategoryPageSkeleton />
   }
 
   const Icon = categoryIcon(slug)

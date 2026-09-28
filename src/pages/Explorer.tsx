@@ -10,6 +10,7 @@ import ArticleCard from '../components/common/ArticleCard'
 import { EmptyState } from '../components/common/EmptyState'
 import { useAsync } from '../hooks/useAsync'
 import { getContents, getCategories, CONTENT_SORT_OPTIONS } from '../services/content.service'
+import ContentFilters, { eraToParams } from '../components/common/ContentFilters'
 import Pagination from '../components/common/Pagination'
 import { getEvents } from '../services/event.service'
 import { sortCategories } from '../lib/categoryIcons'
@@ -33,9 +34,16 @@ export default function Explorer() {
   // here is what makes those links land on the right list instead of a generic
   // one.
   const category = searchParams.get('category') ?? ''
+  const genre = searchParams.get('genre') ?? ''
+  const type = searchParams.get('type') ?? ''
+  const era = searchParams.get('era') ?? ''
   const sort = searchParams.get('sort') ?? ''
   const page = Math.max(1, Number(searchParams.get('page') ?? '1') || 1)
   const PAGE_SIZE = 24
+
+  // The era token expands to the API's two year params. Kept as a single URL
+  // param so a filtered view stays one shareable link.
+  const { yearFrom, yearTo } = eraToParams(era)
 
   // Content search runs on the API, which searches title and synopsis across the
   // whole catalogue. The empty query is a browse, not a filter.
@@ -44,12 +52,16 @@ export default function Explorer() {
       getContents({
         search: query || undefined,
         category: category || undefined,
+        genreId: genre ? Number(genre) : undefined,
+        type: type || undefined,
+        yearFrom: yearFrom ? Number(yearFrom) : undefined,
+        yearTo: yearTo ? Number(yearTo) : undefined,
         page,
         pageSize: PAGE_SIZE,
         // A search defaults to A-Z; a browse or category view keeps the choice.
         sort: sort || (query ? 'title' : 'popular'),
       }),
-    [query, category, page, sort],
+    [query, category, genre, type, yearFrom, yearTo, page, sort],
   )
 
   const { data: events } = useAsync(() => getEvents(), [])
@@ -115,6 +127,24 @@ export default function Explorer() {
               : 'Browse everything on the site, or use the search bar above to filter it.'}
         </p>
       </header>
+
+      {/* Filters sit above the results and stay visible even when a filter has
+          emptied the list — otherwise the way out of a zero-result filter is to
+          reload the page. */}
+      <div className="mb-6">
+        <ContentFilters
+          categories={categories ?? []}
+          category={category}
+          genre={genre}
+          type={type}
+          era={era}
+          resultCount={contentPage?.totalCount ?? null}
+          onChange={setParam}
+          onClear={() =>
+            setParam({ category: null, genre: null, type: null, era: null })
+          }
+        />
+      </div>
 
       {total === 0 ? (
         <EmptyState

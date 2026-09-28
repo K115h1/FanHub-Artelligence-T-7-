@@ -47,7 +47,9 @@ export default function AccountMenu() {
         aria-expanded={open}
         className="flex items-center gap-2 rounded-xl border border-purple-500/30 py-1.5 pl-1.5 pr-2.5 transition hover:border-purple-500 sm:gap-2.5"
       >
-        <Avatar name={current.name} size="sm" />
+        {/* The header is the most persistent surface in the app, so this is where
+            a newly uploaded picture has to show up for the change to feel real. */}
+        <Avatar name={current.name} src={current.avatarPath} size="sm" />
         <span className="max-w-24 truncate text-sm font-semibold text-black dark:text-white sm:max-w-40">
           {current.name}
         </span>
@@ -80,7 +82,11 @@ export default function AccountMenu() {
                 }}
                 className="flex w-full items-center gap-3 rounded-md px-2 py-2 text-left transition hover:bg-purple-500/10"
               >
-                <Avatar name={account.name} size="sm" />
+                {/* Each saved account carries its own avatarPath, so switching
+                    accounts in the list swaps the picture too. Accounts that have
+                    never signed in against the API have none and fall back to
+                    initials. */}
+                <Avatar name={account.name} src={account.avatarPath} size="sm" />
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-sm font-medium text-black dark:text-white">
                     {account.name}

@@ -20,7 +20,7 @@ function looksLikeEmail(value: string): boolean {
 }
 
 export default function Register() {
-  const { signUp } = useAuth()
+  const { signUp, lastError } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -31,11 +31,12 @@ export default function Register() {
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
   const [error, setError] = useState('')
+  const [busy, setBusy] = useState(false)
 
   const tooShort = password.length > 0 && password.length < 6
   const mismatch = confirm.length > 0 && confirm !== password
 
-  function onSubmit(event: FormEvent) {
+  async function onSubmit(event: FormEvent) {
     event.preventDefault()
 
     if (!name.trim()) return setError('Choose a display name.')
@@ -43,8 +44,14 @@ export default function Register() {
     if (password.length < 6) return setError('Passwords need at least 6 characters.')
     if (password !== confirm) return setError('The two passwords do not match.')
 
-    if (signUp(name, email) === null) {
-      setError('An account with that email already exists. Try logging in instead.')
+    setBusy(true)
+    const id = await signUp(name, email, password)
+    setBusy(false)
+
+    if (id === null) {
+      setError(
+        lastError ?? 'An account with that email already exists. Try logging in instead.',
+      )
       return
     }
     navigate(from, { replace: true })
@@ -178,9 +185,10 @@ export default function Register() {
 
           <button
             type="submit"
-            className="w-full rounded-md bg-gradient-to-r from-purple-600 to-purple-500 px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-purple-600/30 transition hover:from-purple-500 hover:to-purple-400"
+            disabled={busy}
+            className="w-full rounded-md bg-gradient-to-r from-purple-600 to-purple-500 px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-purple-600/30 transition hover:from-purple-500 hover:to-purple-400 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            Create account
+            {busy ? 'Creating…' : 'Create account'}
           </button>
         </form>
 

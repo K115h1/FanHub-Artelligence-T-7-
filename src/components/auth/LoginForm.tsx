@@ -28,11 +28,12 @@ export default function LoginForm({
    */
   onNavigateAway?: () => void
 }) {
-  const { signIn, current } = useAuth()
+  const { signIn, current, lastError } = useAuth()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [busy, setBusy] = useState(false)
 
   function onSubmit(event: FormEvent) {
     event.preventDefault()
@@ -40,11 +41,20 @@ export default function LoginForm({
       setError('Enter your email and password.')
       return
     }
-    if (!signIn(email)) {
-      setError('No account with that email yet. Create one instead.')
-      return
-    }
-    onSignedIn()
+    setBusy(true)
+    signIn(email, password)
+      .then((ok) => {
+        if (ok) {
+          setError('')
+          onSignedIn()
+        } else {
+          // The provider has already recorded why; surface it here rather than
+          // a generic failure.
+          setError(lastError ?? 'That email and password did not match.')
+        }
+      })
+      .catch(() => setError('Something went wrong signing in. Please try again.'))
+      .finally(() => setBusy(false))
   }
 
   /**
@@ -54,12 +64,15 @@ export default function LoginForm({
    * hook, and the `use` prefix made the rules-of-hooks lint flag the call site
    * inside the onClick callback as a violation.
    */
-  function signInAsDemo(account: DemoAccount) {
+  async function signInAsDemo(account: DemoAccount) {
     setEmail(account.email)
     setPassword(account.password)
     setError('')
-    signIn(account.email)
-    onSignedIn()
+    setBusy(true)
+    const ok = await signIn(account.email, account.password)
+    setBusy(false)
+    if (ok) onSignedIn()
+    else setError(lastError ?? 'That demo account could not be signed in.')
   }
 
   return (
@@ -76,7 +89,9 @@ export default function LoginForm({
       {/* Shown when a signed-in user reaches the form to switch accounts. */}
       {current && (
         <div className="mt-4 flex items-center gap-2 rounded-md border border-purple-500/20 bg-purple-500/5 px-3 py-2 text-sm text-black/70 dark:text-white/70">
-          <Avatar name={current.name} size="sm" />
+          {/* Whichever account is active, so switching accounts from here shows
+              the right picture rather than the previous one's. */}
+          <Avatar name={current.name} src={current.avatarPath} size="sm" />
           <span>
             Signed in as <strong className="font-semibold">{current.name}</strong>. Use the
             form below to switch.
@@ -142,9 +157,10 @@ export default function LoginForm({
 
         <button
           type="submit"
-          className="w-full rounded-md bg-gradient-to-r from-purple-600 to-purple-500 px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-purple-600/30 transition hover:from-purple-500 hover:to-purple-400"
+          disabled={busy}
+          className="w-full rounded-md bg-gradient-to-r from-purple-600 to-purple-500 px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-purple-600/30 transition hover:from-purple-500 hover:to-purple-400 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          Log in
+          {busy ? 'Signing in…' : 'Log in'}
         </button>
       </form>
 
@@ -157,6 +173,14 @@ export default function LoginForm({
         >
           <UserPlus size={14} aria-hidden="true" />
           Create one
+        </Link>
+        {' · '}
+        <Link
+          to="/forgot-password"
+          onClick={onNavigateAway}
+          className="font-semibold text-purple-600 hover:underline dark:text-purple-400"
+        >
+          Forgot password
         </Link>
       </p>
 

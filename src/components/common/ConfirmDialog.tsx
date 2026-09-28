@@ -1,11 +1,18 @@
 // ConfirmDialog — a blocking yes/no prompt, rendered in a portal.
 import { useEffect, useRef } from 'react'
+import type { ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 
 interface ConfirmDialogProps {
   isOpen: boolean
   title: string
   body?: string
+  /**
+   * Rendered under the message — a field to fill in before confirming. Used by
+   * the moderation queue so a rejection can carry a reason, rather than making
+   * the reason a second dialog.
+   */
+  extra?: ReactNode
   confirmText?: string
   cancelText?: string
   isWarning?: boolean
@@ -17,6 +24,7 @@ export function ConfirmDialog({
   isOpen,
   title,
   body,
+  extra,
   confirmText = 'Confirm',
   cancelText = 'Cancel',
   isWarning = false,
@@ -60,6 +68,9 @@ export function ConfirmDialog({
             {body}
           </p>
         )}
+
+        {/* Any field the caller needs filled in before the decision is made. */}
+        {extra}
 
         <div className="mt-6 flex justify-end gap-3">
           <button

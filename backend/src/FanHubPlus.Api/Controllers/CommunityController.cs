@@ -62,16 +62,26 @@ public class CommunityController : ApiControllerBase
         Guarded(async () => Ok(await _community.CreateSubmissionAsync(
             request, RequireUserId(), HttpContext.RequestAborted)));
 
+    /// <summary>
+    /// The caller's own submissions, filtered by user id in the query.
+    /// </summary>
+    /// <remarks>
+    /// This used to page over every submission and then keep only those whose
+    /// display name matched the caller's, which leaked other people's drafts
+    /// whenever the page happened to contain them, hid the caller's own once
+    /// there were more than a page, and treated two people with the same name as
+    /// one person. Filtering on the id the token actually carries fixes all three.
+    /// </remarks>
     [HttpGet("submissions/mine")]
     [Authorize]
     public Task<IActionResult> MySubmissions(
         [FromQuery] int page = 1, [FromQuery] int pageSize = 25) =>
         Guarded(async () =>
         {
-            var all = await _community.GetSubmissionsAsync(null, page, pageSize, HttpContext.RequestAborted);
-            var mine = all.Items.Where(s => s.UserName == CurrentUserName()).ToList();
-            return Ok(mine);
-        });
+            var result = await _community.GetSubmissionsAsync(
+                null, page, pageSize, RequireUserId(), kind: null, HttpContext.RequestAborted);
 
-    private string? CurrentUserName() => User.Identity?.Name;
+            // Unwrap the page: the client expects a bare array, as it always has.
+            return Ok(result.Items);
+        });
 }

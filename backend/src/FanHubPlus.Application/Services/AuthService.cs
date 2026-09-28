@@ -7,6 +7,7 @@ using FanHubPlus.Application.DTOs;
 using FanHubPlus.Domain;
 using FanHubPlus.Infrastructure;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace FanHubPlus.Application.Services;
@@ -27,6 +28,26 @@ public interface IAuthService
     /// is returned so the flow can be demonstrated without a mail server.
     Task<string> RequestPasswordResetAsync(string email, CancellationToken ct = default);
     Task ResetPasswordAsync(ResetPasswordRequest request, CancellationToken ct = default);
+
+    // ---- Category lists (favourites and interests, kept separate) ----
+
+    Task<ProfileCategoriesDto> GetCategoriesAsync(uint userId, CancellationToken ct = default);
+    Task<ProfileCategoriesDto> SetFavoritesAsync(uint userId, SetCategoriesRequest request, CancellationToken ct = default);
+    Task<ProfileCategoriesDto> SetInterestsAsync(uint userId, SetCategoriesRequest request, CancellationToken ct = default);
+
+    Task<AvatarDto> SetAvatarAsync(uint userId, string? avatarPath, CancellationToken ct = default);
+
+    // ---- Email verification ----
+
+    /// Returns the emailed token, for the same reason as the password reset.
+    Task<string> RequestEmailVerificationAsync(string email, CancellationToken ct = default);
+    Task ConfirmEmailAsync(ConfirmVerificationRequest request, CancellationToken ct = default);
+
+    // ---- Recent activity ----
+
+    /// The member's most recent actions, newest first. `take` is clamped to a
+    /// sane range by the implementation rather than trusted from the query.
+    Task<IReadOnlyList<ActivityDto>> GetActivityAsync(uint userId, int take = 10, CancellationToken ct = default);
 }
 
 public class AuthService : IAuthService
@@ -36,20 +57,30 @@ public class AuthService : IAuthService
     private const string DefaultRole = "registered";
 
     private readonly IUserRepository _users;
+    private readonly IContentRepository _categories;
     private readonly IPasswordHasher<User> _hasher;
     private readonly ITokenService _tokens;
     private readonly ILogger<AuthService> _log;
 
+    // Where the emailed links point. The service builds the link rather than
+    // the controller because both the reset and the verification flow need one,
+    // and two places composing the same URL is how they drift apart.
+    private readonly string _frontendBaseUrl;
+
     public AuthService(
         IUserRepository users,
+        IContentRepository categories,
         IPasswordHasher<User> hasher,
         ITokenService tokens,
-        ILogger<AuthService> log)
+        ILogger<AuthService> log,
+        IConfiguration configuration)
     {
         _users = users;
+        _categories = categories;
         _hasher = hasher;
         _tokens = tokens;
         _log = log;
+        _frontendBaseUrl = configuration["Frontend:BaseUrl"] ?? "http://localhost:5173";
     }
 
     public async Task<AuthResponse> RegisterAsync(RegisterRequest request, CancellationToken ct = default)
@@ -188,6 +219,12 @@ public class AuthService : IAuthService
             CreatedAt = DateTime.UtcNow,
         }, ct);
 
+        var link = $"{_frontendBaseUrl.TrimEnd('/')}/reset-password?token={Uri.EscapeDataString(token)}";
+        _log.LogInformation(
+            "Password reset link for {UserId}: {Link} (no mail server configured — a deployment " +
+            "would send this and return 202 with no body).",
+            user.UserId, link);
+
         return token;
     }
 
@@ -214,6 +251,155 @@ public class AuthService : IAuthService
         {
             UserId = user.UserId,
             Action = "password_reset",
+            CreatedAt = DateTime.UtcNow,
+        }, ct);
+    }
+
+    // ---------- Category lists ----------
+
+    public async Task<ProfileCategoriesDto> GetCategoriesAsync(uint userId, CancellationToken ct = default)
+    {
+        // Sequential on purpose. These are two queries against the same scoped
+        // DbContext, and DbContext is NOT thread-safe: running them through
+        // Task.WhenAll throws "A second operation was started on this context
+        // instance before a previous operation completed" as soon as they
+        // actually overlap. Two small indexed reads cost less than that.
+        var favIds = await _users.GetFavoriteCategoryIdsAsync(userId, ct);
+        var interestIds = await _users.GetInterestCategoryIdsAsync(userId, ct);
+
+        return await BuildCategoriesDtoAsync(favIds, interestIds, ct);
+    }
+
+    public async Task<ProfileCategoriesDto> SetFavoritesAsync(uint userId, SetCategoriesRequest request, CancellationToken ct = default)
+    {
+        var favIds = await ValidateCategoryIdsAsync(request.CategoryIds, ct);
+        await _users.SetFavoriteCategoriesAsync(userId, favIds, ct);
+
+        // Interests are untouched by a favourites edit, so they are read back
+        // rather than assumed.
+        var interestIds = await _users.GetInterestCategoryIdsAsync(userId, ct);
+        return await BuildCategoriesDtoAsync(favIds, interestIds, ct);
+    }
+
+    public async Task<ProfileCategoriesDto> SetInterestsAsync(uint userId, SetCategoriesRequest request, CancellationToken ct = default)
+    {
+        var interestIds = await ValidateCategoryIdsAsync(request.CategoryIds, ct);
+        await _users.SetInterestCategoriesAsync(userId, interestIds, ct);
+
+        var favIds = await _users.GetFavoriteCategoryIdsAsync(userId, ct);
+        return await BuildCategoriesDtoAsync(favIds, interestIds, ct);
+    }
+
+    /// <summary>
+    /// Rejects ids that are not real categories, with a wording that says which.
+    /// Left to the database this would surface as a raw FK violation (a 500) on
+    /// the first bad id in the list, which tells a member nothing about what
+    /// they got wrong.
+    /// </summary>
+    private async Task<List<byte>> ValidateCategoryIdsAsync(IReadOnlyList<byte> ids, CancellationToken ct)
+    {
+        var distinct = ids.Distinct().ToList();
+        if (distinct.Count == 0) return distinct;
+
+        // One query for the whole category list, then a set lookup. A loop of
+        // GetCategoryByIdAsync would be an N+1, and the caller already fetches
+        // every category in BuildCategoriesDtoAsync.
+        var known = (await _categories.GetCategoriesAsync(ct)).Select(c => c.CategoryId).ToHashSet();
+        var unknown = distinct.Where(id => !known.Contains(id)).ToList();
+
+        if (unknown.Count > 0)
+            throw new ValidationException($"Unknown categor{(unknown.Count == 1 ? "y" : "ies")}: {string.Join(", ", unknown)}.");
+
+        return distinct;
+    }
+
+    private async Task<ProfileCategoriesDto> BuildCategoriesDtoAsync(
+        List<byte> favIds, List<byte> interestIds, CancellationToken ct)
+    {
+        // One query for every category, then filtered in memory: the set is
+        // small and fixed, so this avoids an N+1 across two lists.
+        var all = await _categories.GetCategoriesAsync(ct);
+        var byId = all.ToDictionary(c => c.CategoryId);
+
+        CategoryChipDto Chip(byte id) =>
+            byId.TryGetValue(id, out var c)
+                ? new CategoryChipDto(c.CategoryId, c.Slug, c.Name)
+                // A row can outlive its category if a category is ever removed.
+                // Report the id rather than dropping the entry, so the member can
+                // see and clear it instead of watching it vanish.
+                : new CategoryChipDto(id, string.Empty, $"Category {id}");
+
+        return new ProfileCategoriesDto(favIds.Select(Chip).ToList(), interestIds.Select(Chip).ToList());
+    }
+
+    public async Task<AvatarDto> SetAvatarAsync(uint userId, string? avatarPath, CancellationToken ct = default)
+    {
+        await _users.SetAvatarPathAsync(userId, avatarPath, ct);
+        return new AvatarDto(avatarPath);
+    }
+
+    // ---------- Recent activity ----------
+
+    public async Task<IReadOnlyList<ActivityDto>> GetActivityAsync(
+        uint userId, int take = 10, CancellationToken ct = default)
+    {
+        // Clamped rather than trusted: this value reaches the Take() below, and
+        // an unbounded ?take= is a cheap way to pull the whole table.
+        var limit = Math.Clamp(take, 1, 50);
+        var rows = await _users.GetRecentActivityAsync(userId, limit, ct);
+
+        return rows
+            .Select(a => new ActivityDto(a.LogId, a.Action, a.TargetId, a.CreatedAt))
+            .ToList();
+    }
+
+    // ---------- Email verification ----------
+
+    public async Task<string> RequestEmailVerificationAsync(string email, CancellationToken ct = default)
+    {
+        var user = await _users.GetByEmailAsync(email, ct);
+
+        // Same rule as the password reset: succeed whether or not the account
+        // exists, so this cannot be used to enumerate registered addresses.
+        if (user is null || user.IsVerified)
+            return string.Empty;
+
+        var token = Convert.ToHexString(System.Security.Cryptography.RandomNumberGenerator.GetBytes(32));
+
+        await _users.AddEmailVerificationTokenAsync(new EmailVerificationToken
+        {
+            UserId = user.UserId,
+            TokenHash = HashToken(token),
+            ExpiresAt = DateTime.UtcNow.AddDays(1),
+            CreatedAt = DateTime.UtcNow,
+        }, ct);
+
+        var link = $"{_frontendBaseUrl.TrimEnd('/')}/verify-email?token={Uri.EscapeDataString(token)}";
+        _log.LogInformation(
+            "Email verification link for {UserId}: {Link} (no mail server configured — " +
+            "a deployment would send this and return 202 with no body).",
+            user.UserId, link);
+
+        return token;
+    }
+
+    public async Task ConfirmEmailAsync(ConfirmVerificationRequest request, CancellationToken ct = default)
+    {
+        if (string.IsNullOrWhiteSpace(request.Token))
+            throw new ValidationException("That verification link is not valid.");
+
+        var row = await _users.GetEmailVerificationTokenAsync(HashToken(request.Token), ct);
+
+        if (row is null || row.UsedAt is not null || row.ExpiresAt < DateTime.UtcNow)
+            throw new ValidationException("That verification link is no longer valid.");
+
+        row.UsedAt = DateTime.UtcNow;
+        await _users.SetVerifiedAsync(row.UserId, ct);
+
+        await _users.AddActivityAsync(new ActivityLog
+        {
+            UserId = row.UserId,
+            Action = "email_verified",
             CreatedAt = DateTime.UtcNow,
         }, ct);
     }

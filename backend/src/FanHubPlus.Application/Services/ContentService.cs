@@ -118,7 +118,17 @@ public class ContentService : IContentService
         await _content.CreateAsync(content, ct);
         await LogAsync(adminUserId, "content_create", content.ContentId, ct);
 
-        return await ToDetailAsync(content, adminUserId, ct);
+        // After the insert, so the row has an id for the join table to point at.
+        if (request.Genres is { Count: > 0 })
+            await _content.SetGenresAsync(content.ContentId, content.CategoryId, request.Genres, ct);
+
+        // Re-read rather than returning the entity we just built. A constructed
+        // Content has no Category or ContentGenres navigation loaded, so
+        // ToDetailAsync would report an empty categorySlug and no genres — and
+        // the admin panel renders the response it is given straight into its
+        // table, showing a blank fandom badge for a title that exists.
+        var created = await _content.GetByIdAsync(content.ContentId, ct) ?? content;
+        return await ToDetailAsync(created, adminUserId, ct);
     }
 
     public async Task<ContentDetailDto> UpdateAsync(
@@ -144,7 +154,16 @@ public class ContentService : IContentService
         await _content.UpdateAsync(content, ct);
         await LogAsync(adminUserId, "content_update", contentId, ct);
 
-        return await ToDetailAsync(content, adminUserId, ct);
+        // Only when the caller actually sent the field. A partial update that
+        // omitted Genres must not wipe them, so this is not an unconditional call.
+        if (request.Genres is not null)
+            await _content.SetGenresAsync(contentId, content.CategoryId, request.Genres, ct);
+
+        // Re-read for the same reason as create: the genres just written are not
+        // on the tracked entity's navigation, so returning it here would report
+        // the OLD genre list and the caller would render stale tags.
+        var updated = await _content.GetByIdAsync(contentId, ct) ?? content;
+        return await ToDetailAsync(updated, adminUserId, ct);
     }
 
     public async Task<bool> DeleteAsync(uint contentId, uint adminUserId, CancellationToken ct = default)

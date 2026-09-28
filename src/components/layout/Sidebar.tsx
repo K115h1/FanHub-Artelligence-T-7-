@@ -7,6 +7,7 @@ import type { IconType } from 'react-icons'
 import {
   FaHome,
   FaCompass,
+  FaTachometerAlt,
   FaUser,
   FaBookmark,
   FaCalendarAlt,
@@ -55,7 +56,12 @@ const categories: CategoryItem[] = CATEGORIES.map((category) => ({
   tone: TONE_BY_SLUG[category.slug] ?? 'bg-accent',
 }))
 
+// Dashboard leads the group because it is where a signed-in member actually
+// starts: greeting, their activity, and the "share something" form that opens
+// the fan-submission flow. It is the only route a signed-out visitor cannot
+// follow, so RequireAuth handles it the same way as Profile and Bookmarks.
 const userNav: SidebarItem[] = [
+  { label: 'Dashboard', icon: FaTachometerAlt, path: '/dashboard' },
   { label: 'My Profile', icon: FaUser, path: '/profile' },
   { label: 'Bookmarks', icon: FaBookmark, path: '/bookmarks' },
   { label: 'Events', icon: FaCalendarAlt, path: '/events' },

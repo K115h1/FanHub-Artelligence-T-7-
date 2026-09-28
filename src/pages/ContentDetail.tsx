@@ -10,6 +10,7 @@ import PageHero from '../components/common/PageHero'
 import BackButton from '../components/common/BackButton'
 import SectionHeader from '../components/common/SectionHeader'
 import ContentCard from '../components/common/ContentCard'
+import { ContentDetailSkeleton } from '../components/common/skeletons'
 import ArticleCard from '../components/common/ArticleCard'
 import BookmarkButton from '../components/common/BookmarkButton'
 import RatingDisplay from '../components/common/RatingDisplay'
@@ -90,15 +91,7 @@ export default function ContentDetail() {
   const rating = item ? (get('content', item.id) || item.userRating || 0) : 0
 
   if (loading) {
-    return (
-      <div className="mx-auto w-full max-w-7xl space-y-6 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
-        <div className="h-64 animate-pulse rounded-xl border border-line bg-surface-sunken" />
-        <div className="grid gap-6 lg:grid-cols-3">
-          <div className="h-80 animate-pulse rounded-xl border border-line bg-surface-sunken lg:col-span-2" />
-          <div className="h-48 animate-pulse rounded-xl border border-line bg-surface-sunken" />
-        </div>
-      </div>
-    )
+    return <ContentDetailSkeleton />
   }
 
   // A 404 is a real answer, not an error worth shouting about; anything else is.

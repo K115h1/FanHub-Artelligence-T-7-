@@ -8,6 +8,7 @@ import { MapPin, Ticket, Globe, Check, Share2, CalendarDays, ArrowRight } from '
 import PageHero from '../components/common/PageHero'
 import SectionHeader from '../components/common/SectionHeader'
 import EventCard from '../components/common/EventCard'
+import { EventDetailSkeleton } from '../components/common/skeletons'
 import { CategoryDot } from '../components/common/CategoryArt'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { useAsync } from '../hooks/useAsync'
@@ -50,11 +51,7 @@ export default function EventDetail() {
   }, [event, allEvents])
 
   if (loading) {
-    return (
-      <div className="mx-auto w-full max-w-5xl space-y-4 px-4 py-10 sm:px-6">
-        <div className="h-56 animate-pulse rounded-xl border border-line bg-surface-sunken" />
-      </div>
-    )
+    return <EventDetailSkeleton />
   }
 
   if (error || !event) {

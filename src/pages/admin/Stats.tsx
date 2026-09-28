@@ -13,21 +13,8 @@
 import { BarChart, ChartCard, RingStat, StackedMeter } from '../../components/charts'
 import { AdminPageHeader, StatTile } from '../../components/admin/shared'
 import { useAdminData } from '../../features/admin/AdminDataProvider'
-import { useAdminStats } from '../../features/admin/hooks'
+import { useAdminStats, useTopGenres } from '../../features/admin/hooks'
 import { BookMarked, Image, Layers, ScrollText } from 'lucide-react'
-
-/** The twenty most-used genre tags across the catalogue. */
-function useTopGenres() {
-  const { rows } = useAdminData()
-  const counts = new Map<string, number>()
-  for (const row of rows) {
-    for (const genre of row.genres) counts.set(genre, (counts.get(genre) ?? 0) + 1)
-  }
-  return [...counts.entries()]
-    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-    .slice(0, 20)
-    .map(([label, value]) => ({ label, value }))
-}
 
 export default function Stats() {
   const stats = useAdminStats()

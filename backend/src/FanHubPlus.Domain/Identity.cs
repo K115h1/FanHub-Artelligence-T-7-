@@ -29,6 +29,7 @@ public class User
 
     public List<UserRole> UserRoles { get; set; } = [];
     public List<UserFavoriteCategory> FavoriteCategories { get; set; } = [];
+    public List<UserInterestCategory> InterestCategories { get; set; } = [];
     public List<Bookmark> Bookmarks { get; set; } = [];
     public List<MediaRating> Ratings { get; set; } = [];
 }
@@ -43,12 +44,39 @@ public class UserRole
     public Role Role { get; set; } = null!;
 }
 
+// Join row for the SECOND category list: what a member follows, as distinct
+// from what they have favourited. Separate type (not a flag on
+// UserFavoriteCategory) so the two signals cannot overwrite each other.
+public class UserInterestCategory
+{
+    public uint UserId { get; set; }
+    public byte CategoryId { get; set; }
+
+    public User User { get; set; } = null!;
+    public Category Category { get; set; } = null!;
+}
+
 public class PasswordResetToken
 {
     public uint TokenId { get; set; }
     public uint UserId { get; set; }
 
     // SHA-256 of the emailed token. The plaintext is never stored.
+    public string TokenHash { get; set; } = string.Empty;
+    public DateTime ExpiresAt { get; set; }
+    public DateTime? UsedAt { get; set; }
+    public DateTime CreatedAt { get; set; }
+
+    public User User { get; set; } = null!;
+}
+
+// Email verification, kept as its own type so a verification link can never be
+// presented to the reset-password endpoint, or the reverse.
+public class EmailVerificationToken
+{
+    public uint TokenId { get; set; }
+    public uint UserId { get; set; }
+
     public string TokenHash { get; set; } = string.Empty;
     public DateTime ExpiresAt { get; set; }
     public DateTime? UsedAt { get; set; }

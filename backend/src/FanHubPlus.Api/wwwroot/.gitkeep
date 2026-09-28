@@ -1,0 +1,13 @@
+Uploaded avatars are written here, at runtime, under images/avatars/.
+
+The directory is committed (via this file) rather than created on first upload
+for two reasons:
+
+  * The SDK's static-web-assets manifest, loaded at startup in Development,
+    resolves paths under wwwroot. If the folder is missing, the app throws
+    before it can serve anything.
+  * UseStaticFiles builds its file provider once, at startup. A directory that
+    only appears later is invisible to it, so those files 404 forever.
+
+Uploaded files themselves are NOT committed. Add images/avatars/ to
+.gitignore if this is ever committed from a machine that has uploaded.

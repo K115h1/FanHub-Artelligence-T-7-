@@ -74,7 +74,11 @@ public record CreateContentRequest(
     string? ShortSynopsis,
     string? Synopsis,
     ushort? ReleaseYear,
-    string? PosterPath);
+    string? PosterPath,
+    // Genre names rather than ids: the admin editor has a list of strings, and
+    // names are stable across a re-import where surrogate ids are not. Null
+    // leaves the title with no genres.
+    List<string>? Genres = null);
 
 public record UpdateContentRequest(
     string? Title,
@@ -82,7 +86,11 @@ public record UpdateContentRequest(
     string? Synopsis,
     ushort? ReleaseYear,
     string? PosterPath,
-    string? Status);
+    string? Status,
+    // Null means "leave the genres alone", which is what a partial edit of
+    // some other field needs. An empty list means "remove them all", and is
+    // deliberately distinguishable from null.
+    List<string>? Genres = null);
 
 public record EventDto(
     uint Id,
@@ -118,6 +126,8 @@ public record UpdateFeedbackStatusRequest(string Status);
 
 public record CreateSubmissionRequest(
     byte CategoryId,
+    /// <summary>SubmissionKind as a string: article, character_profile, event_highlight.</summary>
+    string Kind,
     string Title,
     string Body);
 
@@ -126,11 +136,17 @@ public record SubmissionDto(
     string Title,
     string Body,
     string Status,
+    string Kind,
     string CategorySlug,
     string UserName,
+    string? ModeratorNote,
+    DateTime? DecidedAt,
     DateTime CreatedAt);
 
-public record UpdateSubmissionStatusRequest(string Status);
+public record UpdateSubmissionStatusRequest(
+    string Status,
+    /// <summary>Optional note shown back to the fan alongside the decision.</summary>
+    string? Note = null);
 
 public record RatingRequest(int Stars);
 
@@ -169,9 +185,15 @@ public record AdminStatsDto(
     int TotalGenres,
     int ContentsWithPoster,
     int ContentsWithSynopsis,
+    // Added so the stats page can report year coverage instead of the client
+    // counting a page of rows it does not have.
+    int ContentsWithYear,
     int TotalUsers,
     int OpenFeedback,
     int PendingSubmissions);
+
+/// <summary>How many titles carry a given genre. For the "most used genres" table.</summary>
+public record AdminGenreStatDto(string Name, int Count);
 
 public record AdminStatsCategoryDto(
     string Slug,

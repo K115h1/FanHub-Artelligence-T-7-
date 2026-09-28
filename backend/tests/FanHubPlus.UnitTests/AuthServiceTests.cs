@@ -6,6 +6,7 @@ using FanHubPlus.Application.Services;
 using FanHubPlus.Domain;
 using FanHubPlus.Infrastructure;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
@@ -18,7 +19,13 @@ public class AuthServiceTests
         var hasher = new PasswordHasher<User>();
         var tokenService = tokens ?? new FixedTokenService();
 
-        return new AuthService(users, hasher, tokenService, NullLogger<AuthService>.Instance);
+        return new AuthService(
+            users,
+            new FakeContentRepository(),
+            hasher,
+            tokenService,
+            NullLogger<AuthService>.Instance,
+            new ConfigurationBuilder().AddInMemoryCollection().Build());
     }
 
     [Fact]
@@ -236,4 +243,98 @@ internal class FakeUserRepository : IUserRepository
         Task.FromResult<PasswordResetToken?>(null);
 
     public Task AddResetTokenAsync(PasswordResetToken token, CancellationToken ct = default) => Task.CompletedTask;
+
+    // ---- Category lists ----
+    // Held in memory and behaving like the real thing (replace wholesale,
+    // de-duplicated, sorted) so the service's validation can be tested without
+    // a database.
+
+    public List<byte> Favorites { get; } = [];
+    public List<byte> Interests { get; } = [];
+
+    public Task<List<byte>> GetFavoriteCategoryIdsAsync(uint userId, CancellationToken ct = default) =>
+        Task.FromResult(Favorites.OrderBy(id => id).ToList());
+
+    public Task<List<byte>> GetInterestCategoryIdsAsync(uint userId, CancellationToken ct = default) =>
+        Task.FromResult(Interests.OrderBy(id => id).ToList());
+
+    public Task SetFavoriteCategoriesAsync(uint userId, IEnumerable<byte> categoryIds, CancellationToken ct = default)
+    {
+        Favorites.Clear();
+        Favorites.AddRange(categoryIds.Distinct().OrderBy(id => id));
+        return Task.CompletedTask;
+    }
+
+    public Task SetInterestCategoriesAsync(uint userId, IEnumerable<byte> categoryIds, CancellationToken ct = default)
+    {
+        Interests.Clear();
+        Interests.AddRange(categoryIds.Distinct().OrderBy(id => id));
+        return Task.CompletedTask;
+    }
+
+    public string? AvatarPath { get; private set; }
+
+    public Task SetAvatarPathAsync(uint userId, string? avatarPath, CancellationToken ct = default)
+    {
+        AvatarPath = avatarPath;
+        return Task.CompletedTask;
+    }
+
+    // ---- Email verification ----
+
+    public List<EmailVerificationToken> EmailTokens { get; } = [];
+
+    public Task AddEmailVerificationTokenAsync(EmailVerificationToken token, CancellationToken ct = default)
+    {
+        EmailTokens.Add(token);
+        return Task.CompletedTask;
+    }
+
+    public Task<EmailVerificationToken?> GetEmailVerificationTokenAsync(string tokenHash, CancellationToken ct = default) =>
+        Task.FromResult<EmailVerificationToken?>(EmailTokens.FirstOrDefault(t => t.TokenHash == tokenHash));
+
+    public bool Verified { get; private set; }
+
+    public Task SetVerifiedAsync(uint userId, CancellationToken ct = default)
+    {
+        Verified = true;
+        return Task.CompletedTask;
+    }
+
+    public List<ActivityLog> Activity { get; } = [];
+
+    public Task<List<ActivityLog>> GetRecentActivityAsync(uint userId, int take, CancellationToken ct = default) =>
+        // Newest first, matching the real query, so ordering bugs show up here.
+        Task.FromResult(Activity.OrderByDescending(a => a.CreatedAt).ThenByDescending(a => a.LogId).Take(take).ToList());
+}
+
+/// The category lookups AuthService needs. Only the two members it calls are
+/// implemented; the rest throw so an accidental new dependency is loud rather
+/// than silently returning null.
+internal class FakeContentRepository : IContentRepository
+{
+    public List<Category> Categories { get; } = [];
+
+    public Task<Category?> GetCategoryByIdAsync(byte categoryId, CancellationToken ct = default) =>
+        Task.FromResult(Categories.FirstOrDefault(c => c.CategoryId == categoryId));
+
+    public Task<List<Category>> GetCategoriesAsync(CancellationToken ct = default) =>
+        Task.FromResult(Categories.ToList());
+
+    private static Exception NotUsed() => new NotSupportedException("FakeContentRepository: not needed by these tests.");
+
+    public Task<PagedResult<Content>> BrowseAsync(ContentQuery query, CancellationToken ct = default) => throw NotUsed();
+    public Task<Content?> GetByIdAsync(uint contentId, CancellationToken ct = default) => throw NotUsed();
+    public Task<Content?> GetBySlugAsync(string slug, byte? categoryId = null, CancellationToken ct = default) => throw NotUsed();
+    public Task<Content> CreateAsync(Content content, CancellationToken ct = default) => throw NotUsed();
+    public Task UpdateAsync(Content content, CancellationToken ct = default) => throw NotUsed();
+    public Task<bool> DeleteAsync(uint contentId, CancellationToken ct = default) => throw NotUsed();
+    public Task IncrementViewCountAsync(uint contentId, CancellationToken ct = default) => throw NotUsed();
+    public Task<Category?> GetCategoryBySlugAsync(string slug, CancellationToken ct = default) => throw NotUsed();
+    public Task<List<Genre>> GetGenresAsync(byte? categoryId = null, CancellationToken ct = default) => throw NotUsed();
+    public Task SetGenresAsync(uint contentId, byte categoryId, IEnumerable<string> genreNames, CancellationToken ct = default) => throw NotUsed();
+    public Task<List<Content>> GetByIdsAsync(IEnumerable<uint> ids, CancellationToken ct = default) => throw NotUsed();
+    public Task<CatalogCounts> GetCountsAsync(byte? categoryId = null, CancellationToken ct = default) => throw NotUsed();
+    public Task<int> CountDistinctGenreNamesAsync(CancellationToken ct = default) => throw NotUsed();
+    public Task<List<(string Name, int Count)>> GetGenreUsageAsync(int take = 20, CancellationToken ct = default) => throw NotUsed();
 }

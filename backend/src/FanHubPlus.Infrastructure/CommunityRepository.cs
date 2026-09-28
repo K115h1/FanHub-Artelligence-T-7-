@@ -75,19 +75,35 @@ public class CommunityRepository : ICommunityRepository
     }
 
     public async Task<PagedResult<FanSubmission>> GetSubmissionsAsync(
-        SubmissionStatus? status, int page, int pageSize, CancellationToken ct = default)
+        SubmissionStatus? status, int page, int pageSize, uint? userId = null,
+        SubmissionKind? kind = null, CancellationToken ct = default)
     {
         var q = _db.FanSubmissions.AsNoTracking()
             .Include(s => s.User).Include(s => s.Category).AsQueryable();
         if (status.HasValue)
             q = q.Where(s => s.Status == status.Value);
 
+        // Filters in SQL, not after the fact. The controller's "mine" endpoint
+        // used to page over everyone's submissions and then discard all but the
+        // caller's, so past page 1 it returned other people's rows and dropped
+        // the caller's own - and it matched on display name, so anyone sharing a
+        // name saw them too.
+        if (userId.HasValue)
+            q = q.Where(s => s.UserId == userId.Value);
+
+        // Which kind of fan content, for the queue's filter.
+        if (kind.HasValue)
+            q = q.Where(s => s.Kind == kind.Value);
+
         var total = await q.CountAsync(ct);
         var p = page < 1 ? 1 : page;
         var size = pageSize is < 1 or > 100 ? 25 : pageSize;
 
+        // Pending first, newest within each group: clearing the queue is the
+        // job, and interleaving decided items with waiting ones buries them.
         var items = await q
-            .OrderByDescending(s => s.CreatedAt)
+            .OrderBy(s => s.Status == SubmissionStatus.Pending ? 0 : 1)
+            .ThenByDescending(s => s.CreatedAt)
             .Skip((p - 1) * size).Take(size)
             .ToListAsync(ct);
 
@@ -106,13 +122,33 @@ public class CommunityRepository : ICommunityRepository
         return submission;
     }
 
-    public async Task SetSubmissionStatusAsync(uint submissionId, SubmissionStatus status, CancellationToken ct = default)
+    public async Task SetSubmissionStatusAsync(
+        uint submissionId, SubmissionStatus status, uint adminUserId, string? note, CancellationToken ct = default)
     {
         var row = await _db.FanSubmissions.FirstOrDefaultAsync(s => s.SubmissionId == submissionId, ct);
         if (row is null) return;
 
         row.Status = status;
+        row.ModeratorNote = note;
+        row.DecidedBy = adminUserId;
+        row.DecidedAt = DateTime.UtcNow;
         await _db.SaveChangesAsync(ct);
+    }
+
+    public async Task<Dictionary<string, int>> GetSubmissionCountsAsync(CancellationToken ct = default)
+    {
+        // One grouped query rather than three counts, so the filter chips cost
+        // a single round trip. Keys go out in the stored lowercase form, because
+        // a Dictionary<SubmissionStatus, _> would serialise as {"Pending": 4} and
+        // the client's filter list is spelled in lowercase.
+        var grouped = await _db.FanSubmissions.AsNoTracking()
+            .GroupBy(s => s.Status)
+            .Select(g => new { Status = g.Key, Count = g.Count() })
+            .ToListAsync(ct);
+
+        return grouped.ToDictionary(
+            x => EnumConverter.ToWireString(x.Status),
+            x => x.Count);
     }
 
     public Task<List<MerchandiseItem>> GetMerchandiseAsync(byte? categoryId = null, CancellationToken ct = default)

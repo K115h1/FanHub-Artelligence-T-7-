@@ -1,65 +1,55 @@
-// AdminDataProvider — the admin panel's data layer.
+// AdminDataProvider — the admin panel's data layer, backed by the API.
 //
-// There is no API yet, so this holds everything the panel needs on the device:
+// This used to hold everything on the device: the whole 2,934-title catalogue
+// was bundled as JSON and layered with edits in localStorage, and the feedback
+// and submission queues were seeded arrays. Every "edit" was a browser-local
+// overlay that vanished for the next administrator and was never visible to a
+// visitor. It now reads and writes the same tables the public site reads.
 //
-//   * the 2,490-title catalogue generated from the same JSON that produced the
-//     database (src/data/catalog.json, verified against the seed SQL by
-//     scripts/verifyCatalog.mjs), plus any admin edits, additions and deletions
-//   * the feedback and fan-submission moderation queues
+// What changed and why it is shaped this way:
 //
-// The catalogue itself is NOT persisted — it is 441KB of generated data. Only
-// the admin's changes to it are, so a reload keeps your work without the
-// bundle carrying two copies of the same titles.
+//   * The catalogue is no longer held in memory. It is ~2,934 rows and the
+//     content manager already paged it to 25 at a time, so paging now happens in
+//     SQL (see useCatalog in hooks.ts) instead of filtering a bundled array.
+//     That is what lets the 441KB JSON drop out of the bundle entirely.
+//   * Moderation queues keep their array shape. The pages filter them by status
+//     and free text across the whole set, and both queues are small enough that
+//     a single fetch beats paging. Mutations are optimistic: the row updates
+//     immediately and reverts if the API refuses, because a moderator working
+//     through a queue should not wait on a round trip per click.
 //
-// When the API lands this provider is deleted and the hooks fetch instead; the
-// hook signatures are the seam.
-
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import catalogJson from '../../data/catalog.json'
-import type { FanSubmission, FeedbackItem, FeedbackStatus, SubmissionStatus } from '../../types/models'
-import { SEED_FEEDBACK, SEED_SUBMISSIONS } from './seed'
-import type { CatalogEdit, CatalogRow, ContentOverrides, FandomKey } from './types'
-
-const OVERRIDES_KEY = 'fanhub.admin.content.v1'
-const FEEDBACK_KEY = 'fanhub.admin.feedback.v1'
-const SUBMISSIONS_KEY = 'fanhub.admin.submissions.v1'
-
-const BASE_CATALOGUE = catalogJson as unknown as CatalogRow[]
-
-export const EMPTY_OVERRIDES: ContentOverrides = { edits: {}, deleted: [], added: [] }
-
-/** Reads a persisted key, falling back to the seed when absent or corrupt. */
-function load<T>(key: string, fallback: T): T {
-  try {
-    const raw = window.localStorage.getItem(key)
-    return raw ? (JSON.parse(raw) as T) : fallback
-  } catch {
-    return fallback
-  }
-}
+// Every call here is [Authorize(Roles = "admin")], so a 403 means the session
+// lost the role rather than that the panel is broken.
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react'
+import * as adminApi from '../../services/admin.service'
+import type { FeedbackEntry, SubmissionEntry } from '../../types/models'
+import type { FandomKey } from './types'
 
 export interface AdminDataValue {
-  /** Catalogue with admin edits applied and deletions removed. */
-  rows: CatalogRow[]
-  /** Row count before deletions — the "original catalogue" figure for stats. */
-  baseCount: number
-  /** How many rows the admin has changed, added or removed. */
-  changeCount: number
+  /** The whole feedback queue, newest first as the server orders it. */
+  feedback: FeedbackEntry[]
+  /** The whole submission queue, newest first. */
+  submissions: SubmissionEntry[]
+  loading: boolean
+  error: string | null
 
-  updateRow: (id: number, patch: Partial<CatalogEdit>) => void
-  addRow: (draft: Omit<CatalogRow, 'id'>) => void
-  /** Remove a row from the catalogue. Reversible via revertRow. */
-  deleteRow: (id: number) => void
-  /** Restore a single deleted row, or drop an edit on a live row. */
-  revertRow: (id: number) => void
-  /** Remove every admin change, returning the catalogue to its loaded state. */
-  resetContent: () => void
-
-  feedback: FeedbackItem[]
-  setFeedbackStatus: (id: string, status: FeedbackStatus) => void
-
-  submissions: FanSubmission[]
-  setSubmissionStatus: (id: string, status: SubmissionStatus) => void
+  /** Move a feedback entry to a new status. Optimistic, reverts on failure. */
+  setFeedbackStatus: (id: number, status: string) => Promise<void>
+  /** Remove a feedback entry. */
+  deleteFeedback: (id: number) => Promise<void>
+  /** Move a submission to pending/approved/rejected. */
+  setSubmissionStatus: (id: number, status: string, note?: string) => Promise<void>
+  /** Re-read both queues from the server. */
+  refresh: () => void
 }
 
 const AdminDataContext = createContext<AdminDataValue | null>(null)
@@ -70,121 +60,110 @@ export function useAdminData(): AdminDataValue {
   return value
 }
 
-export function AdminDataProvider({ children }: { children: React.ReactNode }) {
-  const [overrides, setOverrides] = useState<ContentOverrides>(() =>
-    load<ContentOverrides>(OVERRIDES_KEY, EMPTY_OVERRIDES),
-  )
-  const [feedback, setFeedback] = useState<FeedbackItem[]>(() =>
-    load<FeedbackItem[]>(FEEDBACK_KEY, SEED_FEEDBACK),
-  )
-  const [submissions, setSubmissions] = useState<FanSubmission[]>(() =>
-    load<FanSubmission[]>(SUBMISSIONS_KEY, SEED_SUBMISSIONS),
-  )
+/** Feedback and submissions are small; one page each is the whole queue. */
+const QUEUE_SIZE = 100
 
-  useEffect(() => {
-    window.localStorage.setItem(OVERRIDES_KEY, JSON.stringify(overrides))
-  }, [overrides])
-  useEffect(() => {
-    window.localStorage.setItem(FEEDBACK_KEY, JSON.stringify(feedback))
-  }, [feedback])
-  useEffect(() => {
-    window.localStorage.setItem(SUBMISSIONS_KEY, JSON.stringify(submissions))
-  }, [submissions])
+export function AdminDataProvider({ children }: { children: ReactNode }) {
+  const [feedback, setFeedback] = useState<FeedbackEntry[]>([])
+  const [submissions, setSubmissions] = useState<SubmissionEntry[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  // Bumped by refresh() so an in-flight load knows it has been superseded. A
+  // ref, not state: writing it must not itself schedule a render.
+  const runId = useRef(0)
 
-  // Layer the admin's changes over the read-only catalogue.
-  const rows = useMemo(() => {
-    const removed = new Set(overrides.deleted)
-    const merged = BASE_CATALOGUE.filter((row) => !removed.has(row.id)).map((row) => {
-      const edit = overrides.edits[row.id]
-      return edit ? { ...row, ...edit, genres: edit.genres ?? row.genres } : row
-    })
-    return [...merged, ...overrides.added]
-  }, [overrides])
+  const load = useCallback(() => {
+    const mine = ++runId.current
+    setLoading(true)
+    setError(null)
 
-  const updateRow = useCallback((id: number, patch: Partial<CatalogEdit>) => {
-    setOverrides((prev) => ({
-      ...prev,
-      edits: { ...prev.edits, [id]: { ...prev.edits[id], ...patch } },
-    }))
-  }, [])
+    void Promise.allSettled([
+      adminApi.getFeedback(undefined, 1, QUEUE_SIZE),
+      adminApi.getSubmissions(undefined, 1, QUEUE_SIZE),
+    ]).then(([fb, subs]) => {
+      if (mine !== runId.current) return
 
-  const addRow = useCallback((draft: Omit<CatalogRow, 'id'>) => {
-    setOverrides((prev) => {
-      // Ids continue past the end of the fandom's block so a new row can never
-      // collide with a generated one.
-      const highest = Math.max(0, ...prev.added.map((row) => row.id))
-      const inFandom = BASE_CATALOGUE.filter((row) => row.fandom === draft.fandom)
-      const base = inFandom.length ? Math.max(...inFandom.map((row) => row.id)) : highest
-      return {
-        ...prev,
-        added: [...prev.added, { ...draft, id: Math.max(base, highest) + 1 }],
-      }
+      // One failure must not blank the other queue, so each is settled on its own.
+      if (fb.status === 'fulfilled') setFeedback(fb.value.items)
+      else setError('The feedback queue could not be loaded.')
+
+      if (subs.status === 'fulfilled') setSubmissions(subs.value.items)
+      else setError((prev) => prev ?? 'The submissions queue could not be loaded.')
+
+      setLoading(false)
     })
   }, [])
 
-  const deleteRow = useCallback((id: number) => {
-    setOverrides((prev) =>
-      prev.deleted.includes(id)
-        ? prev
-        : { ...prev, deleted: [...prev.deleted, id] },
-    )
-  }, [])
+  useEffect(() => {
+    load()
+  }, [load])
 
-  const revertRow = useCallback((id: number) => {    setOverrides((prev) => {
-      const edits = { ...prev.edits }
-      delete edits[id]
-      return {
-        edits,
-        deleted: prev.deleted.filter((rowId) => rowId !== id),
-        added: prev.added.filter((row) => row.id !== id),
-      }
-    })
-  }, [])
-
-  const resetContent = useCallback(() => setOverrides(EMPTY_OVERRIDES), [])
-
-  const setFeedbackStatus = useCallback((id: string, status: FeedbackStatus) => {
+  const setFeedbackStatus = useCallback(async (id: number, status: string) => {
+    const before = feedback
+    // Optimistic: the queue is a work list, and waiting on the round trip to
+    // move a card makes working a queue feel broken.
     setFeedback((prev) => prev.map((item) => (item.id === id ? { ...item, status } : item)))
-  }, [])
+    try {
+      await adminApi.updateFeedbackStatus(id, status)
+    } catch (err) {
+      setFeedback(before)
+      setError(err instanceof Error ? err.message : 'That status change did not save.')
+    }
+  }, [feedback])
 
-  const setSubmissionStatus = useCallback((id: string, status: SubmissionStatus) => {
-    setSubmissions((prev) => prev.map((item) => (item.id === id ? { ...item, status } : item)))
-  }, [])
+  const deleteFeedback = useCallback(async (id: number) => {
+    const before = feedback
+    setFeedback((prev) => prev.filter((item) => item.id !== id))
+    try {
+      await adminApi.deleteFeedback(id)
+    } catch (err) {
+      setFeedback(before)
+      setError(err instanceof Error ? err.message : 'That entry could not be deleted.')
+    }
+  }, [feedback])
 
-  const changeCount = useMemo(
-    () =>
-      Object.keys(overrides.edits).length + overrides.deleted.length + overrides.added.length,
-    [overrides],
+  const setSubmissionStatus = useCallback(
+    async (id: number, status: string, note?: string) => {
+      const before = submissions
+      const decidedAt = new Date().toISOString()
+
+      // Optimistic, so the row moves out of the pending group immediately. The
+      // note and decision time are applied here too rather than waiting for a
+      // refetch, because the fan's own list shows them.
+      setSubmissions((prev) =>
+        prev.map((item) =>
+          item.id === id
+            ? { ...item, status, moderatorNote: note ?? item.moderatorNote, decidedAt }
+            : item,
+        ),
+      )
+
+      try {
+        await adminApi.updateSubmissionStatus(id, status, note)
+      } catch (err) {
+        setSubmissions(before)
+        setError(err instanceof Error ? err.message : 'That decision did not save.')
+      }
+    },
+    [submissions],
   )
+
+  const refresh = useCallback(() => {
+    load()
+  }, [load])
 
   const value = useMemo<AdminDataValue>(
     () => ({
-      rows,
-      baseCount: BASE_CATALOGUE.length,
-      changeCount,
-      updateRow,
-      addRow,
-      deleteRow,
-      revertRow,
-      resetContent,
       feedback,
-      setFeedbackStatus,
       submissions,
+      loading,
+      error,
+      setFeedbackStatus,
+      deleteFeedback,
       setSubmissionStatus,
+      refresh,
     }),
-    [
-      rows,
-      changeCount,
-      updateRow,
-      addRow,
-      deleteRow,
-      revertRow,
-      resetContent,
-      feedback,
-      setFeedbackStatus,
-      submissions,
-      setSubmissionStatus,
-    ],
+    [feedback, submissions, loading, error, setFeedbackStatus, deleteFeedback, setSubmissionStatus, refresh],
   )
 
   return <AdminDataContext.Provider value={value}>{children}</AdminDataContext.Provider>
@@ -202,7 +181,10 @@ export const FANDOM_LABELS: Record<FandomKey, string> = {
   tvshows: 'TV Shows',
 }
 
-/** Every distinct genre in the catalogue, alphabetically. */
-export function allGenres(rows: CatalogRow[]): string[] {
-  return [...new Set(rows.flatMap((row) => row.genres))].sort((a, b) => a.localeCompare(b))
-}
+/**
+ * The order categories appear in, for stats tables and filter dropdowns.
+ *
+ * One list, because FANDOM_LABELS being a separate map is how "tvshows" ended
+ * up missing from the stats while every other panel knew about it.
+ */
+export const FANDOM_ORDER: FandomKey[] = ['movies', 'anime', 'games', 'comics', 'kpop', 'tvshows']

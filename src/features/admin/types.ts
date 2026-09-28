@@ -5,7 +5,7 @@
 // admin view needs database-only fields (raw slug, content_type, null year)
 // that the public UI has no use for.
 
-/** One fandom grouping, matching the five seed files and the `categories` table. */
+/** One fandom grouping, matching the six seed files and the `categories` table. */
 export type FandomKey = 'movies' | 'anime' | 'games' | 'comics' | 'kpop' | 'tvshows'
 
 /** A row in the admin content table. */
@@ -25,8 +25,16 @@ export interface CatalogRow {
   status: ContentStatus
 }
 
-/** Mirrors `contents.status` in the database. */
-export type ContentStatus = 'released' | 'announced' | 'discontinued'
+/**
+ * Mirrors `contents.status` in the database:
+ *   ENUM('released','upcoming','ongoing','ended','cancelled')
+ *
+ * This used to be 'released' | 'announced' | 'discontinued', which matched no
+ * column anywhere. It went unnoticed because the whole bundled catalogue was
+ * one value ('released'), so the filter had nothing to exclude. Against the
+ * real column, filtering by status would have matched nothing at all.
+ */
+export type ContentStatus = 'released' | 'upcoming' | 'ongoing' | 'ended' | 'cancelled'
 
 /** The fields an admin is allowed to change on an existing row. */
 export type CatalogEdit = Pick<

@@ -42,6 +42,39 @@ string conversion writes the C# member name verbatim (`MusicArtist`), which then
 fails to convert back on read — a 500 on any request that touches a K-Pop title.
 `Infrastructure/EnumConverter.cs` maps both directions.
 
+### The same trap, in both directions, fails silently
+
+Two follow-on bugs from the same root, both of which looked like working code:
+
+**Reading.** `Enum.TryParse(value, ignoreCase: true)` handles casing but *not*
+the underscore, so `"character_profile"` does not match `CharacterProfile`. A
+query filter built on it therefore never matched, and returned the whole table
+instead of none — the admin queue's kind filter appeared to do nothing. Use
+`EnumConverter.TryParse<T>()`, which bridges the underscore.
+
+**Writing.** `status.ToString()` puts `"Pending"` on the wire, but the client
+spells its filter list `'pending'`. Every comparison missed and every count read
+zero: the admin queue showed "All statuses (5), Pending (0)". Use
+`EnumConverter.ToWireString()`, which emits the same word the column stores.
+
+Neither throws. Both just quietly show the wrong thing, which is why
+`EnumConversionTests` pins the round trip.
+
+## The API port is 5068, and the CORS allow-list is per-port
+
+`launchSettings.json` sets `applicationUrl` to `http://localhost:5068`, and
+`.env.local` sets `VITE_API_URL` to match. 5000 is a habit, not this app's port.
+
+Forcing another port with `--urls` fails in a misleading way: the API answers
+`/health` fine, so it looks healthy, but every browser request is blocked by
+CORS, because the allow-list holds full origins *including* the port. The
+console shows only `blocked by CORS policy` and the page renders as empty data
+rather than an error.
+
+```powershell
+dotnet user-secrets set "Cors:Origins:3" "http://localhost:5180"
+```
+
 ## Route constraints
 
 ASP.NET Core has no built-in `uint` constraint. Using `{id:uint}` fails the whole
@@ -50,8 +83,8 @@ makes it look like a database problem rather than a routing one. Use `:int`.
 
 ## PowerShell mangles non-ASCII when piping to a program
 
-`$OutputEncoding` defaults to Windows-1252, so piping a UTF-8 file into `mysql.exe`
-turns `é` into `?`. Always set this first:
+`$OutputEncoding` defaults to Windows-1252, so piping a UTF-8 file into
+`mysql.exe` turns `é` into `?`. Always set this first:
 
 ```powershell
 $OutputEncoding = [System.Text.Encoding]::UTF8
@@ -59,6 +92,74 @@ $OutputEncoding = [System.Text.Encoding]::UTF8
 ```
 
 Verified by checking `Les Misérables` is 14 characters / 15 bytes with a `C3A9`.
+
+### Setting `$OutputEncoding` was not enough
+
+It fixes the *output* side only. The read is the problem:
+
+```powershell
+# WRONG - still corrupts, even with $OutputEncoding set above
+Get-Content 04_tvshows_seed.sql -Raw | & $mysql -u root fanhubplus
+```
+
+`Get-Content` without `-Encoding` decodes the file as the system codepage
+first, so `é` (bytes `C3 A9`) becomes the two characters `Ã©` before the pipe
+even starts. MySQL then stores bytes `C3 83 C2 A9` — valid UTF-8, wrong
+value. The load reports success.
+
+Do not pipe. Let MySQL read the file:
+
+```powershell
+& $mysql -u root --default-character-set=utf8mb4 fanhubplus -e "SOURCE C:/.../04_tvshows_seed.sql;"
+```
+
+### The same trap applies to editing a file
+
+`Get-Content -Raw` then `Set-Content -Encoding UTF8` re-encodes every
+non-ASCII character and adds a BOM. It hit `04_tvshows_seed.sql` and left
+`90 Day FiancÃ©` in a file that is supposed to be generated. The fix belongs in
+the generator — `scripts/lib/catalogParse.mjs` had the wrong `categorySlug`, and
+re-running `scripts/importCatalog.mjs` produced a clean file. Patching the
+generated output by hand is what created the mess in the first place.
+
+Node's `readFileSync`/`writeFileSync` are always UTF-8 and are the right tool
+for this. `scripts/findNonAscii.mjs` reports code points, and
+`scripts/hexpeek.mjs` shows raw bytes, so a character can be identified rather
+than guessed at.
+
+## A check that cannot fail is worse than no check
+
+`scripts/scanMojibake.mjs` reported a clean database while matching nothing,
+because the `REGEXP` used `[\xC3][\x80-\xBF]` and MySQL 8's ICU engine does not
+read `\xC3` as a byte escape. Every "0 rows affected" it printed was an
+artefact of a broken pattern, not a clean database.
+
+Two rules follow:
+
+- **Put the logic where the semantics are unambiguous.** The detector is a
+  byte-pattern question, so it runs in Node
+  (`scripts/lib/mojibake.mjs`), not in SQL.
+- **Prove the check can go red before trusting a green result.**
+  `scripts/testScanMojibake.mjs` plants a known-bad row, confirms it is caught,
+  and removes it. It also asserts that real titles in this database are *not*
+  flagged, since a detector that flags everything is as useless as one that
+  flags nothing.
+
+## `categorySlug` may differ from `fandomKey`
+
+`scripts/lib/catalogParse.mjs` keeps the database slug separate from the key
+used for the poster manifest and the image folder:
+
+```js
+games:    { categorySlug: "gaming",  ... }   // manifest key "games"
+kpop:     { categorySlug: "k-pop",   ... }   // manifest key "kpop"
+tvshows:  { categorySlug: "tv-shows", ... }  // manifest key "tvshows"
+```
+
+`tvshows` was shipped as `categorySlug: "tvshows"` while the frontend, the nav
+and `05_reference_data.sql` all used `tv-shows`, so the seeded category could
+never be reached. The posters live in `public/images/tvshows/`, which is why
+the two words have to differ.
 
 ## Poster paths and filenames must be generated together
 

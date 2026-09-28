@@ -1,13 +1,16 @@
 // ContentManager — route: /admin/content.
 //
-// Browses the full 2,490-title catalogue and lets an administrator add, edit and
-// remove rows. The catalogue is the generated src/data/catalog.json, verified
-// row-for-row against the database seed files by scripts/verifyCatalog.mjs, so
-// what is on screen here is what MySQL holds.
+// Browses the catalogue and lets an administrator add, edit and remove rows.
+// The rows come from /admin/contents, paged and filtered in SQL, so what is on
+// screen here is what MySQL holds and an edit is visible to visitors at once.
+// It used to be the bundled src/data/catalog.json with changes layered on in
+// localStorage, which meant an administrator's work was invisible to everyone
+// else and gone on another machine.
 //
-// Deletion is deliberately awkward: a mis-click on a bulk-imported row is
-// unrecoverable without re-running the importer, so removing a title spells the
-// title out in the confirmation and every removal can be reverted.
+// Deletion is deliberately awkward, and now genuinely so: a removal is a real
+// DELETE, so the confirmation spells the title out and says plainly that there
+// is no undo. The old "discard changes" undo existed only because the edits were
+// a local overlay, and it could not undo a real delete.
 
 import { useState } from 'react'
 import {
@@ -15,12 +18,12 @@ import {
   Library,
   Pencil,
   Plus,
-  RotateCcw,
   SearchX,
   Trash2,
   TriangleAlert,
 } from 'lucide-react'
-import { useAdminData, FANDOM_LABELS } from '../../features/admin/AdminDataProvider'
+import { FANDOM_LABELS } from '../../features/admin/AdminDataProvider'
+import { useContentMutations } from '../../features/admin/useContentMutations'
 import { useCatalog } from '../../features/admin/hooks'
 import type { CatalogRow, FandomKey } from '../../features/admin/types'
 import { CreatePanel, EditPanel } from './ContentPanels'
@@ -33,6 +36,7 @@ import {
   Pagination,
   StatTile,
   StatusPill,
+  TableSkeleton,
 } from '../../components/admin/shared'
 import { EmptyState } from '../../components/common/EmptyState'
 import { ConfirmDialog } from '../../components/common/ConfirmDialog'
@@ -45,20 +49,27 @@ const FANDOM_OPTIONS = [
   })),
 ]
 
+// The contents.status column values. 'Announced' and 'Discontinued' were never
+// valid for it, so the filter offered two options that matched nothing.
 const STATUS_OPTIONS = [
   { value: 'all', label: 'Any status' },
   { value: 'released', label: 'Released' },
-  { value: 'announced', label: 'Announced' },
-  { value: 'discontinued', label: 'Discontinued' },
+  { value: 'upcoming', label: 'Upcoming' },
+  { value: 'ongoing', label: 'Ongoing' },
+  { value: 'ended', label: 'Ended' },
+  { value: 'cancelled', label: 'Cancelled' },
 ]
 
 export default function ContentManager() {
-  const { updateRow, addRow, deleteRow, revertRow, resetContent, changeCount } = useAdminData()
   const catalog = useCatalog()
+  // Writes go to the API. The old localStorage overlay's "revert" and "discard
+  // all" controls are gone: an edit is now a real UPDATE, so there is no
+  // un-committed state left to roll back.
+  const { updateRow, addRow, deleteRow, busy, error: mutationError, clearError } =
+    useContentMutations(catalog.refresh)
   const [editing, setEditing] = useState<CatalogRow | null>(null)
   const [creating, setCreating] = useState(false)
   const [removing, setRemoving] = useState<CatalogRow | null>(null)
-  const [resetting, setResetting] = useState(false)
 
   return (
     <>
@@ -67,12 +78,6 @@ export default function ContentManager() {
         description="Search, tag and edit every title in the catalogue."
         action={
           <div className="flex gap-2">
-            {changeCount > 0 && (
-              <AdminButton variant="secondary" onClick={() => setResetting(true)}>
-                <RotateCcw size={13} aria-hidden="true" />
-                Discard {changeCount} change{changeCount === 1 ? '' : 's'}
-              </AdminButton>
-            )}
             <AdminButton variant="primary" onClick={() => setCreating(true)}>
               <Plus size={14} aria-hidden="true" />
               Add title
@@ -80,6 +85,26 @@ export default function ContentManager() {
           </div>
         }
       />
+
+      {/* A failed write, and a load failure, are both shown here rather than
+          swallowed: silently doing nothing is how an administrator loses an
+          edit they believed was saved. */}
+      {(mutationError || catalog.error) && (
+        <p
+          role="alert"
+          className="mb-4 flex items-center gap-2 rounded-lg border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-sm font-medium text-rose-600"
+        >
+          <TriangleAlert size={15} aria-hidden="true" />
+          {mutationError ?? catalog.error}
+          <button
+            type="button"
+            onClick={clearError}
+            className="ml-auto text-xs font-semibold underline hover:no-underline"
+          >
+            Dismiss
+          </button>
+        </p>
+      )}
 
       <div className="mb-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <StatTile icon={Library} label="Titles" value={catalog.total.toLocaleString()} hint="Matching filters" />
@@ -92,10 +117,10 @@ export default function ContentManager() {
         />
         <StatTile
           icon={Pencil}
-          label="Your changes"
-          value={changeCount}
-          tone={changeCount > 0 ? 'warning' : 'plain'}
-          hint="Pending review"
+          label="Status"
+          value={catalog.query.status === 'all' ? 'Any' : catalog.query.status}
+          tone="plain"
+          hint="Filtered server-side"
         />
         <StatTile
           icon={TriangleAlert}
@@ -141,7 +166,9 @@ export default function ContentManager() {
         )}
       </div>
 
-      {catalog.rows.length === 0 ? (
+      {catalog.loading && catalog.rows.length === 0 ? (
+        <TableSkeleton />
+      ) : catalog.rows.length === 0 ? (
         <EmptyState
           icon={SearchX}
           title="No titles match those filters"
@@ -235,24 +262,21 @@ export default function ContentManager() {
       {editing && (
         <EditPanel
           row={editing}
+          busy={busy}
           onClose={() => setEditing(null)}
           onSave={(patch) => {
-            updateRow(editing.id, patch)
+            void updateRow(editing.id, patch)
             setEditing(null)
           }}
-          onRevert={() => {
-            revertRow(editing.id)
-            setEditing(null)
-          }}
-          canRevert={changeCount > 0}
         />
       )}
 
       {creating && (
         <CreatePanel
+          busy={busy}
           onClose={() => setCreating(false)}
           onCreate={(draft) => {
-            addRow(draft)
+            void addRow(draft)
             setCreating(false)
           }}
         />
@@ -263,29 +287,16 @@ export default function ContentManager() {
         title="Remove this title?"
         body={
           removing
-            ? `"${removing.title}" (id ${removing.id}) will be removed from the catalogue. You can restore it with Discard changes.`
+            ? `"${removing.title}" (id ${removing.id}) will be deleted from the database. It disappears from the public site immediately, and re-adding it means importing it again — there is no undo.`
             : ''
         }
         confirmText="Remove title"
         isWarning
         onConfirm={() => {
-          if (removing) deleteRow(removing.id)
+          if (removing) void deleteRow(removing.id)
           setRemoving(null)
         }}
         onCancel={() => setRemoving(null)}
-      />
-
-      <ConfirmDialog
-        isOpen={resetting}
-        title="Discard all changes?"
-        body={`${changeCount} change${changeCount === 1 ? '' : 's'} will be reverted, restoring every title to its original entry.`}
-        confirmText="Discard changes"
-        isWarning
-        onConfirm={() => {
-          resetContent()
-          setResetting(false)
-        }}
-        onCancel={() => setResetting(false)}
       />
     </>
   )

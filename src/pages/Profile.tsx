@@ -2,15 +2,17 @@
 // privacy. The active tab lives in the URL (`?tab=settings`) so it can be
 // linked to and survives a reload. Sits behind RequireAuth in the router.
 import { useSearchParams } from 'react-router-dom'
-import { User, Settings, ShieldCheck } from 'lucide-react'
+import { User, Settings, ShieldCheck, Heart } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import Avatar from '../components/common/Avatar'
 import ProfileTab from '../components/profile/ProfileTab'
 import SettingsTab from '../components/profile/SettingsTab'
 import PrivacyTab from '../components/profile/PrivacyTab'
+import InterestsTab from '../components/profile/InterestsTab'
 
 const TABS = [
   { id: 'profile', label: 'Profile', icon: User },
+  { id: 'interests', label: 'Interests', icon: Heart },
   { id: 'settings', label: 'Settings', icon: Settings },
   { id: 'privacy', label: 'Privacy', icon: ShieldCheck },
 ] as const
@@ -41,7 +43,7 @@ export default function Profile() {
     <div className="mx-auto w-full max-w-4xl space-y-6 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
       {/* ---- Identity header ---- */}
       <header className="surface-card flex items-center gap-4 p-5">
-        <Avatar name={current.name} size="md" />
+        <Avatar name={current.name} src={current.avatarPath} size="md" />
         <div className="min-w-0 flex-1">
           <h1 className="truncate text-xl font-bold text-ink">{current.name}</h1>
           <p className="truncate text-sm text-ink-muted">{current.email}</p>
@@ -80,6 +82,7 @@ export default function Profile() {
           it with the new values instead of syncing via an effect. */}
       <div role="tabpanel" id={`panel-${active}`} aria-labelledby={`tab-${active}`}>
         {active === 'profile' && <ProfileTab key={current.id} />}
+        {active === 'interests' && <InterestsTab key={current.id} />}
         {active === 'settings' && <SettingsTab />}
         {active === 'privacy' && <PrivacyTab />}
       </div>

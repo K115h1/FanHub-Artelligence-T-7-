@@ -1,35 +1,45 @@
 // UserManager — route: /admin/users.
 //
-// Lists the accounts saved on this device and lets an administrator change a
-// role. The current SRS asks for suspension as well, but there is no `suspended`
-// column on Account yet and the API has no endpoint to enforce it, so this page
-// does role changes only rather than shipping a toggle that does nothing.
+// Lists real accounts from the database and lets an administrator change a role.
+// It used to read the accounts saved in localStorage on this browser and change
+// their role there, which meant each administrator saw a different list and a
+// demotion only removed a badge until the page reloaded — the API's role check
+// never saw it. The current SRS asks for suspension as well, but there is no
+// `suspended` column on Account yet and the API has no endpoint to enforce it, so
+// this page does role changes only rather than shipping a toggle that does
+// nothing.
 
 import { useState } from 'react'
 import { ShieldCheck, UserCog, Users } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
-import type { Account } from '../../context/AuthContext'
 import { useAdminStats } from '../../features/admin/hooks'
+import { useAdminUsers } from '../../features/admin/useAdminUsers'
 import {
   AdminButton,
   AdminPageHeader,
   FilterInput,
   StatTile,
   StatusPill,
+  TableSkeleton,
 } from '../../components/admin/shared'
 import { EmptyState } from '../../components/common/EmptyState'
 import { ConfirmDialog } from '../../components/common/ConfirmDialog'
-import type { UserRole } from '../../types/models'
+import type { Account, UserRole } from '../../types/models'
 
 export default function UserManager() {
-  const { accounts, current, setAccountRole, signOut } = useAuth()
+  const { current, signOut } = useAuth()
   const stats = useAdminStats()
+  const { users, loading, error, setRole } = useAdminUsers()
   const [search, setSearch] = useState('')
   // The role change being confirmed, held until the dialog is accepted.
   const [pending, setPending] = useState<{ account: Account; role: UserRole } | null>(null)
+  // A rejected role change, shown rather than swallowed: the dialog closes
+  // either way, so a failure with no message looks like a success.
+  const [roleError, setRoleError] = useState<string | null>(null)
 
   const needle = search.trim().toLowerCase()
-  const filtered = accounts    .filter(
+  const filtered = users
+    .filter(
       (account) =>
         !needle ||
         account.name.toLowerCase().includes(needle) ||
@@ -40,18 +50,25 @@ export default function UserManager() {
 
   // Demoting the final admin locks everyone out of this panel, so say so.
   const isLastAdmin =
-    current?.role === 'admin' && accounts.filter((a) => a.role === 'admin').length === 1
+    current?.role === 'admin' && users.filter((a) => a.role === 'admin').length === 1
 
   // Role changes go through the confirmation dialog. Your own row is handled
   // separately (signing out) because demoting yourself in place would leave you
   // signed in with no way back into the panel.
   function requestRoleChange(account: Account, role: UserRole) {
+    setRoleError(null)
     setPending({ account, role })
   }
 
-  function confirmRoleChange() {
-    if (pending) setAccountRole(pending.account.id, pending.role)
-    setPending(null)
+  async function confirmRoleChange() {
+    if (!pending) return
+    try {
+      await setRole(pending.account.id, pending.role)
+      setPending(null)
+    } catch (err) {
+      setRoleError(err instanceof Error ? err.message : 'That role change did not save.')
+      setPending(null)
+    }
   }
 
   return (
@@ -88,17 +105,31 @@ export default function UserManager() {
         />
       </div>
 
-      {filtered.length === 0 ? (
+      {/* Both the load failure and a rejected role change are shown. A silent
+          failure here means an administrator believes they granted or revoked
+          admin when the database says otherwise. */}
+      {(error || roleError) && (
+        <p
+          role="alert"
+          className="mb-4 rounded-lg border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-sm font-medium text-rose-600"
+        >
+          {error ?? roleError}
+        </p>
+      )}
+
+      {loading && users.length === 0 ? (
+        <TableSkeleton rows={6} columns={5} />
+      ) : filtered.length === 0 ? (
         <EmptyState
           icon={Users}
-          title={accounts.length === 0 ? 'No accounts yet' : 'No accounts match'}
+          title={users.length === 0 ? 'No accounts yet' : 'No accounts match'}
           body={
-            accounts.length === 0
+            users.length === 0
               ? 'Accounts created from the register page will appear here.'
               : 'Try a different name or email address.'
           }
-          actionText={accounts.length === 0 ? 'Go to the site' : undefined}
-          onAction={accounts.length === 0 ? () => window.location.assign('/') : undefined}
+          actionText={users.length === 0 ? 'Go to the site' : undefined}
+          onAction={users.length === 0 ? () => window.location.assign('/') : undefined}
         />
       ) : (
         <div className="surface-card overflow-hidden">
@@ -122,7 +153,13 @@ export default function UserManager() {
               </thead>
               <tbody className="divide-y divide-line">
                 {filtered.map((account) => {
-                  const isSelf = account.id === current?.id
+                  // These are different id spaces: the API row's `id` is the
+                  // user's numeric user_id, while current.id is a device-local
+                  // key like "acc_api_4". Comparing them never matched, so the
+                  // "You" badge and the sign-out button were unreachable — and
+                  // self-demotion was offered instead, which locks the
+                  // administrator out of the panel they are standing in.
+                  const isSelf = current?.userId != null && account.id === current.userId
                   return (
                     <tr key={account.id} className="align-middle">
                       <td className="px-4 py-3">

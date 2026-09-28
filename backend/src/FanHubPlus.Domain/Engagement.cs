@@ -61,9 +61,22 @@ public class FanSubmission
     public uint SubmissionId { get; set; }
     public uint UserId { get; set; }
     public byte CategoryId { get; set; }
+
+    /// <summary>Which kind of fan content this is. See <see cref="SubmissionKind"/>.</summary>
+    public SubmissionKind Kind { get; set; } = SubmissionKind.Article;
+
     public string Title { get; set; } = string.Empty;
     public string Body { get; set; } = string.Empty;
     public SubmissionStatus Status { get; set; } = SubmissionStatus.Pending;
+
+    // The decision record. An approval is a judgement a fan may want to query,
+    // so who decided, when, and why are all kept rather than just the verdict.
+    public string? ModeratorNote { get; set; }
+    public DateTime? DecidedAt { get; set; }
+
+    // Null for system decisions, and for a submission deleted with its moderator.
+    public uint? DecidedBy { get; set; }
+
     public DateTime CreatedAt { get; set; }
 
     public User User { get; set; } = null!;

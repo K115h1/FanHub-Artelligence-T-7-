@@ -1,164 +1,190 @@
-// Dashboard — user home base (the profile / events / popular / help content
-// that the mockup showed in the right-hand bar, now a full page).
-// Glassy style, purple-only accents, low roundness — same language as Home.
+// Dashboard — the member's landing page.
+//
+// Four panels, all from one hook: a greeting, the fandoms they have favourited,
+// what they have been doing, and what they have bookmarked. Previously a static
+// page with placeholder tiles that linked nowhere useful.
+//
+// Each panel renders independently. A signed-in member with nothing favourited
+// or bookmarked still gets a real page, because "you have not done anything yet"
+// is a true answer and an empty grid would look broken.
 import { Link } from 'react-router-dom'
-import { Calendar, Flame, Headphones, ArrowRight, User, Bookmark, Star } from 'lucide-react'
-import { POPULAR_THIS_WEEK, UPCOMING_EVENTS } from '../lib/mockData'
-
-const glassCard =
-  'rounded-lg border border-purple-500/20 bg-white/60 backdrop-blur-xl dark:bg-white/[0.06]'
-const purpleGradient = 'bg-gradient-to-br from-purple-600 via-purple-500 to-purple-400'
-
-// Placeholder profile stats — replaced by real auth data in the auth phase.
-const PROFILE = {
-  name: 'Dammy',
-  following: 12,
-  followers: 24,
-  level: 'Level 3',
-}
+import { ArrowRight, Bookmark, History, PenLine, Sparkles, Star } from 'lucide-react'
+import { useAuth } from '../context/AuthContext'
+import { useDashboardSummary } from '../features/dashboard/useDashboardSummary'
+import { useSubmissions } from '../features/dashboard/useSubmissions'
+import ContentCard from '../components/common/ContentCard'
+import { ListSkeleton, CardGridSkeleton } from '../components/common/skeletons'
+import { Skeleton } from '../components/ui/Skeleton'
+import { CategoryDot } from '../components/common/CategoryArt'
+import { EmptyState } from '../components/common/EmptyState'
+import SectionHeader from '../components/common/SectionHeader'
+import CreateSubmission from '../components/dashboard/CreateSubmission'
+import SubmissionList from '../components/dashboard/SubmissionList'
 
 export default function Dashboard() {
+  const { current, isAuthed } = useAuth()
+  const summary = useDashboardSummary()
+  // Created content is member-only: both endpoints behind it are [Authorize], so
+  // this hook is only mounted once there is a token to send.
+  const submissions = useSubmissions()
+
+  const firstName = (current?.name ?? '').trim().split(/\s+/)[0] || 'there'
+
   return (
-    <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {/* Profile card */}
-        <section aria-label="Profile" className={`${glassCard} p-6 lg:col-span-1`}>
-          <div className="flex items-center gap-4">
-            <span
-              className={`flex h-14 w-14 items-center justify-center rounded-md text-white shadow-md shadow-purple-500/30 ${purpleGradient}`}
+    <div className="mx-auto w-full max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
+      {/* ---- Greeting ---- */}
+      <header>
+        <h1 className="text-2xl font-bold text-ink sm:text-3xl">
+          {!isAuthed
+            ? 'Welcome to FanHub Plus'
+            : summary.loading
+              ? 'Welcome back'
+              : `${summary.hello}, ${firstName}`}
+        </h1>
+        <p className="mt-1 text-sm text-ink-muted">
+          {/* Three states, not two. Keying the "confirm your email" prompt off
+              isVerified alone showed it to signed-out visitors, who have no
+              email to confirm and no profile to be sent to. */}
+          {!isAuthed ? (
+            <>
+              Sign in and this fills up with your fandoms, your bookmarks and your
+              recent activity.
+            </>
+          ) : current?.isVerified ? (
+            <>Here&rsquo;s what you&rsquo;ve been up to.</>
+          ) : (
+            <>
+              Here&rsquo;s what you&rsquo;ve been up to.{' '}
+              <Link
+                to="/profile?tab=interests"
+                className="font-medium text-accent hover:underline"
+              >
+                Confirm your email
+              </Link>{' '}
+              to get a verified badge.
+            </>
+          )}
+        </p>
+      </header>
+
+      {/* ---- Favourite fandoms ---- */}
+      <section aria-labelledby="dash-favourites">
+        <SectionHeader
+          id="dash-favourites"
+          title="Your fandoms"
+          icon={Star}
+          action={
+            <Link
+              to="/profile?tab=interests"
+              className="inline-flex items-center gap-1 text-sm font-medium text-accent hover:underline"
             >
-              <User size={26} />
-            </span>
+              Edit
+              <ArrowRight size={14} aria-hidden="true" />
+            </Link>
+          }
+        />
+
+        {summary.loading ? (
+          <Skeleton className="h-11 w-full max-w-md" />
+        ) : summary.favoriteFandoms.length > 0 ? (
+          <div className="flex flex-wrap gap-2">
+            {summary.favoriteFandoms.map((fandom) => (
+              <Link
+                key={fandom.id}
+                to={`/explore?category=${fandom.slug}`}
+                className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-4 py-2 text-sm font-medium text-ink transition hover:border-accent hover:text-accent"
+              >
+                <CategoryDot slug={fandom.slug} />
+                {fandom.name}
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-ink-muted">
+            No favourites yet.{' '}
+            <Link to="/profile?tab=interests" className="font-medium text-accent hover:underline">
+              Pick a few
+            </Link>{' '}
+            and they&rsquo;ll show up here.
+          </p>
+        )}
+      </section>
+
+      {/* ---- Recent activity ---- */}
+      <section aria-labelledby="dash-activity">
+        <SectionHeader id="dash-activity" title="Recent activity" icon={History} />
+
+        {summary.loading ? (
+          <ListSkeleton rows={4} columns={3} />
+        ) : summary.activity.length > 0 ? (
+          <ul className="surface-card divide-y divide-line">
+            {summary.activity.map((entry) => (
+              <li key={entry.id} className="flex items-center gap-3 px-4 py-3">
+                <Sparkles size={15} className="shrink-0 text-accent" aria-hidden="true" />
+                <span className="min-w-0 flex-1 truncate text-sm text-ink">{entry.label}</span>
+                <time className="shrink-0 text-xs text-ink-subtle">{entry.when}</time>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-sm text-ink-muted">
+            Nothing yet. Anything you do — bookmarking, rating, verifying — lands here.
+          </p>
+        )}
+      </section>
+
+      {/* ---- Create ---- */}
+      {isAuthed && (
+        <section aria-labelledby="dash-create">
+          <SectionHeader
+            id="dash-create"
+            title="Create"
+            icon={PenLine}
+            subtitle="Anything you write here goes to an administrator for review before it goes live."
+          />
+          <div className="grid gap-5 lg:grid-cols-2">
+            <CreateSubmission draft={submissions} />
             <div>
-              <h1 className="text-lg font-bold text-black dark:text-white">Hi, {PROFILE.name} 👋</h1>
-              <p className="text-sm text-black/60 dark:text-white/60">
-                Welcome back to FanHub Plus!
-              </p>
+              <h3 className="mb-4 text-sm font-semibold text-ink">What you have sent</h3>
+              <SubmissionList draft={submissions} />
             </div>
           </div>
+        </section>
+      )}
 
-          <dl className="mt-6 grid grid-cols-3 divide-x divide-purple-500/20 text-center">
-            <div className="px-2">
-              <dt className="text-xs text-black/50 dark:text-white/50">Following</dt>
-              <dd className="text-xl font-bold text-black dark:text-white">{PROFILE.following}</dd>
-            </div>
-            <div className="px-2">
-              <dt className="text-xs text-black/50 dark:text-white/50">Followers</dt>
-              <dd className="text-xl font-bold text-black dark:text-white">{PROFILE.followers}</dd>
-            </div>
-            <div className="px-2">
-              <dt className="text-xs text-black/50 dark:text-white/50">Member</dt>
-              <dd className="text-xl font-bold text-black dark:text-white">{PROFILE.level}</dd>
-            </div>
-          </dl>
-
-          {/* Quick links */}
-          <nav className="mt-6 flex flex-col gap-2">
+      {/* ---- Bookmarks ---- */}
+      <section aria-labelledby="dash-bookmarks">
+        <SectionHeader
+          id="dash-bookmarks"
+          title="Bookmarked"
+          icon={Bookmark}
+          action={
             <Link
               to="/bookmarks"
-              className="flex items-center justify-between rounded-md border border-purple-500/20 px-3 py-2 text-sm text-black/70 transition hover:border-purple-500/50 hover:text-purple-600 dark:text-white/70 dark:hover:text-purple-400"
+              className="inline-flex items-center gap-1 text-sm font-medium text-accent hover:underline"
             >
-              <span className="inline-flex items-center gap-2">
-                <Bookmark size={15} /> My Bookmarks
-              </span>
-              <ArrowRight size={14} />
+              See all
+              <ArrowRight size={14} aria-hidden="true" />
             </Link>
-            <Link
-              to="/profile"
-              className="flex items-center justify-between rounded-md border border-purple-500/20 px-3 py-2 text-sm text-black/70 transition hover:border-purple-500/50 hover:text-purple-600 dark:text-white/70 dark:hover:text-purple-400"
-            >
-              <span className="inline-flex items-center gap-2">
-                <Star size={15} /> My Ratings
-              </span>
-              <ArrowRight size={14} />
-            </Link>
-          </nav>
-        </section>
+          }
+        />
 
-        {/* Right column: events + popular + help */}
-        <div className="space-y-6 lg:col-span-2">
-          {/* Upcoming events */}
-          <section aria-label="Upcoming events" className={`${glassCard} p-6`}>
-            <header className="mb-4 flex items-center justify-between">
-              <h2 className="flex items-center gap-2 text-lg font-bold text-black dark:text-white">
-                <Calendar size={18} className="text-purple-500" /> Upcoming Events
-              </h2>
-              <Link
-                to="/events"
-                className="text-sm font-medium text-purple-600 transition hover:text-purple-500 dark:text-purple-400"
-              >
-                View all
-              </Link>
-            </header>
-            <ul className="space-y-3">
-              {UPCOMING_EVENTS.map((event) => (
-                <li
-                  key={event.id}
-                  className="flex items-center gap-4 rounded-md border border-purple-500/20 bg-white/50 p-3 transition hover:border-purple-500/40 dark:bg-white/[0.04]"
-                >
-                  <div className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-md bg-purple-600/10 text-purple-600 dark:text-purple-400">
-                    <span className="text-sm font-bold leading-none">{event.day}</span>
-                    <span className="text-[10px] font-semibold uppercase">{event.month}</span>
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate font-medium text-black dark:text-white">{event.title}</p>
-                    <p className="text-sm text-black/50 dark:text-white/50">{event.location}</p>
-                  </div>
-                  <span className="shrink-0 rounded-md border border-purple-500/30 px-2 py-0.5 text-xs text-purple-600 dark:text-purple-400">
-                    {event.tag}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </section>
-
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            {/* Popular this week */}
-            <section aria-label="Popular this week" className={`${glassCard} p-6`}>
-              <h2 className="mb-4 flex items-center gap-2 text-lg font-bold text-black dark:text-white">
-                <Flame size={18} className="text-purple-500" /> Popular This Week
-              </h2>
-              <ol className="space-y-3">
-                {POPULAR_THIS_WEEK.map((item, i) => (
-                  <li key={item.id}>
-                    <Link
-                      to={`/content/${item.id}`}
-                      className="flex items-center gap-3 rounded-md p-1.5 transition hover:bg-purple-500/10"
-                    >
-                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-purple-600/10 text-xs font-bold text-purple-600 dark:text-purple-400">
-                        {i + 1}
-                      </span>
-                      <span className="min-w-0">
-                        <span className="block truncate text-sm font-medium text-black dark:text-white">
-                          {item.title}
-                        </span>
-                        <span className="block text-xs text-black/50 dark:text-white/50">
-                          {item.type} · {item.views}
-                        </span>
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-              </ol>
-            </section>
-
-            {/* Need help */}
-            <section aria-label="Support" className={`${glassCard} flex flex-col p-6`}>
-              <h2 className="mb-2 flex items-center gap-2 text-lg font-bold text-black dark:text-white">
-                <Headphones size={18} className="text-purple-500" /> Need help?
-              </h2>
-              <p className="mb-4 text-sm text-black/60 dark:text-white/60">
-                Our support team is here 24/7. Chat with us anytime!
-              </p>
-              <div className={`mt-auto rounded-md p-[1px] ${purpleGradient}`}>
-                <button className="flex w-full items-center justify-center gap-2 rounded-md bg-white/90 px-4 py-2.5 text-sm font-semibold text-purple-700 transition hover:bg-white dark:bg-black/80 dark:text-purple-300 dark:hover:bg-black">
-                  <Headphones size={16} /> Start Chat
-                </button>
-              </div>
-            </section>
+        {summary.loading ? (
+          <CardGridSkeleton count={4} />
+        ) : summary.bookmarks.length > 0 ? (
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {summary.bookmarks.slice(0, 8).map((item) => (
+              <ContentCard key={item.id} item={item} />
+            ))}
           </div>
-        </div>
-      </div>
+        ) : (
+          <EmptyState
+            icon={Bookmark}
+            title="No bookmarks yet"
+            body="Bookmark a title and it will wait for you here."
+          />
+        )}
+      </section>
     </div>
   )
 }

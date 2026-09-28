@@ -29,8 +29,34 @@ public interface IUserRepository
     Task SetRatingAsync(uint userId, uint contentId, byte stars, CancellationToken ct = default);
     Task<bool> RemoveRatingAsync(uint userId, uint contentId, CancellationToken ct = default);
 
+    /// <summary>Returns a TRACKED token, because confirming stamps UsedAt on it.</summary>
     Task<PasswordResetToken?> GetResetTokenByHashAsync(string tokenHash, CancellationToken ct = default);
     Task AddResetTokenAsync(PasswordResetToken token, CancellationToken ct = default);
+
+    // ---- Category lists (favourites and interests are separate) ----
+
+    /// Category ids the member has favourited, ascending.
+    Task<List<byte>> GetFavoriteCategoryIdsAsync(uint userId, CancellationToken ct = default);
+    /// Category ids the member follows as an interest, ascending.
+    Task<List<byte>> GetInterestCategoryIdsAsync(uint userId, CancellationToken ct = default);
+
+    /// Replaces the whole set. Takes the ids to KEEP, so a category the caller
+    /// dropped is removed rather than silently retained.
+    Task SetFavoriteCategoriesAsync(uint userId, IEnumerable<byte> categoryIds, CancellationToken ct = default);
+    Task SetInterestCategoriesAsync(uint userId, IEnumerable<byte> categoryIds, CancellationToken ct = default);
+
+    Task SetAvatarPathAsync(uint userId, string? avatarPath, CancellationToken ct = default);
+
+    // ---- Email verification ----
+
+    Task AddEmailVerificationTokenAsync(EmailVerificationToken token, CancellationToken ct = default);
+    /// Tracked, so the caller can stamp UsedAt and save without a second lookup.
+    Task<EmailVerificationToken?> GetEmailVerificationTokenAsync(string tokenHash, CancellationToken ct = default);
+    Task SetVerifiedAsync(uint userId, CancellationToken ct = default);
+
+    /// The member's most recent actions, newest first. `take` is clamped by the
+    /// caller; this returns raw rows in order.
+    Task<List<ActivityLog>> GetRecentActivityAsync(uint userId, int take, CancellationToken ct = default);
 
     Task AddActivityAsync(ActivityLog log, CancellationToken ct = default);
 }

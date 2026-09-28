@@ -76,7 +76,39 @@ CREATE TABLE IF NOT EXISTS user_favorite_categories (
     CONSTRAINT fk_ufc_category FOREIGN KEY (category_id) REFERENCES categories (category_id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ---------- Genres (secondary taxonomy, scoped per category) ----------
+-- ---------- Categories a member is INTERESTED in ----------
+-- Deliberately a SECOND table rather than a flag on user_favorite_categories.
+-- Favourites are what someone deliberately pinned; interests are a broader
+-- signal used to shape recommendations, and a member can follow six fandoms
+-- without having favourited any of them. Keeping them apart means un-favouriting
+-- something does not silently change what gets recommended.
+CREATE TABLE IF NOT EXISTS user_interest_categories (
+    user_id      INT UNSIGNED      NOT NULL,
+    category_id  TINYINT UNSIGNED  NOT NULL,
+    PRIMARY KEY (user_id, category_id),
+    KEY ix_uic_category (category_id),
+    CONSTRAINT fk_uic_user FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE,
+    CONSTRAINT fk_uic_category FOREIGN KEY (category_id) REFERENCES categories (category_id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ---------- Email verification ----------
+-- Same shape as password_reset_tokens on purpose: a random token is generated,
+-- only its SHA-256 is stored, and UsedAt marks it spent so a link cannot be
+-- replayed. Kept separate from password_reset_tokens because the two flows have
+-- different lifetimes and must not be able to consume each other's tokens.
+CREATE TABLE IF NOT EXISTS email_verification_tokens (
+    token_id   INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    user_id    INT UNSIGNED NOT NULL,
+    token_hash CHAR(64)     NOT NULL,
+    expires_at DATETIME     NOT NULL,
+    used_at    DATETIME     NULL,
+    created_at DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (token_id),
+    UNIQUE KEY uq_email_verify_hash (token_hash),
+    KEY ix_email_verify_user (user_id),
+    CONSTRAINT fk_email_verify_user FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- Genre names REPEAT across fandoms — "Action" means different things to a
 -- games and a films catalogue — so a genre is unique per (category, name)
 -- rather than globally. That is why "Action" appears once under Gaming and
@@ -294,16 +326,28 @@ CREATE TABLE IF NOT EXISTS fan_submissions (
     submission_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     user_id       INT UNSIGNED NOT NULL,
     category_id   TINYINT UNSIGNED NOT NULL,
+    -- What the fan is submitting. The SRS names three kinds of user-created
+    -- content: rich-text articles, card-based character profiles, and
+    -- timeline-style event highlights. Without this column every submission is
+    -- an anonymous wall of text and the moderation queue cannot route them.
+    kind          ENUM('article','character_profile','event_highlight') NOT NULL DEFAULT 'article',
     title         VARCHAR(255) NOT NULL,
     body          TEXT NOT NULL,
     -- pending | approved | rejected
     status        ENUM('pending','approved','rejected') NOT NULL DEFAULT 'pending',
+    -- The admin's note, shown to the fan alongside the decision.
+    moderator_note TEXT        NULL,
+    decided_at    DATETIME     NULL,
+    decided_by    INT UNSIGNED NULL,
     created_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (submission_id),
     KEY ix_submissions_user (user_id),
     KEY ix_submissions_status (status),
+    -- The queue's default view is "pending, newest first, of kind X".
+    KEY ix_submissions_kind (kind, status, created_at),
     CONSTRAINT fk_submissions_user     FOREIGN KEY (user_id)     REFERENCES users (user_id)      ON DELETE CASCADE,
-    CONSTRAINT fk_submissions_category FOREIGN KEY (category_id) REFERENCES categories (category_id) ON DELETE CASCADE
+    CONSTRAINT fk_submissions_category FOREIGN KEY (category_id) REFERENCES categories (category_id) ON DELETE CASCADE,
+    CONSTRAINT fk_submissions_decider  FOREIGN KEY (decided_by) REFERENCES users (user_id)      ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ---------- Merchandise (display only — no payments per SRS) ----------

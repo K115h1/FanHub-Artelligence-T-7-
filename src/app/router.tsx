@@ -7,6 +7,8 @@
 import { createBrowserRouter } from 'react-router-dom'
 import RootLayout from '../components/layout/RootLayout'
 import ComingSoon from '../components/common/ComingSoon'
+import { RouteFallback } from '../components/common/skeletons'
+import RouteBootFailure from '../components/common/RouteBootFailure'
 import RequireAuth from '../components/auth/RequireAuth'
 
 // Route entry for a page that hasn't been built yet.
@@ -19,6 +21,19 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <RootLayout />,
+    // Rendered while the FIRST route's lazy chunk downloads. Without this the
+    // router has nothing to paint on a cold load and the page stays blank until
+    // the chunk lands — it also logs "No HydrateFallback element provided".
+    // Only the initial load uses this; later navigations keep the current page
+    // on screen while the next chunk arrives, which is the behaviour we want.
+    HydrateFallback: RouteFallback,
+    // The app had no error boundary at all before this. A failed dynamic import
+    // is the most likely thing to throw here — a visitor who left the tab open
+    // across a deploy gets a chunk request for a file that no longer exists —
+    // and without this the router unmounts to a blank page. The root route is
+    // the right place because it also covers a bad route config, which happens
+    // before any child could handle it.
+    errorElement: <RouteBootFailure />,
     children: [
       // Landing page.
       {
@@ -34,8 +49,23 @@ export const router = createBrowserRouter([
         handle: { title: 'Login' },
       },
       { path: 'register', lazy: async () => ({ Component: (await import('../pages/Register')).default }), handle: { title: 'Register' } },
-      { path: 'forgot-password', ...placeholder('Forgot Password') },
-      { path: 'reset-password', ...placeholder('Reset Password') },
+      // The tokenized email flows. All three are public — a member following a
+      // link from their inbox is by definition not signed in yet.
+      {
+        path: 'forgot-password',
+        lazy: async () => ({ Component: (await import('../pages/ForgotPassword')).default }),
+        handle: { title: 'Forgot Password' },
+      },
+      {
+        path: 'reset-password',
+        lazy: async () => ({ Component: (await import('../pages/ResetPassword')).default }),
+        handle: { title: 'Reset Password' },
+      },
+      {
+        path: 'verify-email',
+        lazy: async () => ({ Component: (await import('../pages/VerifyEmail')).default }),
+        handle: { title: 'Verify Email' },
+      },
 
       // Public browsing
       { path: 'explorer', ...placeholder('Explorer') },

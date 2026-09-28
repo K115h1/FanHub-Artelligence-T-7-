@@ -15,10 +15,15 @@ public interface ICommunityRepository
     Task SetFeedbackStatusAsync(uint feedbackId, FeedbackStatus status, CancellationToken ct = default);
     Task DeleteFeedbackAsync(uint feedbackId, CancellationToken ct = default);
 
-    Task<PagedResult<FanSubmission>> GetSubmissionsAsync(SubmissionStatus? status, int page, int pageSize, CancellationToken ct = default);
+    Task<PagedResult<FanSubmission>> GetSubmissionsAsync(SubmissionStatus? status, int page, int pageSize, uint? userId = null, SubmissionKind? kind = null, CancellationToken ct = default);
     Task<FanSubmission?> GetSubmissionByIdAsync(uint submissionId, CancellationToken ct = default);
     Task<FanSubmission> AddSubmissionAsync(FanSubmission submission, CancellationToken ct = default);
-    Task SetSubmissionStatusAsync(uint submissionId, SubmissionStatus status, CancellationToken ct = default);
+
+    /// Records the decision along with who made it and when.
+    Task SetSubmissionStatusAsync(uint submissionId, SubmissionStatus status, uint adminUserId, string? note, CancellationToken ct = default);
+
+    /// How many submissions sit in each status, for the queue's filter chips.
+    Task<Dictionary<string, int>> GetSubmissionCountsAsync(CancellationToken ct = default);
 
     Task<List<MerchandiseItem>> GetMerchandiseAsync(byte? categoryId = null, CancellationToken ct = default);
     Task<List<UpcomingRelease>> GetUpcomingReleasesAsync(CancellationToken ct = default);

@@ -19,7 +19,7 @@ public class ContentsController : ApiControllerBase
         _content = content;
     }
 
-    /// GET /api/contents?search=&category=&genre=&type=&status=&page=&pageSize=&sort=
+    /// GET /api/contents?search=&category=&genre=&type=&status=&yearFrom=&yearTo=&page=&pageSize=&sort=
     [HttpGet]
     [AllowAnonymous]
     public Task<IActionResult> Browse(
@@ -28,6 +28,8 @@ public class ContentsController : ApiControllerBase
         [FromQuery] ushort? genre,
         [FromQuery] string? type,
         [FromQuery] string? status,
+        [FromQuery] int? yearFrom,
+        [FromQuery] int? yearTo,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 24,
         [FromQuery] string sort = "popular") =>
@@ -40,6 +42,8 @@ public class ContentsController : ApiControllerBase
                 GenreId = genre,
                 Type = ParseType(type),
                 Status = ParseStatus(status),
+                YearFrom = yearFrom,
+                YearTo = yearTo,
                 Page = page,
                 PageSize = pageSize,
                 SortBy = sort,

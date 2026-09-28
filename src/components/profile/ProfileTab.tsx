@@ -1,11 +1,12 @@
-// ProfileTab — identity: avatar, name and bio.
+// ProfileTab — identity: picture, name and bio.
 //
-// The picture is a placeholder: upload.service.ts has no endpoint yet, so the
-// button is disabled and the initials avatar stands in.
+// The picture is editable here, not on the Interests tab: it is part of who you
+// are rather than what you like, and the uploader lives in AvatarUploader so
+// the file input and its validation have one owner.
 import { useEffect, useState, type FormEvent } from 'react'
-import { Camera, Mail, Check, LoaderCircle } from 'lucide-react'
+import { Mail, Check, LoaderCircle } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
-import Avatar from '../common/Avatar'
+import AvatarUploader from './AvatarUploader'
 
 const MAX_NAME = 40
 const MAX_BIO = 160
@@ -46,32 +47,10 @@ export default function ProfileTab() {
       {/* ---- Avatar ---- */}
       <section className="surface-card p-5">
         <h3 className="text-sm font-semibold text-ink">Profile picture</h3>
-        <div className="mt-4 flex items-center gap-4">
-          <div className="relative">
-            <Avatar name={name || current.name} size="md" />
-            <span
-              aria-hidden="true"
-              className="absolute -right-1 -bottom-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-surface bg-ink-subtle text-white"
-            >
-              <Camera size={12} />
-            </span>
-          </div>
-
-          <div className="min-w-0 flex-1">
-            <p className="text-sm text-ink-muted">Showing your initials on a purple tile.</p>
-            <p className="mt-0.5 text-xs text-ink-subtle">
-              Upload your own picture to replace the initials.
-            </p>
-          </div>
-
-          <button
-            type="button"
-            disabled
-            className="shrink-0 cursor-not-allowed rounded-lg border border-line px-3 py-2 text-xs font-semibold text-ink-subtle opacity-60"
-          >
-            Change photo
-          </button>
-        </div>
+        {/* The uploader owns the picture, the buttons and the file input. It
+            reads the account from AuthContext rather than taking props, so it
+            cannot be rendered against a stale copy of the user's avatar. */}
+        <AvatarUploader />
       </section>
 
       {/* ---- Name + bio ---- */}

@@ -15,9 +15,10 @@ public interface ICommunityService
     Task SetFeedbackStatusAsync(uint feedbackId, FeedbackStatus status, uint adminUserId, CancellationToken ct = default);
     Task DeleteFeedbackAsync(uint feedbackId, uint adminUserId, CancellationToken ct = default);
 
-    Task<PagedResponse<SubmissionDto>> GetSubmissionsAsync(SubmissionStatus? status, int page, int pageSize, CancellationToken ct = default);
+    Task<PagedResponse<SubmissionDto>> GetSubmissionsAsync(SubmissionStatus? status, int page, int pageSize, uint? userId = null, SubmissionKind? kind = null, CancellationToken ct = default);
     Task<SubmissionDto> CreateSubmissionAsync(CreateSubmissionRequest request, uint userId, CancellationToken ct = default);
-    Task SetSubmissionStatusAsync(uint submissionId, SubmissionStatus status, uint adminUserId, CancellationToken ct = default);
+    Task SetSubmissionStatusAsync(uint submissionId, SubmissionStatus status, uint adminUserId, string? note = null, CancellationToken ct = default);
+    Task<Dictionary<string, int>> GetSubmissionCountsAsync(CancellationToken ct = default);
 
     Task<List<MerchandiseDto>> GetMerchandiseAsync(byte? categoryId, CancellationToken ct = default);
     Task<List<CharacterDto>> GetCharactersAsync(byte? categoryId, CancellationToken ct = default);
@@ -66,8 +67,8 @@ public class CommunityService : ICommunityService
         var result = await _community.GetFeedbackAsync(status, page, pageSize, ct);
         return new PagedResponse<FeedbackDto>(
             result.Items.Select(f => new FeedbackDto(
-                f.FeedbackId, f.Type.ToString(), f.Message, f.Email, f.Rating,
-                f.Status.ToString(), f.User?.Name, f.CreatedAt)).ToList(),
+                f.FeedbackId, EnumConverter.ToWireString(f.Type), f.Message, f.Email, f.Rating,
+                EnumConverter.ToWireString(f.Status), f.User?.Name, f.CreatedAt)).ToList(),
             result.TotalCount, result.Page, result.PageSize, result.PageCount);
     }
 
@@ -119,13 +120,12 @@ public class CommunityService : ICommunityService
     }
 
     public async Task<PagedResponse<SubmissionDto>> GetSubmissionsAsync(
-        SubmissionStatus? status, int page, int pageSize, CancellationToken ct = default)
+        SubmissionStatus? status, int page, int pageSize, uint? userId = null,
+        SubmissionKind? kind = null, CancellationToken ct = default)
     {
-        var result = await _community.GetSubmissionsAsync(status, page, pageSize, ct);
+        var result = await _community.GetSubmissionsAsync(status, page, pageSize, userId, kind, ct);
         return new PagedResponse<SubmissionDto>(
-            result.Items.Select(s => new SubmissionDto(
-                s.SubmissionId, s.Title, s.Body, s.Status.ToString(),
-                s.Category?.Slug ?? string.Empty, s.User?.Name ?? "Unknown", s.CreatedAt)).ToList(),
+            result.Items.Select(ToSubmissionDto).ToList(),
             result.TotalCount, result.Page, result.PageSize, result.PageCount);
     }
 
@@ -138,6 +138,14 @@ public class CommunityService : ICommunityService
         if (string.IsNullOrWhiteSpace(request.Body))
             throw new ValidationException("Your submission is empty.");
 
+        // The kind decides what the moderation queue does with it, so an
+        // unrecognised value is rejected here rather than defaulting silently.
+        // Parsed with EnumConverter because the wire form is snake_case and
+        // Enum.TryParse cannot bridge "character_profile" to CharacterProfile.
+        if (!EnumConverter.TryParse<SubmissionKind>(request.Kind, out var kind))
+            throw new ValidationException(
+                "Pick what you are submitting: an article, a character profile, or an event highlight.");
+
         // The category has to exist, otherwise the foreign key fails at save
         // time with a constraint error the caller cannot act on.
         var category = await _content.GetCategoryByIdAsync(request.CategoryId, ct)
@@ -147,23 +155,44 @@ public class CommunityService : ICommunityService
         {
             UserId = userId,
             CategoryId = category.CategoryId,
+            Kind = kind,
             Title = request.Title.Trim(),
             Body = request.Body.Trim(),
             Status = SubmissionStatus.Pending,
             CreatedAt = DateTime.UtcNow,
         }, ct);
 
+        // Fill in the category and author from data we already hold, rather than
+        // the empty strings this used to return. The client renders the row it
+        // gets back straight into the member's list, so an empty slug showed as
+        // a blank chip until a refetch.
+        var author = await _users.GetByIdAsync(userId, ct);
+
         return new SubmissionDto(
-            row.SubmissionId, row.Title, row.Body, row.Status.ToString(),
-            string.Empty, string.Empty, row.CreatedAt);
+            row.SubmissionId, row.Title, row.Body, EnumConverter.ToWireString(row.Status),
+            EnumConverter.ToWireString(row.Kind),
+            category.Slug, author?.Name ?? "Unknown",
+            row.ModeratorNote, row.DecidedAt, row.CreatedAt);
     }
 
     public async Task SetSubmissionStatusAsync(
-        uint submissionId, SubmissionStatus status, uint adminUserId, CancellationToken ct = default)
+        uint submissionId, SubmissionStatus status, uint adminUserId, string? note = null,
+        CancellationToken ct = default)
     {
-        await _community.SetSubmissionStatusAsync(submissionId, status, ct);
+        await _community.SetSubmissionStatusAsync(submissionId, status, adminUserId, note, ct);
         await LogAsync(adminUserId, "submission_status", submissionId, ct);
     }
+
+    public Task<Dictionary<string, int>> GetSubmissionCountsAsync(CancellationToken ct = default) =>
+        _community.GetSubmissionCountsAsync(ct);
+
+    /// One place that maps a submission to the wire shape, so the create path
+    /// and the list path cannot disagree about which fields are filled in.
+    private static SubmissionDto ToSubmissionDto(FanSubmission s) => new(
+        s.SubmissionId, s.Title, s.Body, EnumConverter.ToWireString(s.Status),
+        EnumConverter.ToWireString(s.Kind),
+        s.Category?.Slug ?? string.Empty, s.User?.Name ?? "Unknown",
+        s.ModeratorNote, s.DecidedAt, s.CreatedAt);
 
     public async Task<List<MerchandiseDto>> GetMerchandiseAsync(byte? categoryId, CancellationToken ct = default)
     {

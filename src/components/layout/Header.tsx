@@ -78,9 +78,16 @@ export default function Header({
         scrolled ? 'glass-panel border-line shadow-lg shadow-black/5' : 'border-transparent bg-transparent'
       }`}
     >
-      {/* Max-width row so the header doesn't stretch on wide monitors. */}
-      <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 sm:py-4 lg:px-8">
-        {/* Hamburger — drives the sidebar. */}
+      {/* Full-bleed row, not a centred max-w-7xl one.
+          The sidebar is fixed at left-0, so the hamburger has to sit at x=0 to
+          line up with it; a centred container would inset the button and break
+          that alignment on any screen wider than the container. The logo
+          follows immediately, and the right-hand controls are pushed out with
+          ml-auto rather than by justify-between — with three children
+          justify-between puts the SECOND one in the middle, which is why the
+          logo was floating a third of the way across the header. */}
+      <div className="flex w-full items-center gap-2 py-3 pr-4 sm:py-4 sm:pr-6 lg:pr-8">
+        {/* Hamburger — drives the sidebar. Flush left, on top of it. */}
         <button
           type="button"
           onClick={onToggleSidebar}
@@ -101,9 +108,10 @@ export default function Header({
           FanHub <span className="text-accent">Plus</span>
         </Link>
 
-        {/* Right-hand controls — min-w-0 lets the search box SHRINK on
-            mid-size screens instead of pushing the header sideways. */}
-        <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+        {/* Right-hand controls — ml-auto holds them at the far right, and
+            min-w-0 lets the search box SHRINK on mid-size screens instead of
+            pushing the header sideways. */}
+        <div className="ml-auto flex min-w-0 items-center gap-2 sm:gap-3">
           {/* Search — the shared SearchBar in its header variant, so the debounce
               and clear button exist once instead of twice. `onSubmit` means it
               submits on Enter instead of navigating per keystroke. */}

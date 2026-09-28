@@ -156,8 +156,11 @@ public class UserRepository : IUserRepository
         return true;
     }
 
+    // Tracked, not AsNoTracking. ResetPasswordAsync stamps UsedAt on this row,
+    // and against an untracked entity that assignment is silently discarded —
+    // which left reset links replayable until the token expired on their own.
     public Task<PasswordResetToken?> GetResetTokenByHashAsync(string tokenHash, CancellationToken ct = default) =>
-        _db.PasswordResetTokens.AsNoTracking()
+        _db.PasswordResetTokens
             .FirstOrDefaultAsync(t => t.TokenHash == tokenHash, ct);
 
     public async Task AddResetTokenAsync(PasswordResetToken token, CancellationToken ct = default)
@@ -165,6 +168,97 @@ public class UserRepository : IUserRepository
         _db.PasswordResetTokens.Add(token);
         await _db.SaveChangesAsync(ct);
     }
+
+    // ---------- Category lists ----------
+
+    public async Task<List<byte>> GetFavoriteCategoryIdsAsync(uint userId, CancellationToken ct = default) =>
+        await _db.UserFavoriteCategories.AsNoTracking()
+            .Where(f => f.UserId == userId)
+            .Select(f => f.CategoryId)
+            .OrderBy(id => id)
+            .ToListAsync(ct);
+
+    public async Task<List<byte>> GetInterestCategoryIdsAsync(uint userId, CancellationToken ct = default) =>
+        await _db.UserInterestCategories.AsNoTracking()
+            .Where(i => i.UserId == userId)
+            .Select(i => i.CategoryId)
+            .OrderBy(id => id)
+            .ToListAsync(ct);
+
+    // Replace wholesale rather than diffing. The payload is a handful of ids, so
+    // the extra statements are cheaper than the logic needed to work out which
+    // rows to add and which to delete — and it cannot drift out of sync with
+    // what the client asked for.
+    public async Task SetFavoriteCategoriesAsync(uint userId, IEnumerable<byte> categoryIds, CancellationToken ct = default)
+    {
+        var keep = categoryIds.Distinct().ToList();
+
+        var existing = await _db.UserFavoriteCategories
+            .Where(f => f.UserId == userId)
+            .ToListAsync(ct);
+
+        _db.UserFavoriteCategories.RemoveRange(existing.Where(f => !keep.Contains(f.CategoryId)));
+        var have = existing.Select(f => f.CategoryId).ToHashSet();
+        _db.UserFavoriteCategories.AddRange(
+            keep.Where(id => !have.Contains(id)).Select(id => new UserFavoriteCategory { UserId = userId, CategoryId = id }));
+
+        await _db.SaveChangesAsync(ct);
+    }
+
+    public async Task SetInterestCategoriesAsync(uint userId, IEnumerable<byte> categoryIds, CancellationToken ct = default)
+    {
+        var keep = categoryIds.Distinct().ToList();
+
+        var existing = await _db.UserInterestCategories
+            .Where(i => i.UserId == userId)
+            .ToListAsync(ct);
+
+        _db.UserInterestCategories.RemoveRange(existing.Where(i => !keep.Contains(i.CategoryId)));
+        var have = existing.Select(i => i.CategoryId).ToHashSet();
+        _db.UserInterestCategories.AddRange(
+            keep.Where(id => !have.Contains(id)).Select(id => new UserInterestCategory { UserId = userId, CategoryId = id }));
+
+        await _db.SaveChangesAsync(ct);
+    }
+
+    // Targeted UPDATE rather than loading the user: the only field changing is
+    // the avatar, and loading a tracked entity would invite a stale overwrite
+    // of a concurrent profile edit.
+    public async Task SetAvatarPathAsync(uint userId, string? avatarPath, CancellationToken ct = default)
+    {
+        await _db.Users
+            .Where(u => u.UserId == userId)
+            .ExecuteUpdateAsync(s => s.SetProperty(u => u.AvatarPath, avatarPath), ct);
+    }
+
+    // ---------- Email verification ----------
+
+    public async Task AddEmailVerificationTokenAsync(EmailVerificationToken token, CancellationToken ct = default)
+    {
+        _db.EmailVerificationTokens.Add(token);
+        await _db.SaveChangesAsync(ct);
+    }
+
+    // Tracked, not AsNoTracking: confirming a link stamps UsedAt and saves.
+    public Task<EmailVerificationToken?> GetEmailVerificationTokenAsync(string tokenHash, CancellationToken ct = default) =>
+        _db.EmailVerificationTokens
+            .FirstOrDefaultAsync(t => t.TokenHash == tokenHash, ct);
+
+    public async Task SetVerifiedAsync(uint userId, CancellationToken ct = default) =>
+        await _db.Users
+            .Where(u => u.UserId == userId)
+            .ExecuteUpdateAsync(s => s.SetProperty(u => u.IsVerified, true), ct);
+
+    public async Task<List<ActivityLog>> GetRecentActivityAsync(uint userId, int take, CancellationToken ct = default) =>
+        await _db.ActivityLogs.AsNoTracking()
+            .Where(a => a.UserId == userId)
+            .OrderByDescending(a => a.CreatedAt)
+            .ThenByDescending(a => a.LogId)
+            // LogId as the tie-break: several actions can share a CreatedAt to the
+            // second, and without a deterministic second key the same row can
+            // appear on one page load and not the next.
+            .Take(take)
+            .ToListAsync(ct);
 
     public async Task AddActivityAsync(ActivityLog log, CancellationToken ct = default)
     {

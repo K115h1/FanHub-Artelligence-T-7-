@@ -25,7 +25,7 @@ export const FANDOMS = {
   games:    { categorySlug: "gaming",  categoryName: "Gaming",  contentType: "game",         idBase: 2000 },
   comics:   { categorySlug: "comics",  categoryName: "Comics",  contentType: "comic",        idBase: 3000 },
   kpop:     { categorySlug: "k-pop",   categoryName: "K-Pop",   contentType: "music_artist", idBase: 4000 },
-  tvshows:  { categorySlug: "tvshows",  categoryName: "TV Shows", contentType: "series",       idBase: 5000 },
+  tvshows:  { categorySlug: "tv-shows", categoryName: "TV Shows", contentType: "series",       idBase: 5000 },
 };
 
 /**

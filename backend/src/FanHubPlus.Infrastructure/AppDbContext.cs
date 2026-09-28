@@ -22,6 +22,8 @@ public class AppDbContext : DbContext
 
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<UserFavoriteCategory> UserFavoriteCategories => Set<UserFavoriteCategory>();
+    public DbSet<UserInterestCategory> UserInterestCategories => Set<UserInterestCategory>();
+    public DbSet<EmailVerificationToken> EmailVerificationTokens => Set<EmailVerificationToken>();
     public DbSet<Genre> Genres => Set<Genre>();
     public DbSet<Content> Contents => Set<Content>();
     public DbSet<ContentGenre> ContentGenres => Set<ContentGenre>();
@@ -119,6 +121,34 @@ public class AppDbContext : DbContext
                 .HasForeignKey(f => f.UserId).OnDelete(DeleteBehavior.Cascade);
             entity.HasOne(f => f.Category).WithMany()
                 .HasForeignKey(f => f.CategoryId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<UserInterestCategory>(entity =>
+        {
+            entity.ToTable("user_interest_categories");
+            entity.HasKey(i => new { i.UserId, i.CategoryId });
+            entity.Property(i => i.UserId).HasColumnName("user_id");
+            entity.Property(i => i.CategoryId).HasColumnName("category_id");
+            entity.HasOne(i => i.User).WithMany(u => u.InterestCategories)
+                .HasForeignKey(i => i.UserId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(i => i.Category).WithMany()
+                .HasForeignKey(i => i.CategoryId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<EmailVerificationToken>(entity =>
+        {
+            entity.ToTable("email_verification_tokens");
+            entity.HasKey(t => t.TokenId);
+            entity.Property(t => t.TokenId).HasColumnName("token_id").ValueGeneratedOnAdd();
+            entity.Property(t => t.UserId).HasColumnName("user_id");
+            entity.Property(t => t.TokenHash).HasColumnName("token_hash").HasMaxLength(64)
+                .IsFixedLength().IsRequired();
+            entity.Property(t => t.ExpiresAt).HasColumnName("expires_at");
+            entity.Property(t => t.UsedAt).HasColumnName("used_at");
+            entity.Property(t => t.CreatedAt).HasColumnName("created_at");
+            entity.HasIndex(t => t.TokenHash).IsUnique().HasDatabaseName("uq_email_verify_hash");
+            entity.HasOne(t => t.User).WithMany()
+                .HasForeignKey(t => t.UserId).OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<Genre>(entity =>
@@ -290,15 +320,24 @@ public class AppDbContext : DbContext
             entity.Property(s => s.SubmissionId).HasColumnName("submission_id").ValueGeneratedOnAdd();
             entity.Property(s => s.UserId).HasColumnName("user_id");
             entity.Property(s => s.CategoryId).HasColumnName("category_id");
+            entity.Property(s => s.Kind).HasColumnName("kind").HasConversion(EnumConverter.SnakeCase<SubmissionKind>()).HasMaxLength(20);
             entity.Property(s => s.Title).HasColumnName("title").HasMaxLength(255).IsRequired();
             entity.Property(s => s.Body).HasColumnName("body").HasColumnType("TEXT").IsRequired();
             entity.Property(s => s.Status).HasColumnName("status").HasConversion(EnumConverter.SnakeCase<SubmissionStatus>()).HasMaxLength(16);
+            entity.Property(s => s.ModeratorNote).HasColumnName("moderator_note").HasColumnType("TEXT");
+            entity.Property(s => s.DecidedAt).HasColumnName("decided_at");
+            entity.Property(s => s.DecidedBy).HasColumnName("decided_by");
             entity.Property(s => s.CreatedAt).HasColumnName("created_at");
             entity.HasIndex(s => s.Status).HasDatabaseName("ix_submissions_status");
+            // The queue's default view is "pending, newest first, of kind X".
+            entity.HasIndex(s => new { s.Kind, s.Status, s.CreatedAt }).HasDatabaseName("ix_submissions_kind");
             entity.HasOne(s => s.User).WithMany()
                 .HasForeignKey(s => s.UserId).OnDelete(DeleteBehavior.Cascade);
             entity.HasOne(s => s.Category).WithMany()
                 .HasForeignKey(s => s.CategoryId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne<User>()
+                .WithMany()
+                .HasForeignKey(s => s.DecidedBy).OnDelete(DeleteBehavior.SetNull);
         });
 
         modelBuilder.Entity<MerchandiseItem>(entity =>

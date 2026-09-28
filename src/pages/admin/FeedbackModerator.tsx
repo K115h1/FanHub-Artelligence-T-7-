@@ -7,7 +7,7 @@
 import { useMemo, useState } from 'react'
 import { Inbox, MessageSquare, SearchX } from 'lucide-react'
 import { useAdminData } from '../../features/admin/AdminDataProvider'
-import type { FeedbackItem, FeedbackStatus } from '../../types/models'
+import type { FeedbackEntry, FeedbackStatus } from '../../types/models'
 import {
   AdminButton,
   AdminPageHeader,
@@ -45,9 +45,9 @@ export default function FeedbackModerator() {
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState<FeedbackStatus | 'all'>('all')
   const [type, setType] = useState<string>('all')
-  const [expanded, setExpanded] = useState<string | null>(null)
+  const [expanded, setExpanded] = useState<number | null>(null)
   // Dismissal is the one irreversible-sounding action, so it is confirmed.
-  const [dismissing, setDismissing] = useState<FeedbackItem | null>(null)
+  const [dismissing, setDismissing] = useState<FeedbackEntry | null>(null)
 
   const counts = useMemo(() => {
     const map: Record<string, number> = { all: feedback.length }
@@ -62,18 +62,20 @@ export default function FeedbackModerator() {
         if (status !== 'all' && item.status !== status) return false
         if (type !== 'all' && item.type !== type) return false
         if (needle && !item.message.toLowerCase().includes(needle)) return false
-        if (needle && !item.userName.toLowerCase().includes(needle)) return false
+        // userName is nullable — feedback can be submitted without an account,
+        // and the local seed had no anonymous rows, so this was never a null.
+        if (needle && !(item.userName ?? '').toLowerCase().includes(needle)) return false
         return true
       })
       .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
   }, [feedback, search, status, type])
 
-  function applyStatus(item: FeedbackItem, next: FeedbackStatus) {
+  function applyStatus(item: FeedbackEntry, next: FeedbackStatus) {
     if (next === 'dismissed') {
       setDismissing(item)
       return
     }
-    setFeedbackStatus(item.id, next)
+    void setFeedbackStatus(item.id, next)
   }
 
   return (
@@ -185,7 +187,17 @@ export default function FeedbackModerator() {
                     {open ? 'Show less' : 'Show full message'}
                   </AdminButton>
                   <div className="ml-auto flex flex-wrap gap-2">
-                    {NEXT_ACTIONS[item.status].map((action) => (
+                    {/*
+                      status arrives as a plain string from the API rather than a
+                      union, so a value outside the four the table knows (a row
+                      written by an older build, say) would index to undefined and
+                      throw on .map. Falling back to no actions shows the entry
+                      read-only instead of taking the queue down.
+                    */}
+                    {(item.status in NEXT_ACTIONS
+                      ? NEXT_ACTIONS[item.status as FeedbackStatus]
+                      : []
+                    ).map((action) => (
                       <AdminButton
                         key={action.to + action.label}
                         variant={action.to === 'dismissed' ? 'danger' : 'primary'}

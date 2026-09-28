@@ -11,9 +11,16 @@ export interface ContentFilters {
   /** Category slug, e.g. "anime". */
   category?: string
   genreId?: number
-  /** ContentType values as the API names them: Movie, Series, Game… */
+  /** ContentType values as the API names them: movie, series, game, comic… */
   type?: string
   status?: string
+  /**
+   * Inclusive release-year bounds. Either alone is a half-open range; setting
+   * either one excludes titles with no release year, since a title with no year
+   * cannot be inside any range.
+   */
+  yearFrom?: number
+  yearTo?: number
   page?: number
   pageSize?: number
   sort?: string
@@ -35,6 +42,8 @@ export function getContents(filters: ContentFilters = {}): Promise<Paginated<Con
     genre: filters.genreId,
     type: filters.type,
     status: filters.status,
+    yearFrom: filters.yearFrom,
+    yearTo: filters.yearTo,
     page: filters.page,
     pageSize: filters.pageSize,
     sort: filters.sort,
