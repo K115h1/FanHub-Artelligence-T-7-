@@ -81,8 +81,19 @@ services:
           envVarKey: MYSQL_PASSWORD
       # The connection string is assembled in ServiceCollectionExtensions from
       # DB_* because the password contains characters that are awkward in a URL.
-      - key: JWT__SigningKey
+      # The JWT signing key. This MUST be named Jwt__Key: Program.cs reads
+      # Configuration["Jwt:Key"] and throws at startup if it is absent, and
+      # ASP.NET Core maps a configuration section to an environment variable by
+      # replacing every colon with a double underscore. JWT__SigningKey looks
+      # right and is silently ignored, which crash-loops the API on boot.
+      - key: Jwt__Key
         generateValue: true
+      - key: Jwt__Issuer
+        value: FanHubPlus
+      - key: Jwt__Audience
+        value: FanHubPlusClient
+      - key: Jwt__ExpiryHours
+        value: "8"
       # CORS is a list, so each entry is its own key. Add one per deployed
       # frontend origin — see docs/deployment.md.
       #
