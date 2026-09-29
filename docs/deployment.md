@@ -49,6 +49,46 @@ request is a 404.
 Vite inlines `VITE_*` at **build** time, so changing this value requires a
 rebuild, not just a restart.
 
+## Deep links: `vercel.json`
+
+The app is a single-page app, so a browser asking for `/explore` is asking for
+a route the React app owns, not a file on disk. Vercel has to be told to answer
+those with `index.html`; otherwise it returns a hard 404 and the browser never
+loads the app at all. `vercel.json` at the repository root does that:
+
+```json
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    { "source": "/((?!assets/).*)", "destination": "/index.html" }
+  ]
+}
+```
+
+Vercel checks the filesystem **before** applying rewrites, so real files still
+serve normally — `/images/anime/*.jpg`, `/logo.svg`, `/icons.svg` and the rest
+of `public/`. The `assets/` exclusion covers Vite's hashed build output, which
+is the one path where a rewrite would be actively harmful. No application route
+starts with `assets`, so nothing is caught by accident.
+
+**This is not optional, and its absence breaks far more than the 404 page.**
+Without it, on the live site as of this writing:
+
+| Request | Result |
+|---|---|
+| `/` | 200, app loads |
+| `/explore`, `/category/anime`, `/articles` | **404, no app** |
+| `/dashboard`, `/admin` | **404, no app** |
+| any unknown path | **404, no app** |
+
+So every bookmark, every shared link, every `F5` on a page other than `/`, and
+every link in an email — password reset, verify-email — lands on a dead 404.
+In-app navigation is unaffected, which is why the bug survives local testing:
+clicking around never asks the server for anything.
+
+`vercel.json` contains only `rewrites`, so Vercel's framework detection is left
+alone and the build settings are unchanged.
+
 ## The other manual step: CORS
 
 `render.yaml` already allows the Vercel production origin at
@@ -234,11 +274,16 @@ which is how the MySQL image is meant to be probed.
 ```powershell
 curl https://fanhubplus-api.onrender.com/health
 curl https://fanhubplus-api.onrender.com/api/contents/categories
+curl -I https://fan-hub-artelligence-t-7.vercel.app/explore
 ```
 
 `/health` returning ok proves the app started and the health check passed. The
 second call proves it can reach MySQL and read real data — if the first works
 and the second does not, the problem is the database, not the app.
+
+The third proves the SPA rewrite is in place: it must return **200**. A 404
+there means `vercel.json` is missing or has not been deployed, and every deep
+link on the site is broken (see above).
 
 **The free API sleeps after inactivity** and takes roughly 50 seconds to wake.
 The first request after a lull will hang for that long. That is the free tier,
