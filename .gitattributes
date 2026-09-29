@@ -1,0 +1,22 @@
+# Line endings are load-bearing for two kinds of file in this repository.
+#
+# docker-entrypoint.sh MUST be LF. A CRLF version fails at container start with
+# "/bin/sh: 1: ...: \r: not found", because the carriage return becomes part of
+# the command. That is an opaque failure on a machine where everything else looks
+# correct, and it only appears on Windows checkouts — which is where the commit
+# was made.
+*.sh text eol=lf
+
+# Dockerfile and the YAML Render reads are not shell, but CRLF in a Dockerfile
+# produces a stray \r in COPY paths on some builders. Cheap to pin.
+Dockerfile text eol=lf
+*.Dockerfile text eol=lf
+render.yaml text eol=lf
+
+# SQL is loaded by MySQL's SOURCE, which tolerates CRLF, but pinning it keeps
+# the files byte-identical between a Windows and a Linux checkout so a diff of
+# the schema is only ever a real change.
+*.sql text eol=lf
+
+# Everything else: let the repo's existing behaviour stand.
+* text=auto

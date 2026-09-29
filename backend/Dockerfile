@@ -1,33 +1,39 @@
-# Backend image for Render.
+# API image for Render.
 #
-# A Dockerfile rather than Render's native .NET runtime, so the SDK version is
-# pinned here instead of depending on which .NET versions the native image
-# happens to ship this month. The project targets net10.0, and a silent SDK
-# mismatch on the native runtime is the kind of failure that costs an afternoon.
+# BUILD CONTEXT IS backend/, NOT THE REPO ROOT.
+#   That is deliberate. The API needs nothing outside this folder, and the repo
+#   root carries ~174 MB of poster artwork under public/images. A root context
+#   would ship all of it to the daemon on every build and then throw it away.
+#   It also means the sibling .dockerignore applies, since Docker only reads one
+#   .dockerignore — the one at the root of the context.
 #
-# Build context is the REPOSITORY ROOT, not backend/, because the .env files, the
-# render.yaml and the SQL all sit alongside the solution.
+#   Consequence: paths below are relative to backend/, and the database image
+#   (deploy/mysql/Dockerfile) is unaffected because it genuinely does need
+#   database/ and therefore keeps the repo root as its context.
+#
+# Two stages: SDK to build, ASP.NET runtime to run. The runtime image has no
+# compiler, MSBuild or NuGet client in it, which is most of the size saving.
 
 # ---------- build ----------
 FROM mcr.microsoft.com/dotnet/sdk:10 AS build
 WORKDIR /src
 
-# Copied on their own layer first so a source-only change does not invalidate
-# the restore. This is the single biggest win in a .NET container build.
+# Restore on its own layer, copied before any source. A change to a .cs file then
+# does not invalidate the restore, which is the single biggest win in a .NET
+# container build.
 #
 # There is no Directory.Build.props in this repo, so the solution and the four
-# csproj files are all that the restore layer needs. Adding one later means adding
-# it here too, or the build fails with a file-not-found rather than a missing
-# property.
-COPY backend/*.slnx ./
-COPY backend/src/FanHubPlus.Domain/*.csproj        src/FanHubPlus.Domain/
-COPY backend/src/FanHubPlus.Application/*.csproj    src/FanHubPlus.Application/
-COPY backend/src/FanHubPlus.Infrastructure/*.csproj src/FanHubPlus.Infrastructure/
-COPY backend/src/FanHubPlus.Api/*.csproj            src/FanHubPlus.Api/
+# project files are the whole dependency graph. Adding one means adding it here
+# too, or the build fails on a missing file rather than a missing property.
+COPY FanHubPlus.slnx ./
+COPY src/FanHubPlus.Domain/*.csproj        src/FanHubPlus.Domain/
+COPY src/FanHubPlus.Application/*.csproj    src/FanHubPlus.Application/
+COPY src/FanHubPlus.Infrastructure/*.csproj src/FanHubPlus.Infrastructure/
+COPY src/FanHubPlus.Api/*.csproj            src/FanHubPlus.Api/
 
 RUN dotnet restore src/FanHubPlus.Api/FanHubPlus.Api.csproj
 
-COPY backend/ .
+COPY . .
 RUN dotnet publish src/FanHubPlus.Api/FanHubPlus.Api.csproj \
       -c Release \
       -o /app/publish \
@@ -36,8 +42,10 @@ RUN dotnet publish src/FanHubPlus.Api/FanHubPlus.Api.csproj \
 # ---------- runtime ----------
 FROM mcr.microsoft.com/dotnet/aspnet:10 AS runtime
 
-# The API needs the MySQL client only for the schema health probe in
-# Program.cs; if that is ever removed this can go too.
+# mysql-client is not needed by the app. It is here because the container has no
+# other way to prove the database is reachable, and "is the API actually talking
+# to MySQL" is the first question when a deploy misbehaves. Delete this line and
+# the apt layer together if you would rather keep the image smaller.
 RUN apt-get update \
  && apt-get install -y --no-install-recommends default-mysql-client \
  && rm -rf /var/lib/apt/lists/*
@@ -45,14 +53,19 @@ RUN apt-get update \
 WORKDIR /app
 COPY --from=build /app/publish .
 
-# Runs unprivileged. The base image ships an `app` user for exactly this.
-USER $APP_UID
+# The bind address is decided in the entrypoint, not here: Render injects PORT at
+# run time, and a Dockerfile ENV cannot express a run-time default. Do not set
+# ASPNETCORE_URLS or ASPNETCORE_HTTP_PORTS here — the entrypoint owns it.
+COPY docker-entrypoint.sh ./
+RUN chmod +x docker-entrypoint.sh
 
-# Render routes to the port named by EXPOSE. ASP.NET Core 8+ images default to
-# 8080; naming it explicitly means a change to that default cannot silently
-# produce a health-check failure.
-ENV ASPNETCORE_HTTP_PORTS=8080 \
-    DOTNET_gcServer=1
+# Documents the default port for a local `docker run` and for anything that reads
+# EXPOSE. Render routes to the port the entrypoint actually binds, which is $PORT.
 EXPOSE 8080
 
-ENTRYPOINT ["dotnet", "FanHubPlus.Api.dll"]
+# Unprivileged. The aspnet images ship an `app` user for exactly this; running as
+# root inside a container is not a vulnerability here, but it is a habit worth
+# not forming.
+USER $APP_UID
+
+ENTRYPOINT ["./docker-entrypoint.sh"]

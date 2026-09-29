@@ -36,6 +36,11 @@
 
 FROM mysql:8.0
 
+# BUILD CONTEXT IS THE REPO ROOT, unlike the API image.
+#   This image genuinely needs database/, so the context cannot be narrowed the
+#   way backend/Dockerfile narrows it. The .dockerignore at the repo root is the
+#   one that applies here.
+#
 # Sorted by the numeric prefixes. Copied individually rather than as a glob so
 # the order is visible in this file instead of hidden in a COPY -- the ordering
 # is load-bearing.

@@ -32,7 +32,14 @@ render.yaml.bak
 Dockerfile.*
 !Dockerfile
 
+# The poster artwork, avatars and category banners. This is ~174 MB of committed
+# binaries and the only image with a repo-root context is the database, which
+# copies database/*.sql and nothing else. Excluding it takes that build context
+# from 181 MB to well under 1 MB.
+#
+# The API image is unaffected: its context is backend/, which has no public/.
+public/
+
 # Docs are not needed at runtime
 docs/
 *.md
-!public/images/**/*.md

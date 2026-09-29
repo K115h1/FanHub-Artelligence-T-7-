@@ -56,8 +56,12 @@ services:
   - type: web
     name: fanhubplus-api
     runtime: docker
-    dockerfilePath: ./backend/Dockerfile
-    dockerContext: .
+    dockerfilePath: ./Dockerfile
+    # backend/, NOT the repo root. The API needs nothing outside backend/, and
+    # the root carries ~174 MB of poster artwork that would be sent to the daemon
+    # on every build and discarded. It also means backend/.dockerignore applies:
+    # Docker reads exactly one, the one at the context root.
+    dockerContext: ./backend
     plan: free
     healthCheckPath: /health
     # Same workspace as the database, so DB_HOST resolves to the private service

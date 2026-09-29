@@ -1,0 +1,63 @@
+# Build context is backend/, so this is the only .dockerignore Docker reads —
+# one exists per context root, and a .dockerignore in a subfolder is ignored.
+#
+# The point is the build cache. Anything sent to the daemon is also sent to
+# every build, and a changed file invalidates the layer it sits in. bin/ and
+# obj/ are the worst offenders: megabytes of build output that change on every
+# single compile, which would bust the restore layer on every build.
+
+# Build output
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+*.user
+*.suo
+*.userprefs
+
+# Test and coverage output
+TestResults/
+*.trx
+*.coverage
+coverage*.json
+coverage*.xml
+coverage*.info
+
+# Nested build output, for any project that nests its own
+**/bin/
+**/obj/
+
+# Version control and editor noise
+.git/
+.gitignore
+.gitattributes
+.vs/
+.vscode/
+.idea/
+*.swp
+*~
+
+# Local secrets. The connection string and the JWT key live in user-secrets on
+# the developer's machine, never in the repo, and must never reach a layer: a
+# secret in an image is readable by anyone who can pull it, and image layers are
+# not scrubbed by deleting a later file.
+.env
+.env.*
+!.env.example
+*.pfx
+*.pem
+*.key
+my.ini
+secrets.json
+
+# Not needed to build or run the API
+*.md
+docs/
+README.md
+.gitignore
+.dockerignore
+Dockerfile
+Dockerfile.*
+!Dockerfile
