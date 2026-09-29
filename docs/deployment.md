@@ -1,15 +1,22 @@
 # Deploying to Render
 
-## The short version
+## The deployed stack
+
+| Piece | Where | URL |
+|---|---|---|
+| Frontend | Vercel | https://fan-hub-artelligence-t-7.vercel.app/ |
+| API | Render web service | `https://fanhubplus-api.onrender.com` |
+| Database | Render private service, MySQL 8 | internal only, `fanhubplus-db:3306` |
+
+The API hostname is derived from the `name:` of the API service in
+`render.yaml`. Rename the service and the Vercel build has to change with it.
+
+## Deploying the API and database
 
 The API deploys to Render as a normal .NET web service. The database **also
 deploys to Render, but not as a managed service** — see the caveat below.
 
-```powershell
-git push origin main
-```
-
-Then in Render: **New → Blueprint**, point at the repository, and Render reads
+In Render: **New → Blueprint**, point at the repository, and Render reads
 `render.yaml`. It creates two services:
 
 | Service | Type | Reachable from |
@@ -17,8 +24,47 @@ Then in Render: **New → Blueprint**, point at the repository, and Render reads
 | `fanhubplus-db` | MySQL 8, private service, 10 GB disk | other services only |
 | `fanhubplus-api` | ASP.NET Core 10 web service | the internet |
 
-The frontend is a separate static site. It can go on Render too, or anywhere —
-it is just a Vite build.
+**Watch the database logs on first boot.** They should show every file from
+`01_schema.sql` through `11_view_counts.sql` importing. If one errors, the
+container does not start and the API has nothing to connect to. A fresh
+database ends up with 25 tables, 8 categories, 3 roles, 3,383 titles, 12 events
+and 2 users with real Argon2 password hashes.
+
+## The one manual step: the frontend's API URL
+
+Vercel does not read `.env.local`, and `.env.production` is git-ignored, so
+nothing committed here reaches the deployed frontend. Set it in the Vercel
+dashboard:
+
+**Project → Settings → Environment Variables**
+
+| Name | Value |
+|---|---|
+| `VITE_API_URL` | `https://fanhubplus-api.onrender.com/api` |
+
+Set it for both **Production** and **Preview**, then redeploy. The `/api` suffix
+is required — the controllers are routed `api/[controller]`, and without it every
+request is a 404.
+
+Vite inlines `VITE_*` at **build** time, so changing this value requires a
+rebuild, not just a restart.
+
+## The other manual step: CORS
+
+`render.yaml` already allows the Vercel production origin at
+`Cors__Origins__1`. Two things to know about it:
+
+- **No trailing slash.** A CORS origin is scheme + host + port. The browser
+  sends the origin it is actually on, which never has one, so
+  `https://x.vercel.app/` does not match `https://x.vercel.app` and the request
+  is refused while `/health` still answers.
+- **Vercel previews get a different origin per deployment.** A preview build
+  will be blocked. Copy the origin from the Vercel preview page and add it as
+  `Cors__Origins__2`, then the API redeploys.
+
+If requests fail with no console error at all, suspect this before anything
+else. It is the single most common cause of "the app deployed but shows no
+data".
 
 ## The caveat: Render has no managed MySQL
 
@@ -148,20 +194,9 @@ The API also accepts the discrete `DB_*` variables, which is what Render's
 
 ## CORS — the one thing that will bite you
 
-The API ships a CORS allow-list of dev-server origins. The deployed frontend's
-origin is not on it, so every browser request will be blocked while `/health`
-still answers — which looks like a broken database rather than a CORS problem.
-
-Add one entry per deployed frontend origin:
-
-```yaml
-- key: Cors__Origins__1
-  value: https://fanhubplus.onrender.com
-```
-
-CORS origins are **scheme + host + port**. `https://x.onrender.com` and
-`https://x.onrender.com/` are different strings, and the trailing slash will not
-match.
+See the CORS section above. The short version: the allow-list is in
+`render.yaml`, the Vercel production origin is already there, and a preview
+deployment needs its own entry added.
 
 ## Two changes made for deployment
 
@@ -187,9 +222,24 @@ which is how the MySQL image is meant to be probed.
 
 ## Things to do after the first deploy
 
-1. **Add the frontend origin to CORS.** See above. Nothing works until you do.
-2. **Set `VITE_API_URL`** on the frontend to the API's public URL, and rebuild.
-   The value must include the `/api` suffix — the controllers are routed
-   `api/[controller]`.
+1. **Set `VITE_API_URL` in the Vercel dashboard**, then redeploy the frontend.
+   Nothing works until you do — the built bundle still points at localhost.
+2. **Check the browser console.** A CORS error means the origin list is
+   missing an entry.
 3. **Take a `mysqldump`.** Disk snapshots are not a backup.
 4. **Rotate `MYSQL_PASSWORD`.** It is generated and visible in the dashboard.
+
+## Verifying a deploy
+
+```powershell
+curl https://fanhubplus-api.onrender.com/health
+curl https://fanhubplus-api.onrender.com/api/contents/categories
+```
+
+`/health` returning ok proves the app started and the health check passed. The
+second call proves it can reach MySQL and read real data — if the first works
+and the second does not, the problem is the database, not the app.
+
+**The free API sleeps after inactivity** and takes roughly 50 seconds to wake.
+The first request after a lull will hang for that long. That is the free tier,
+not a bug.

@@ -85,8 +85,16 @@ services:
         generateValue: true
       # CORS is a list, so each entry is its own key. Add one per deployed
       # frontend origin — see docs/deployment.md.
+      #
+      # The origin is scheme + host + port with NO trailing slash. The browser
+      # sends the origin it is actually on, which never has one, so
+      # "https://x.vercel.app/" does not match "https://x.vercel.app" and the
+      # request is refused while /health still answers.
       - key: Cors__Origins__0
         value: http://localhost:5180
       - key: Cors__Origins__1
-        sync: false # the deployed frontend origin, e.g. https://fanhubplus.onrender.com
+        value: https://fan-hub-artelligence-t-7.vercel.app
+      # Vercel gives every preview deployment its own origin, so a preview build
+      # is blocked by the list above. Those URLs are not predictable from here —
+      # copy the one from the Vercel preview page and add it as Cors__Origins__2.
     autoDeploy: true
