@@ -14,21 +14,26 @@
 
 services:
   # ---------- database ----------
-  # Not a `databases:` entry: Render has no first-party MySQL, so this is a
-  # private service running the official image with our schema baked in.
-  # See deploy/mysql/Dockerfile and docs/deployment.md.
-  - type: web
+  # `type: pserv` is a PRIVATE service. It has no onrender.com subdomain and is
+  # unreachable from the internet; only other services in this workspace can
+  # reach it. Declaring it `type: web` would publish it, which is the opposite of
+  # what is wanted here.
+  #
+  # Not a `databases:` entry: Render has no first-party MySQL, so this is the
+  # official image with our schema baked in. See deploy/mysql/Dockerfile.
+  - type: pserv
     name: fanhubplus-db
     runtime: docker
     dockerfilePath: ./deploy/mysql/Dockerfile
     dockerContext: .
-    plan: starter # a Disk is not available on the free tier
+    # There is no free plan for a private service; 0.5c-512mb is the smallest and
+    # is also the default if this is omitted. A disk requires a paid plan, which
+    # is the only reason this is not free.
+    plan: 0.5c-512mb
     disk:
       name: mysql-data
       mountPath: /var/lib/mysql # must match the mysql image exactly
       sizeGB: 10
-    # Not published: no `fromService` and no public host, so this is only
-    # reachable from other services in the workspace.
     envVars:
       - key: MYSQL_DATABASE
         value: fanhubplus
@@ -38,14 +43,14 @@ services:
         generateValue: true
       - key: MYSQL_ROOT_PASSWORD
         generateValue: true
-    # No healthCheckPath. Render's health check is an HTTP GET, and MySQL speaks
-    # no HTTP, so there is no path to poll. The container's own entrypoint is the
+    # No healthCheckPath. Render's health check is an HTTP GET and MySQL speaks
+    # no HTTP, so there is nothing to poll. The container entrypoint is the
     # readiness signal: it runs the schema import and only then starts listening
-    # on 3306, so a connection refused means it is genuinely not ready yet.
+    # on 3306, so a refused connection means it is genuinely not ready.
     #
     # This is also why the API does not use ServerVersion.AutoDetect — see
     # ServiceCollectionExtensions.
-    autoDeploy: false
+    autoDeployTrigger: 'off'
 
   # ---------- API ----------
   - type: web
@@ -66,10 +71,23 @@ services:
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
         value: Production
-      # The database host on the private network. Render names it after the
-      # service; the port is the one mysql listens on.
+      # The database's private-network hostname.
+      #
+      # It is NOT the service name. Render appends a random suffix — the docs'
+      # own example is `elasticsearch-2j3e:9200` for a service named
+      # `elasticsearch` — so a hardcoded `fanhubplus-db` would never resolve.
+      # The `host` property is the supported way to read it, and it re-syncs
+      # whenever the reference changes.
+      #
+      # `property: port` is deliberately NOT used: it returns the port of the
+      # service's HTTP server, and MySQL has none. It listens on 3306.
       - key: DB_HOST
-        value: fanhubplus-db
+        fromService:
+          name: fanhubplus-db
+          type: pserv
+          property: host
+      - key: DB_PORT
+        value: "3306"
       - key: DB_NAME
         value: fanhubplus
       - key: DB_USER
@@ -77,10 +95,11 @@ services:
       - key: DB_PASSWORD
         fromService:
           name: fanhubplus-db
-          type: web
+          type: pserv
           envVarKey: MYSQL_PASSWORD
       # The connection string is assembled in ServiceCollectionExtensions from
       # DB_* because the password contains characters that are awkward in a URL.
+      #
       # The JWT signing key. This MUST be named Jwt__Key: Program.cs reads
       # Configuration["Jwt:Key"] and throws at startup if it is absent, and
       # ASP.NET Core maps a configuration section to an environment variable by
@@ -108,4 +127,4 @@ services:
       # Vercel gives every preview deployment its own origin, so a preview build
       # is blocked by the list above. Those URLs are not predictable from here —
       # copy the one from the Vercel preview page and add it as Cors__Origins__2.
-    autoDeploy: true
+    autoDeployTrigger: commit
