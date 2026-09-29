@@ -55,15 +55,15 @@ services:
     dockerContext: .
     plan: free
     healthCheckPath: /health
-    # Same workspace as the database, so this resolves to the private service.
-    # fromService is Render's mechanism for referencing another service's
-    # environment by name.
+    # Same workspace as the database, so DB_HOST resolves to the private service
+    # over Render's internal network. No public database URL is involved.
+    #
+    # The database is configured with the four discrete DB_* variables rather
+    # than a single ConnectionStrings__FanhubPlus. Two reasons: Render's
+    # fromService hands over one value at a time, and a generated password can
+    # contain a semicolon or an at-sign that would need escaping inside a
+    # connection-string URL. ServiceCollectionExtensions assembles the string.
     envVars:
-      - key: ConnectionStrings__FanhubPlus
-        fromService:
-          name: fanhubplus-db
-          type: web
-          envVarKey: CONNECTION_URL
       - key: ASPNETCORE_ENVIRONMENT
         value: Production
       # The database host on the private network. Render names it after the
