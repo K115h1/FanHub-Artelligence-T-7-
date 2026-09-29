@@ -1,4 +1,4 @@
-// verifySynopsisChain.mjs — checks the synopsis data actually reaches MySQL.
+// verifySynopsisChain.mjs, checks the synopsis data actually reaches MySQL.
 //
 // The failure this catches is silent. 07_synopsis_seed.sql is a file of UPDATEs,
 // so a wrong slug, a missing category join or a stale 04_* seed all produce
@@ -195,7 +195,7 @@ console.log(`  matching nothing       : ${orphans}`);
 // A seed row that no UPDATE covers is the one gap a visitor can see: the detail
 // page renders "No description yet". Measured against the SQL rather than
 // catalog.json, because the merged duplicates are absent from the catalogue yet
-// still filled in — reading it from catalog.json reports 92 phantom gaps.
+// still filled in, reading it from catalog.json reports 92 phantom gaps.
 const updated = new Set(updates.map((m) => `${m[2]}|${m[1].replace(/''/g, "'")}`));
 const uncovered = [...seedPairs].filter((p) => !updated.has(p));
 console.log(`seed rows w/o an UPDATE  : ${uncovered.length}`);

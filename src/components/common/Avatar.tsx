@@ -1,11 +1,11 @@
-// Avatar — a profile picture, or the initials stand-in when there isn't one.
+// Avatar, a profile picture, or the initials stand-in when there isn't one.
 //
 // The initials tile was the whole component until avatars could actually be
 // uploaded. It stays as the fallback rather than being replaced: most seeded
 // accounts have no picture, and an empty circle reads as broken where a letter
 // reads as a person.
 //
-// `src` is expected to be a resolved URL — run it through avatarUrl() from
+// `src` is expected to be a resolved URL, run it through avatarUrl() from
 // lib/avatar.ts, because the API serves these from a different origin than the
 // poster art and the bare "/images/..." path is ambiguous between the two.
 import { useState } from 'react'

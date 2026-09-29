@@ -157,7 +157,7 @@ public class UserRepository : IUserRepository
     }
 
     // Tracked, not AsNoTracking. ResetPasswordAsync stamps UsedAt on this row,
-    // and against an untracked entity that assignment is silently discarded —
+    // and against an untracked entity that assignment is silently discarded, 
     // which left reset links replayable until the token expired on their own.
     public Task<PasswordResetToken?> GetResetTokenByHashAsync(string tokenHash, CancellationToken ct = default) =>
         _db.PasswordResetTokens
@@ -187,7 +187,7 @@ public class UserRepository : IUserRepository
 
     // Replace wholesale rather than diffing. The payload is a handful of ids, so
     // the extra statements are cheaper than the logic needed to work out which
-    // rows to add and which to delete — and it cannot drift out of sync with
+    // rows to add and which to delete, and it cannot drift out of sync with
     // what the client asked for.
     public async Task SetFavoriteCategoriesAsync(uint userId, IEnumerable<byte> categoryIds, CancellationToken ct = default)
     {

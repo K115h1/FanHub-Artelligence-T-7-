@@ -1,8 +1,8 @@
-// SettingsContext — the visitor's preferences. State and persistence live in
+// SettingsContext, the visitor's preferences. State and persistence live in
 // app/providers/SettingsProvider.tsx.
 //
 // Theme is deliberately not in here: ThemeProvider already owns the `.dark`
-// class on <html>, and merging them would leave two providers writing it.
+// class on html element, and merging them would leave two providers writing it.
 import { createContext, useContext } from 'react'
 import { DEFAULT_SETTINGS, type UserSettings } from '../types/models'
 

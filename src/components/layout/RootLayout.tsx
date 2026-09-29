@@ -1,4 +1,4 @@
-// RootLayout — the shell every page renders through.
+// RootLayout, the shell every page renders through.
 // The sidebar's open state lives here, not in Sidebar, because the header's
 // hamburger, the mobile scrim and the close button all drive it.
 import { Outlet } from 'react-router-dom'
@@ -16,7 +16,7 @@ export default function RootLayout() {
   return (
     // The auth overlay is mounted here rather than in the header so it survives
     // navigating between pages, and rather than in app/providers/ so it can use
-    // the router. It portals to <body> on its own, so nesting it inside the page
+    // the router. It portals to body on its own, so nesting it inside the page
     // column does not put it behind the header or sidebar.
     <AuthModalProvider>
       <div className="flex min-h-screen flex-col bg-surface">
@@ -30,7 +30,7 @@ export default function RootLayout() {
 
           {/* The content column. On desktop it gets a left margin equal to the
               sidebar width, so opening the sidebar PUSHES the page rather than
-              covering it. Below md there's no margin — the sidebar overlays. */}
+              covering it. Below md there's no margin, the sidebar overlays. */}
           <div
             className={`flex min-w-0 flex-1 flex-col transition-[margin] duration-300 ease-out ${
               isOpen && isDesktop ? 'md:ml-60' : 'md:ml-0'
@@ -44,7 +44,7 @@ export default function RootLayout() {
           </div>
         </div>
 
-        {/* Scrim — mobile only. Tapping anywhere outside the open drawer
+        {/* Scrim, mobile only. Tapping anywhere outside the open drawer
             dismisses it. `aria-hidden` because Escape is the keyboard
             equivalent and the button would be redundant to screen readers. */}
         {!isDesktop && isOpen && (

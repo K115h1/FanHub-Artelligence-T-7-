@@ -1,9 +1,9 @@
-// Feature: Feedback — business logic layer.
+// Feature: Feedback, business logic layer.
 //
 // Owns the submit-and-track behaviour for pages/Feedback.tsx. The page used to
 // keep its own list in localStorage, which meant a submitted report lived only
 // in the browser that wrote it: no row reached MySQL, and the admin panel at
-// /admin/feedback — which reads that table through GET /admin/feedback — had
+// /admin/feedback, which reads that table through GET /admin/feedback, had
 // nothing to show. Both halves now go through feedback.service.
 //
 // The type categorisation (bug / suggestion / query / content) stays on the
@@ -27,7 +27,7 @@ interface SubmitState {
 /**
  * Sends one piece of feedback and reports what the server stored.
  *
- * Resolves to the created entry, or null when the call failed — the reason is
+ * Resolves to the created entry, or null when the call failed, the reason is
  * on `error`. Returning the entry rather than only throwing lets the page add
  * it to the list immediately instead of refetching to discover what it just
  * wrote.

@@ -1,10 +1,10 @@
-// buildMangaSeed.mjs — turns data/provenance/manga_results.csv into
+// buildMangaSeed.mjs, turns data/provenance/manga_results.csv into
 // database/04_manga_seed.sql.
 //
 // Manga is the seventh fandom and the only one of the eight with a provenance
 // CSV but no seed: the six catalogue imports came from data/*_by_genre.json,
 // which has no manga equivalent. The CSV is the leftover record of an earlier
-// scrape, and it is the only manga title list this repo has — 449 rows, 0 with
+// scrape, and it is the only manga title list this repo has. 449 rows, 0 with
 // a fetch error.
 //
 // Two things about that CSV are worth knowing before editing this:
@@ -12,7 +12,7 @@
 //   * It is RFC-4180 quoted. Titles like `Kanojo, Okarishimasu` and
 //     `Snow, Flower, and the Full Moon` contain commas, so a naive
 //     split(",") shifts every field after the title and invents genres out of
-//     title words — `It's My Turn!!"` and `Flower` both come from that. The
+//     title words. `It's My Turn!!"` and `Flower` both come from that. The
 //     parser below is hand-rolled rather than a dependency because it is the
 //     only CSV in the repo that needs quoting at all.
 //   * Its `status` column ('downloaded' / 'no_match') describes whether an
@@ -20,7 +20,7 @@
 //     contents.status; every row is a released series.
 //
 // Posters: all 394 image_path values point into public/images/manga/, which
-// does not exist — the scrape recorded intended paths, not files on disk. The
+// does not exist, the scrape recorded intended paths, not files on disk. The
 // seed therefore leaves poster_path NULL, which is what the other five
 // title-less fandoms already do and what ContentCard's accent-wash fallback is
 // built for. Writing a path to a file that is not there is the dead-poster bug

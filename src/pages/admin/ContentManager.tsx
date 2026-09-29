@@ -1,4 +1,4 @@
-// ContentManager — route: /admin/content.
+// ContentManager, route: /admin/content.
 //
 // Browses the catalogue and lets an administrator add, edit and remove rows.
 // The rows come from /admin/contents, paged and filtered in SQL, so what is on

@@ -1,4 +1,4 @@
-// ConfirmDialog — a blocking yes/no prompt, rendered in a portal.
+// ConfirmDialog, a blocking yes/no prompt, rendered in a portal.
 import { useEffect, useRef } from 'react'
 import type { ReactNode } from 'react'
 import { createPortal } from 'react-dom'
@@ -8,7 +8,7 @@ interface ConfirmDialogProps {
   title: string
   body?: string
   /**
-   * Rendered under the message — a field to fill in before confirming. Used by
+   * Rendered under the message, a field to fill in before confirming. Used by
    * the moderation queue so a rejection can carry a reason, rather than making
    * the reason a second dialog.
    */

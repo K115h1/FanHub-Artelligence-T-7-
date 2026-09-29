@@ -1,4 +1,4 @@
-// avatar.ts — turning a stored AvatarPath into something an <img> can load.
+// avatar.ts, turning a stored AvatarPath into something an img element can load.
 //
 // The API stores an API-relative path ("/images/avatars/abc.png") and serves
 // those files from ITS OWN origin. The frontend also serves /images/ out of
@@ -18,7 +18,7 @@ export function apiOrigin(): string {
 /**
  * Resolve a stored AvatarPath to a loadable URL.
  *
- * Returns null for "no avatar", which is the signal to fall back to initials —
+ * Returns null for "no avatar", which is the signal to fall back to initials, 
  * so an empty string and a null both mean the same thing to a caller.
  */
 export function avatarUrl(path: string | null | undefined): string | null {

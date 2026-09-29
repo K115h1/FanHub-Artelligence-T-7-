@@ -1,4 +1,4 @@
-// AccountMenu — the header's account switcher. Replaces the Login button
+// AccountMenu, the header's account switcher. Replaces the Login button
 // once someone is signed in: avatar + username + chevron (the "down
 // carrot"), opening a dropdown that lists every account saved on this
 // device, plus "Add another account" and "Sign out".
@@ -38,7 +38,7 @@ export default function AccountMenu() {
 
   return (
     <div ref={menuRef} className="relative shrink-0">
-      {/* Trigger — matches the header's Login button family. */}
+      {/* Trigger, matches the header's Login button family. */}
       <button
         type="button"
         onClick={() => setOpen((wasOpen) => !wasOpen)}
@@ -58,7 +58,7 @@ export default function AccountMenu() {
         />
       </button>
 
-      {/* Dropdown — glass panel, same purple-only palette. */}
+      {/* Dropdown, glass panel, same purple-only palette. */}
       {open && (
         <div
           role="menu"

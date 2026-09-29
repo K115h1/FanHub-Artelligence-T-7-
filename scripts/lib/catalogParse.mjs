@@ -1,4 +1,4 @@
-// catalogParse.mjs — the single source of truth for turning a raw fandom list
+// catalogParse.mjs, the single source of truth for turning a raw fandom list
 // into titles, years and genre hints.
 //
 // This logic used to be copy-pasted into buildCatalog.mjs and importCatalog.mjs,
@@ -37,7 +37,7 @@ export const FANDOMS = {
  * anime and comics.
  *
  * This matters whenever a row in catalog.json has to be matched against a row in
- * the database. A synopsis UPDATE scoped by `g.slug = <categorySlug>` never
+ * the database. A synopsis UPDATE scoped by `g.slug = categorySlug element` never
  * matches a catalog.json value, so every K-Pop and TV Shows synopsis silently
  * no-ops. buildCatalog.mjs copies the value into catalog.json; applySynopses.mjs
  * reads it from here to convert back.
@@ -74,7 +74,7 @@ const EDIT_NOTES = new Set(["dup", "dup remove", "x", "delete", "remove"]);
  * Qualifiers that are DISAMBIGUATORS, not genres.
  *
  * The tvshows list carries "(TV)" on shows whose title collides with a film of
- * the same name — Willow, The Exorcist, The Purge all exist as movies in the
+ * the same name. Willow, The Exorcist, The Purge all exist as movies in the
  * poster set. That marker separates two real, distinct works; it is not a
  * genre, so it is stripped and the title stands on its own. The fandom prefix
  * already keeps the two apart, and leaving "Willow (TV)" in the title would
@@ -143,7 +143,7 @@ export const QUALIFIER_TOKENS = new Set(
   ].map((t) => slugifyToken(t)),
 );
 
-/** slugify, but exported below it is defined — kept local to avoid a cycle. */
+/** slugify, but exported below it is defined, kept local to avoid a cycle. */
 function slugifyToken(text) {
   return String(text)
     .toLowerCase()
@@ -198,7 +198,7 @@ export function matchRealBucket(candidate, realNames) {
       best = name;
     }
   }
-  // Below this, the two names are barely related — better to keep separate.
+  // Below this, the two names are barely related, better to keep separate.
   return bestScore >= 0.99 ? best : null;
 }
 
@@ -208,8 +208,8 @@ export function matchRealBucket(candidate, realNames) {
  * The source lists are messy: the same trailing "(...)" means a year in one
  * entry, a genre in another, an editing note in a third, a disambiguator in a
  * fourth, and a legitimate part of a name in a few (f(x), (G)I-DLE). Guessing
- * wrong is costly — a naive rule turned "f(x)" into "f" and invented genres
- * called "dup remove" — so each case is handled explicitly and anything
+ * wrong is costly, a naive rule turned "f(x)" into "f" and invented genres
+ * called "dup remove", so each case is handled explicitly and anything
  * unrecognised is left alone.
  *
  *   "God of War (2018)"      -> { title: "God of War", year: "2018" }
@@ -241,7 +241,7 @@ export function parseTitle(raw, realGenreNames, fandomKey) {
     };
   }
 
-  // (2) A year — a disambiguator, and the title keeps its identity.
+  // (2) A year, a disambiguator, and the title keeps its identity.
   if (/^\d{4}$/.test(inside)) {
     return { title: base.trim(), year: inside, genreHint: null, dropped: false, verbatim: false };
   }

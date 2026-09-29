@@ -1,7 +1,7 @@
 // Home page data.
 //
-// The home page needs the same handful of slices — trending, a discovery set,
-// categories, events — so they are fetched here rather than repeated in each
+// The home page needs the same handful of slices, trending, a discovery set,
+// categories, events, so they are fetched here rather than repeated in each
 // section component. Every call goes through a service; nothing reads mockData.
 //
 // Articles are the exception: there is no articles table in the schema, so the
@@ -34,7 +34,7 @@ export function useFeatured() {
 }
 
 /**
- * "Try Something New" — deliberately outside the fandoms the rest of the page
+ * "Try Something New", deliberately outside the fandoms the rest of the page
  * leans towards. Pulls a wider page and drops anything already shown, so the
  * row genuinely differs rather than repeating Trending.
  */

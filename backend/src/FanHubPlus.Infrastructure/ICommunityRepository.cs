@@ -1,4 +1,4 @@
-// Community repository — events, feedback, submissions, merchandise.
+// Community repository, events, feedback, submissions, merchandise.
 using FanHubPlus.Domain;
 using Microsoft.EntityFrameworkCore;
 

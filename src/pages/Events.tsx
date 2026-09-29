@@ -1,4 +1,4 @@
-// Events — conventions, festivals, meetups and screenings.
+// Events, conventions, festivals, meetups and screenings.
 //
 // Three views over one dataset: a featured highlight, a filterable list, and a
 // "near you" block driven by the geolocation hook. Which events are on is
@@ -157,7 +157,7 @@ export default function Events() {
     })
   }, [sorted, mode, category, city, query])
 
-  // In-person events only — geolocation can only help with physical ones.
+  // In-person events only, geolocation can only help with physical ones.
   const inPerson = useMemo(() => sorted.filter((e) => !e.isOnline), [sorted])
 
   const featured = sorted.find((e) => e.featured) ?? sorted[0]
@@ -276,7 +276,7 @@ export default function Events() {
             >
               <option value="all">All cities</option>
               {/* Online events have no city, so they're excluded from this
-                  filter — pick "Online" in the mode row above instead. */}
+                  filter, pick "Online" in the mode row above instead. */}
               {EVENT_CITIES.map((c) => (
                 <option key={c} value={c}>
                   {c}

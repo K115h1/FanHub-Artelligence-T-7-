@@ -33,7 +33,7 @@ public class CommunityController : ApiControllerBase
             return dto is null ? NotFound() : Ok(dto);
         });
 
-    /// Feedback is public by design — visitors can send it without an account,
+    /// Feedback is public by design, visitors can send it without an account,
     /// which is why CurrentUserId is optional here. An anonymous submission lands
     /// in the admin queue with a null author, which is intended: the queue has to
     /// see a bug report from someone who never made an account.
@@ -94,13 +94,13 @@ public class CommunityController : ApiControllerBase
 
     /// GET /api/community/cover-pools?perCategory=24
     ///
-    /// A small sample of real cover paths per fandom, for titles that have none.
-    /// Manga ships with 449 titles and no cover files, so without something to
-    /// fall back to its whole catalogue renders as placeholder tiles.
+    /// A handful of real cover paths per fandom, for the titles that have none.
+    /// Manga has 449 titles and not one cover file, so with nothing to fall back
+    /// to the whole manga catalogue was placeholder tiles.
     ///
-    /// Capped rather than returning every cover: this is ample for visual
-    /// variety, and sending all 2,675 paths would be ~100KB of JSON the client
-    /// fetches once per session just to choose one image from.
+    /// Capped instead of sending every cover. A couple of dozen is plenty for
+    /// variety, and all 2,675 paths would be about 100KB of JSON that the client
+    /// downloads once just to pick one image from.
     [HttpGet("cover-pools")]
     [AllowAnonymous]
     public Task<IActionResult> CoverPools([FromQuery] int perCategory = 24) =>

@@ -1,4 +1,4 @@
-// AuthContext — carries the logged-in account across the app.
+// AuthContext, carries the logged-in account across the app.
 // The real state + persistence lives in src/app/providers/AuthProvider.tsx.
 //
 // `signIn`/`signUp` are async and take a password. They were synchronous and
@@ -42,7 +42,7 @@ export interface AuthContextValue {
    *
    * Falls back to the previous email-only device match ONLY when the API could
    * not be reached at all (server down / CORS), never when it rejected the
-   * credentials — otherwise a typo would appear to succeed.
+   * credentials, otherwise a typo would appear to succeed.
    */
   signIn: (email: string, password: string) => Promise<boolean>
   /** Create an account and sign in. Null if the email is taken. */
@@ -57,11 +57,11 @@ export interface AuthContextValue {
   lastError: string | null
   // Role changes are deliberately NOT here. They used to be a localStorage edit
   // on this browser's account list, which the API's [Authorize(Roles = "admin")]
-  // never saw — so the button promoted nobody. The admin panel now calls
+  // never saw, so the button promoted nobody. The admin panel now calls
   // PUT /admin/users/{id}/role; see useAdminUsers.
 }
 
-// Default value only matters if someone renders UI outside <AuthProvider>.
+// Default value only matters if someone renders UI outside AuthProvider component.
 export const AuthContext = createContext<AuthContextValue>({
   accounts: [],
   current: null,

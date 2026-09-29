@@ -1,4 +1,4 @@
-// ForgotPassword — ask for a reset link.
+// ForgotPassword, ask for a reset link.
 //
 // There is no mail server, so the API returns the token in the response and also
 // writes the link to its own log. The link is shown here so the flow is usable

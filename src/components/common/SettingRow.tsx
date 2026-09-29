@@ -1,4 +1,4 @@
-// SettingRow — the bordered block that groups related settings on the
+// SettingRow, the bordered block that groups related settings on the
 // Profile page. One row per group, with an optional heading and a footnote.
 import type { ReactNode } from 'react'
 

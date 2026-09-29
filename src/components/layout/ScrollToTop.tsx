@@ -1,4 +1,4 @@
-// ScrollToTop — returns the window to the top on navigation. Renders nothing.
+// ScrollToTop, returns the window to the top on navigation. Renders nothing.
 // Mounted once in RootLayout.
 //
 // Watches `pathname` only, not the full location: Explorer rewrites `?q=` as

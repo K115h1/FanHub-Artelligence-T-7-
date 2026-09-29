@@ -59,7 +59,7 @@ public class Content
     public string? Language { get; set; }
     public string? Country { get; set; }
 
-    // Director, studio, author, artist — whatever "creator" means per fandom.
+    // Director, studio, author, artist, whatever "creator" means per fandom.
     public string? Creator { get; set; }
 
     // JSON array of names, e.g. ["Ada Lovelace","Grace Hopper"].

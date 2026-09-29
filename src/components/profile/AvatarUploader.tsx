@@ -1,4 +1,4 @@
-// AvatarUploader — the picture, its buttons, and the file input.
+// AvatarUploader, the picture, its buttons, and the file input.
 //
 // Extracted because the first version of this was written inline in
 // InterestsTab and then had to be moved to the Profile tab; a control that has
@@ -7,7 +7,7 @@
 // The input is visually hidden but NOT hidden from assistive tech: a styled
 // label or a display:none input is unreachable by keyboard, and the button
 // that drives it is the only thing a sighted user sees. The button is a real
-// <button>, and the input carries an aria-label so it is still findable.
+// button element, and the input carries an aria-label so it is still findable.
 import { useRef, useState } from 'react'
 import { Camera, Trash2 } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
@@ -24,7 +24,7 @@ export default function AvatarUploader() {
   async function onPick(file: File) {
     setError(null)
 
-    // Checked here for a fast, specific message, and again on the server — this
+    // Checked here for a fast, specific message, and again on the server, this
     // is a convenience, not the control. The server's magic-byte check is the
     // one that actually matters, since the browser's type is only a claim.
     const problem = validateImage(file)

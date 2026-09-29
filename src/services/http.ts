@@ -1,4 +1,4 @@
-// http.ts — the shared fetch wrapper. Every service in this folder goes through
+// http.ts, the shared fetch wrapper. Every service in this folder goes through
 // it, and nothing else calls fetch() directly.
 //
 // Responsibilities, in order:
@@ -13,12 +13,12 @@
 
 import { ApiError } from '../types/api'
 
-// The fallback must match the backend's launch profile, or a missing .env
+// The fallback must match the backend's launch profile, or a missing.env
 // produces a silent "nothing loads" rather than an obvious misconfiguration.
 // Kept in step with:
-//   backend/src/FanHubPlus.Api/Properties/launchSettings.json -> http :5068
+//   backend/src/FanHubPlus.Api/Properties/launchSettings.json -> http:5068
 // and the "/api" suffix comes from [Route("api/[controller]")] on
-// ApiControllerBase. Both move together — change one, change this.
+// ApiControllerBase. Both move together, change one, change this.
 const BASE_URL = (import.meta.env.VITE_API_URL as string | undefined) ?? 'http://localhost:5068/api'
 
 /** Where the bearer token lives between reloads. */

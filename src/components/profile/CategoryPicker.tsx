@@ -1,4 +1,4 @@
-// CategoryPicker — the toggle grid used for both Favourites and Interests.
+// CategoryPicker, the toggle grid used for both Favourites and Interests.
 //
 // One component for both on purpose. The two lists differ only in wording and in
 // which endpoint they save to, and a duplicated grid would drift.

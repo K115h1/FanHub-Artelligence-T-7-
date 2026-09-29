@@ -1,10 +1,10 @@
-// CreateSubmission — the "create something" panel on the dashboard.
+// CreateSubmission, the "create something" panel on the dashboard.
 //
 // This is the member-facing half of the fan_submissions table. The table, the
 // POST endpoint and the admin moderation queue all existed; this is the form
 // that was missing, so nothing had ever written to it from the member's side.
 //
-// The member says WHAT they are sending — an article, a character profile, or
+// The member says WHAT they are sending, an article, a character profile, or
 // an event highlight. Those are the three kinds the SRS names, and they are
 // stored in fan_submissions.kind so the moderation queue can filter and route
 // them. The shape below the picker is the same for all three, because the table
@@ -73,7 +73,7 @@ export default function CreateSubmission({ draft }: { draft: UseSubmissions }) {
       </p>
 
       {/* ---- What kind of content this is ----
-          A radio group rather than a <select>, because there are only three
+          A radio group rather than a select element, because there are only three
           options and each needs a line of explanation. Radios also mean the
           choice is visible at a glance instead of hidden behind a dropdown. */}
       <fieldset>

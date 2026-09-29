@@ -1,10 +1,10 @@
-// importImages.mjs — moves the delivered poster files into public/images/,
+// importImages.mjs, moves the delivered poster files into public/images/,
 // named by catalog slug, and writes src/data/posters.json.
 //
 // The two delivered archives are laid out for browsing, not for serving:
 //
-//   zipA  images/<fandom>/by_genre_small/<genre>/<file>.jpg
-//   zipB  images/<category>/<genre>/<file>.jpg
+//   zipA  images/fandom element/by_genre_small/genre element/file element.jpg
+//   zipB  images/category element/genre element/file element.jpg
 //
 // Both use snake_case filenames, both repeat a title once per genre folder, and
 // neither filename matches the catalogue's slug. Matching them exactly found
@@ -14,7 +14,7 @@
 //      slugify DELETES an apostrophe ("Wolf's" -> "Wolfs"), while the scraper
 //      spelled it out as its own _s_ token. So "wolf-s-rain" != "wolfs-rain".
 //   2. Genre baked into the filename.  portal-puzzle, rocket-league-racing,
-//      kino-s-journey-mystery — the scraper appended the folder name.
+//      kino-s-journey-mystery, the scraper appended the folder name.
 //   3. Year baked into the filename.  god-of-war-2018, dead-space-2023.
 //
 // All three fall out of one normalisation: compare slugs with every
@@ -23,10 +23,10 @@
 //
 // Anything that still does not match is reported and left out rather than
 // guessed at, and a poster is only attached when exactly one catalogue title
-// matches — an ambiguous name is reported, never silently resolved.
+// matches, an ambiguous name is reported, never silently resolved.
 //
 // Usage:
-//   node scripts/importImages.mjs <stagingDir> [--dry-run]
+//   node scripts/importImages.mjs stagingDir element [--dry-run]
 
 import { readFileSync, writeFileSync, readdirSync, statSync, mkdirSync, copyFileSync, existsSync, rmSync } from "node:fs";
 import { join, basename, extname } from "node:path";
@@ -56,7 +56,7 @@ const loose = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, "");
  * Scrapers mark re-downloads by suffixing the filename. These are artefacts of
  * the collection run, not part of any title, so the suffix is always stripped.
  * "bibi_zhou_dup_remove" additionally names a title importCatalog drops
- * outright, so stripping its suffix cannot resurrect a deleted row — it simply
+ * outright, so stripping its suffix cannot resurrect a deleted row, it simply
  * fails to match and is reported.
  */
 const DUP_SUFFIX = /_dup(_remove)?$/;
@@ -64,7 +64,7 @@ const DUP_SUFFIX = /_dup(_remove)?$/;
 /**
  * Real format and dimensions, read from the file's own header.
  *
- * The delivered zipB contains 21 PNGs saved with a .jpg extension, so trusting
+ * The delivered zipB contains 21 PNGs saved with a.jpg extension, so trusting
  * the extension both misreports the type and hides the dimensions. Browsers
  * sniff content and would render them anyway, but a CDN or strict static host
  * that trusts Content-Type would serve them as image/jpeg and some refuse to
@@ -103,7 +103,7 @@ function probeImage(buf) {
   return { format: "unknown", ext: ".bin", width: null, height: null };
 }
 
-/** Every .jpg under a directory, recursively, in a stable order. */
+/** Every.jpg under a directory, recursively, in a stable order. */
 function walk(dir) {
   const out = [];
   if (!existsSync(dir)) return out;
@@ -150,7 +150,7 @@ function resolve(fandom, filename) {
   const index = byFandom.get(fandom);
   const key = loose(clean);
 
-  // (1) Loose-key equality — covers the apostrophe and separator differences.
+  // (1) Loose-key equality, covers the apostrophe and separator differences.
   const exact = index.get(key);
   if (exact?.length === 1) return { slug: exact[0].slug, how: "exact" };
   if (exact?.length > 1) return { slug: null, how: "ambiguous-exact", candidates: exact.map((r) => r.slug) };
@@ -159,7 +159,7 @@ function resolve(fandom, filename) {
   //       portal-puzzle, god-of-war-2018, willow-tv, 13-reasons-why-mystery.
   //     Each case is only accepted when the remainder names exactly one real
   //     catalogue title, so this resolves the delivery's naming quirks without
-  //     inventing matches — an unrecognised tail simply fails and is reported.
+  //     inventing matches, an unrecognised tail simply fails and is reported.
   // Up to three trailing tokens, because a qualifier can be a hyphenated
   // phrase: "bob_s_burgers_live_action_adj" ends in three.
   const parts = clean.replace(/_/g, "-").split("-");
@@ -177,7 +177,7 @@ function resolve(fandom, filename) {
 
 /**
  * Is this trailing token something the delivery could legitimately have
- * appended — a year, a genre, or a qualifier from the source list?
+ * appended, a year, a genre, or a qualifier from the source list?
  *
  * Genres are matched by prefix as well as equality because the scraper often
  * shortened them: the games bucket "Party / Multiplayer Mini-Games" arrives as
@@ -206,7 +206,7 @@ const dryRun = process.argv.includes("--dry-run");
 
 // Collected first, then written, so a fandom that resolves to the same slug
 // twice is reported rather than silently overwritten by whichever came last.
-const picked = new Map(); // "fandom|slug" -> { src, how, fandom, slug }
+const picked = new Map(); // "fandom, slug" -> { src, how, fandom, slug }
 const unresolved = [];
 const ambiguous = [];
 const divergent = [];
@@ -241,8 +241,8 @@ for (const source of SOURCES) {
     const key = `${source.fandom}|${slug}`;
     const prior = picked.get(key);
     if (prior) {
-      // The same title arrived in more than one genre folder. That is normal —
-      // a series filed under Action and Supernatural is delivered twice — and
+      // The same title arrived in more than one genre folder. That is normal, 
+      // a series filed under Action and Supernatural is delivered twice, and
       // the scraper often picked a different photo each time. Keep the first in
       // sorted order so the choice is reproducible, and record the fact rather
       // than dropping the title or resolving it arbitrarily at random.
@@ -260,8 +260,8 @@ for (const source of SOURCES) {
 
 // ---------- read dimensions, write files ----------
 
-// Wipe the output first. A title that loses its poster between runs — because
-// the source list was edited, or a file was deleted from the delivery — would
+// Wipe the output first. A title that loses its poster between runs, because
+// the source list was edited, or a file was deleted from the delivery, would
 // otherwise leave an orphaned file behind that no manifest entry references,
 // and nothing would ever clean it up.
 if (!dryRun && existsSync(OUT_DIR)) {
@@ -319,7 +319,7 @@ for (const row of catalog) {
 }
 
 // A file whose bytes are not a recognised image is a corrupt delivery and
-// should be loud; a PNG that arrived named .jpg is merely mislabelled, and the
+// should be loud; a PNG that arrived named.jpg is merely mislabelled, and the
 // extension has been corrected on the way in.
 const formatTally = {};
 for (const m of manifest) formatTally[m.format] = (formatTally[m.format] ?? 0) + 1;

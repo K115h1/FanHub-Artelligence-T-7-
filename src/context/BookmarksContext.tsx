@@ -1,4 +1,4 @@
-// BookmarksContext — the member's saved items.
+// BookmarksContext, the member's saved items.
 //
 // State lives in a provider rather than a hook because several bookmark buttons
 // can be on screen at once (every card on the homepage). A per-component hook

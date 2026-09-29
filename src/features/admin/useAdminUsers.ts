@@ -1,4 +1,4 @@
-// useAdminUsers — the account list and role changes, from the API.
+// useAdminUsers, the account list and role changes, from the API.
 //
 // This used to read the accounts saved in localStorage on the administrator's
 // own browser and change their role there. That list is per-device: it holds

@@ -1,4 +1,4 @@
-// Skeleton — the one primitive every loading placeholder is built from.
+// Skeleton, the one primitive every loading placeholder is built from.
 //
 // Before this existed each page hand-rolled its own `<div className="h-64
 // animate-pulse rounded-xl bg-surface-sunken" />`, in three slightly different
@@ -17,12 +17,12 @@
 //     sizes; a second vocabulary here would just drift from them.
 //   * No corner radius in the base. Two `rounded-*` utilities have equal
 //     specificity, so which one applies depends on the order Tailwind emits them
-//     in the stylesheet — not the order they appear in the class attribute. A
+//     in the stylesheet, not the order they appear in the class attribute. A
 //     default here would therefore make every call site's radius a coin flip
 //     (passing `rounded-xl` would silently lose). Each caller states the shape
 //     it mirrors instead, which also lets genuinely different shapes (a pill for
-//     a stat chip) exist. If these ever need real overrides, add tailwind-merge —
-//     the `cn` helper in lib/utils.ts is still a placeholder — and put a default
+//     a stat chip) exist. If these ever need real overrides, add tailwind-merge, 
+//     the `cn` helper in lib/utils.ts is still a placeholder, and put a default
 //     back.
 import type { HTMLAttributes } from 'react'
 
@@ -63,7 +63,7 @@ export function SkeletonText({
  *
  * The blocks inside stay `aria-hidden`; this is the one thing that is exposed,
  * so assistive tech hears "Loading" once instead of nothing at all. Without it a
- * skeleton is completely silent, which is worse than a spinner — it looks like
+ * skeleton is completely silent, which is worse than a spinner, it looks like
  * an empty page rather than a page that is working.
  */
 export function SkeletonRegion({

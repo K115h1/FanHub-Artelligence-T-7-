@@ -1,4 +1,4 @@
-// category.service — the 8 fandom categories and their genres.
+// category.service, the 8 fandom categories and their genres.
 //
 // Both live under /api/contents on the API, so these are thin re-exports of
 // the calls in content.service rather than a second set of requests. Kept as a

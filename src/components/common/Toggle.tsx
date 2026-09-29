@@ -1,4 +1,4 @@
-// Toggle — a labelled on/off switch, shared by the settings and privacy tabs.
+// Toggle, a labelled on/off switch, shared by the settings and privacy tabs.
 interface ToggleProps {
   checked: boolean
   onChange: (next: boolean) => void

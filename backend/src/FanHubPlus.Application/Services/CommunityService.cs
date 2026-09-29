@@ -1,4 +1,4 @@
-// CommunityService — events, feedback, submissions, merchandise, characters.
+// CommunityService, events, feedback, submissions, merchandise, characters.
 using FanHubPlus.Application.DTOs;
 using FanHubPlus.Domain;
 using FanHubPlus.Infrastructure;
@@ -118,7 +118,7 @@ public class CommunityService : ICommunityService
 
         // Both enums go out through EnumConverter, as the list endpoint does.
         // They used to be serialised with ToString(), which returned "Bug" and
-        // "Open" — so the row the submitter was handed disagreed with the row
+        // "Open", so the row the submitter was handed disagreed with the row
         // the same user saw a moment later in the queue, and any client
         // comparing against the lowercase values the admin panel uses read
         // nothing at all. The author is filled in from data already in hand so

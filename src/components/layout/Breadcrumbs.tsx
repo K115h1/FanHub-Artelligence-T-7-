@@ -1,6 +1,6 @@
-// Breadcrumbs — navigation clarity across categories (SRS accessibility item).
+// Breadcrumbs, navigation clarity across categories (SRS accessibility item).
 // Placeholder export for RootLayout; will read route `handle.title` values
-// from src/app/router.tsx when implemented — the route table already carries them.
+// from src/app/router.tsx when implemented, the route table already carries them.
 import { useMatches } from 'react-router-dom'
 
 interface RouteHandle {

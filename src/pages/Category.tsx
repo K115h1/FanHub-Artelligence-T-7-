@@ -1,4 +1,4 @@
-// Category page — /category/:slug (one "child" page per category).
+// Category page, /category/:slug (one "child" page per category).
 //
 // Titles and events come from the API, so each fandom shows its real catalogue
 // rather than the handful in the mock. Articles are still local: the schema has
@@ -45,7 +45,7 @@ function StatTile({ label, value }: { label: string; value: string | number }) {
 const SORT_OPTIONS = CONTENT_SORT_OPTIONS
 
 /**
- * Native <select> styling for the Sort and Genre controls.
+ * Native select element styling for the Sort and Genre controls.
  *
  * The `[&>option]:` variants are the point: the open list is painted by the OS,
  * so it showed as a plain grey list against the purple theme. Theme tokens mean
@@ -85,7 +85,7 @@ function CountChip({ n, label }: { n: number; label: string }) {
   )
 }
 
-// Small link chip — used for jumping between category pages.
+// Small link chip, used for jumping between category pages.
 function CategoryChip({ slug, name }: { slug: string; name: string }) {
   return (
     <Link
@@ -166,15 +166,15 @@ export default function Category() {
     [category?.id],
   )
 
-  // Characters and merchandise, per fandom. Both endpoints take a categoryId and
-  // filter in SQL, so this asks the database for one fandom's rows rather than
-  // fetching everything and discarding most of it in the browser.
+  // Characters and merchandise for this fandom. Both endpoints take a
+  // categoryId and filter in SQL, so we only pull the rows for the one fandom we
+  // are on rather than grabbing everything and throwing most of it away.
   //
-  // This is what makes a fandom like Cosplay work at all: it has no titles, so
-  // without these two the page had nothing to show despite holding 14 costume
-  // profiles and 9 products. The client-side re-filter is belt-and-braces — the
-  // API already filters, but a page that quietly shows another fandom's rows
-  // because a query param was dropped is worse than one that shows none.
+  // This is the only reason a fandom like Cosplay works at all. It has no
+  // titles, so without these two the page had nothing to show even though it was
+  // sitting on 14 costume profiles and 9 products. We filter again on this side
+  // even though the API already did it, just because a page quietly showing the
+  // wrong fandom is worse than one showing nothing.
   const { data: apiCharacters } = useAsync(
     () => (category ? getCharacters(category.id) : Promise.resolve([])),
     [category?.id],
@@ -239,19 +239,19 @@ export default function Category() {
   const pageCount = result?.pageCount ?? 1
 
   // Counts for the stat strip. Derived from what this page's results carry, so
-  // nothing is invented — a fandom with no release years shows zero.
+  // nothing is invented, a fandom with no release years shows zero.
   const withPoster = content.filter((item) => item.posterPath).length
   const withYear = content.filter((item) => item.releaseYear).length
   const avgViews = content.length
     ? Math.round(content.reduce((sum, item) => sum + item.viewCount, 0) / content.length)
     : 0
   // Per-100 rather than a raw count, because this is a sample of 24 out of
-  // hundreds — "437 of 513" would need its own sentence to explain.
+  // hundreds, "437 of 513" would need its own sentence to explain.
   const percent = (n: number) => `${Math.round((n / Math.max(content.length, 1)) * 100)}%`
 
   return (
     <div className="mx-auto w-full max-w-7xl space-y-10 px-4 py-8 sm:px-6 lg:px-8">
-      {/* Banner — a photograph of the fandom where one exists, over the same
+      {/* Banner, a photograph of the fandom where one exists, over the same
           purple gradient the homepage hero uses.
 
           The image is a CSS background on its own layer, with the gradient
@@ -294,7 +294,7 @@ export default function Category() {
 
       {/* At-a-glance numbers. Which tiles appear depends on what this fandom
           actually holds: a title fandom gets artwork coverage and average
-          views, and a fandom with no titles at all — Cosplay — gets its
+          views, and a fandom with no titles at all. Cosplay, gets its
           costume and product counts instead of four zeroes. */}
       {(totalTitles > 0 || characters.length > 0 || merchandise.length > 0) && (
         <section aria-label={`${category.name} at a glance`}>
@@ -348,7 +348,7 @@ export default function Category() {
       )}
 
       {isEmpty ? (
-        /* Nothing in this category yet — offer the other fandoms instead. */
+        /* Nothing in this category yet, offer the other fandoms instead. */
         <div className={`${glassCard} p-10 text-center`}>
           <h2 className="mb-2 text-xl font-bold text-black dark:text-white">Nothing here yet</h2>
           <p className="mb-6 text-black/60 dark:text-white/60">
@@ -445,7 +445,7 @@ export default function Category() {
             </section>
           )}
 
-          {/* Costumes — the character_profiles rows for this fandom. Sits after
+          {/* Costumes, the character_profiles rows for this fandom. Sits after
               Content and before Articles so that a fandom with no titles
               (Cosplay) still leads with the thing it actually has, while a
               title fandom keeps its titles first. */}
@@ -460,7 +460,7 @@ export default function Category() {
             </section>
           )}
 
-          {/* Products — merchandise_items for this fandom. Display only; the
+          {/* Products, merchandise_items for this fandom. Display only; the
               shop has no cart, so these are the same cards as /merchandise and
               deliberately not links. */}
           {merchandise.length > 0 && (
@@ -474,7 +474,7 @@ export default function Category() {
             </section>
           )}
 
-          {/* Articles — filtered from the ARTICLES_BY_CATEGORY hashmap */}
+          {/* Articles, filtered from the ARTICLES_BY_CATEGORY hashmap */}
           {articles.length > 0 && (
             <section aria-label={`${category.name} articles`}>
               <SectionTitle title="Articles" count={articles.length} />
@@ -504,7 +504,7 @@ export default function Category() {
             </section>
           )}
 
-          {/* Events — from the API, filtered to this fandom */}
+          {/* Events, from the API, filtered to this fandom */}
           {events.length > 0 && (
             <section aria-label={`${category.name} events`}>
               <SectionTitle title="Upcoming Events" count={events.length} />

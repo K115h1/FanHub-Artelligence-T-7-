@@ -1,7 +1,7 @@
-// ContentCard — the tile used by every content row (featured, trending,
+// ContentCard, the tile used by every content row (featured, trending,
 // category grids, search results).
 //
-// The card is an <article>, not a <Link>: the bookmark button inside it would
+// The card is an article element, not a Link component: the bookmark button inside it would
 // otherwise be interactive content nested inside an anchor, which is invalid and
 // breaks keyboard use. The title carries the link instead.
 //
@@ -31,7 +31,7 @@ export default function ContentCard({
   rank?: number
 }) {
   const pools = useCoverPools()
-  // Manga ships 449 titles with no cover, so the wash is not a rare edge case —
+  // Manga ships 449 titles with no cover, so the wash is not a rare edge case, 
   // it is a fifth of the catalogue. Falls back to the fandom's own art.
   const artwork = item.posterPath ?? pickCoverFallback(item.categorySlug, item.id, pools)
 
@@ -49,7 +49,7 @@ export default function ContentCard({
         ) : (
           <>
             <div aria-hidden="true" className="accent-wash absolute inset-0 opacity-85" />
-            {/* A neutral media glyph, not the title's initial — a letter reads as
+            {/* A neutral media glyph, not the title's initial, a letter reads as
                 a broken image rather than as artwork. */}
             <Film
               aria-hidden="true"
@@ -73,11 +73,11 @@ export default function ContentCard({
 
       <div className="flex flex-1 flex-col gap-1.5 p-4">
         <h3 className="line-clamp-2 font-semibold text-ink">
-          {/* Stretched link: the ::after covers the card so the whole tile is
+          {/* Stretched link: the::after covers the card so the whole tile is
               clickable. The bookmark button sets z-10 to sit above it.
 
               The category rides along in the query string because slug is unique
-              per fandom and not globally — 273 slugs here exist in more than one,
+              per fandom and not globally. 273 slugs here exist in more than one,
               and "akira" is four separate titles. Without it the API resolves an
               ambiguous slug with FirstOrDefault and a card can open the wrong
               title. See ContentDetail for where the param is read. */}

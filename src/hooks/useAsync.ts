@@ -1,4 +1,4 @@
-// useAsync — one place for "fetch something, then be loading / errored / done".
+// useAsync, one place for "fetch something, then be loading / errored / done".
 //
 // Every page that calls a service needs the same three pieces of state and the
 // same unmount guard, so they live here rather than being retyped per page. The
@@ -7,7 +7,7 @@
 // warning that looks like a real bug.
 //
 // Deliberately not a data library. There is no cache, no background refresh and
-// no request deduplication — the catalogue is small enough that a fresh request
+// no request deduplication, the catalogue is small enough that a fresh request
 // per page visit is simpler than explaining a cache to whoever reads this next.
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ApiError } from '../types/api'

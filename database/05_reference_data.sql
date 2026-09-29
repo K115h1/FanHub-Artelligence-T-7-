@@ -1,10 +1,10 @@
 -- ============================================================
--- Reference data — the rows every other file depends on.
+-- Reference data, the rows every other file depends on.
 -- ============================================================
 -- LOAD ORDER MATTERS:
 --   1. 01_schema.sql        (all 19 tables)
 --   2. 04_*_seed.sql        (the five catalogue imports)
---   3. 05_reference_data.sql (this file — last)
+--   3. 05_reference_data.sql (this file, last)
 --
 --   This file runs LAST because the 04_* files insert categories 1-5 with a
 --   plain INSERT. Loading this file first would insert those same five and the
@@ -17,7 +17,7 @@
 --   first account anyone registers would fail on a foreign key. This file
 --   seeds the two things the schema needs before anything else can work.
 --
--- This file is safe to run more than once — it uses upserts throughout, and
+-- This file is safe to run more than once, it uses upserts throughout, and
 -- unlike the 04_* files it inserts no rows that a child table depends on
 -- within the same transaction.
 --
@@ -26,7 +26,7 @@
 -- ---------- Roles ----------
 -- The three roles from the SRS. `registered` is what a new sign-up is given;
 -- `admin` is only ever assigned by an existing admin. `visitor` is not a row
--- the app assigns — it just means "not signed in" — but it is listed so the
+-- the app assigns, it just means "not signed in", but it is listed so the
 -- tier is visible in the table.
 
 INSERT INTO roles (role_id, name, description) VALUES
@@ -96,7 +96,7 @@ ON DUPLICATE KEY UPDATE
 
 -- 3 = admin, 2 = registered
 --
--- Only user 1 is an admin. Every other account — Grace included — is
+-- Only user 1 is an admin. Every other account. Grace included, is
 -- 'registered', which is also the only role RegisterAsync ever assigns. The
 -- ON DUPLICATE KEY UPDATE below is what makes this file re-runnable as a
 -- demotion: a database where somebody was promoted to admin in the panel goes

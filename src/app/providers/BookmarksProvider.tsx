@@ -1,4 +1,4 @@
-// BookmarksProvider — the saved-items store, scoped to the signed-in account.
+// BookmarksProvider, the saved-items store, scoped to the signed-in account.
 //
 // Reads and writes localStorage per account, so two accounts on one device keep
 // separate lists. Signed out, the store is empty and every control is disabled
@@ -41,7 +41,7 @@ function BookmarksStore({
       try {
         localStorage.setItem(storageKey(accountId), JSON.stringify(next))
       } catch {
-        // Ignore quota/private-mode failures — the in-memory list still works.
+        // Ignore quota/private-mode failures, the in-memory list still works.
       }
     },
     [accountId],

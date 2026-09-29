@@ -1,8 +1,8 @@
-// importSuppliedArt.mjs — places the supplied merchandise and character artwork.
+// importSuppliedArt.mjs, places the supplied merchandise and character artwork.
 //
 //   node scripts/importSuppliedArt.mjs            # report only
 //   node scripts/importSuppliedArt.mjs --apply    # write the image files
-//   node scripts/importSuppliedArt.mjs --apply --seed   # ...and the catalogue rows
+//   node scripts/importSuppliedArt.mjs --apply --seed   #...and the catalogue rows
 //
 // --apply places images only. Catalogue rows are opt-in via --seed, so
 // refreshing artwork can never silently rewrite the database.
@@ -232,8 +232,8 @@ function consider(kind, category, filename, data, { group = null } = {}) {
 
   seenHashes.set(hash, filename)
   // Trust the CONTENT over the extension. One delivered file is
-  // `Monkey_D.Luffy` with no extension at all, and defaulting that to .jpg would
-  // leave a JPEG named .jpg only by luck; sniffing the magic byte is the same
+  // `Monkey_D.Luffy` with no extension at all, and defaulting that to.jpg would
+  // leave a JPEG named.jpg only by luck; sniffing the magic byte is the same
   // approach placeCategoryArt.mjs takes to read dimensions.
   const ext = detectExtension(data)
   const rel = kind === 'merch'
@@ -294,9 +294,9 @@ for (const { zip, kind, flatCategory } of sources) {
       continue
     }
 
-    // Characters.zip is Characters/<fandom>[/<band>/]<file>. The K-pop folder
+    // Characters.zip is Characters/fandom element[/band element/]file element. The K-pop folder
     // nests one level deeper per band (BTS, Blackpink, Twice, Straykids), and for
-    // those the band name is the only naming information in the path — a file
+    // those the band name is the only naming information in the path, a file
     // called `download (7).jpg` under `Kpop/BTS/` is a BTS character, and without
     // passing the band through it would land as a nameless `k-pop-item-07`.
     const category = CHAR_FOLDERS[parts[1]]
@@ -378,10 +378,10 @@ for (const [key, list] of groups) {
  *
  * Categories resolve by SLUG through a subselect rather than a literal
  * category_id. That key is a surrogate that differs between a fresh database and
- * the live one — they already disagree about the TV Shows slug — so a hardcoded
+ * the live one, they already disagree about the TV Shows slug, so a hardcoded
  * id is a latent bug and a subselect is not.
  *
- * Re-running is safe: every statement is INSERT ... WHERE NOT EXISTS on slug.
+ * Re-running is safe: every statement is INSERT. WHERE NOT EXISTS on slug.
  */
 if (!seed) {
   console.log(`\nNo catalogue rows written (pass --seed to emit database/09_characters_seed.sql).`)

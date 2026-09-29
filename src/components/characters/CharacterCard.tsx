@@ -1,19 +1,17 @@
-// CharacterCard — one costume or character profile.
+// CharacterCard, one costume or character.
 //
-// Lives here rather than inline in pages/Characters.tsx because the category page
-// needs the same tile for fandoms whose content is people rather than titles
-// (Cosplay has 14 of these and no titles at all). Extracting it also means the
-// two places cannot drift apart on the scrim or the fallback.
+// This lives here because the category page needs the same tile as
+// pages/Characters.tsx, and fandoms like Cosplay are all costumes and no titles
+// at all. Having it in one place stops the two drifting apart.
 //
-// The image is a CSS background, not an <img>, for the same reason as
-// MerchandiseCard: a path that fails to load then paints nothing and the layer
-// underneath shows, where an <img> would leave a broken-image glyph sitting in
-// the middle of a grid. Supplied artwork is the most likely thing on the site
-// to be missing, so the fallback has to be quiet.
+// Image is a CSS background, same as MerchandiseCard. If the path is bad it just
+// paints nothing and you see the layer underneath. An img tag would leave a
+// broken image icon in the middle of the grid instead, and the artwork we were
+// given is the most likely thing here to be missing.
 //
-// <li> so it drops straight into the <ul> grids on both pages. The link is
-// inside rather than wrapping, so the whole tile stays one anchor with no
-// interactive children nested in it.
+// It renders as a list item so it drops straight into the grids on both pages.
+// The link sits inside the tile rather than around it, so we are not nesting
+// clickable things inside a link.
 import { ImageOff } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import type { Character } from '../../types/models'

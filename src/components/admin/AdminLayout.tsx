@@ -1,4 +1,4 @@
-// AdminLayout — the control panel's own shell.
+// AdminLayout, the control panel's own shell.
 //
 // Deliberately NOT the public site chrome. The header, sidebar and footer all
 // carry fan-facing navigation that an administrator has no use for while
@@ -38,7 +38,7 @@ export default function AdminLayout() {
   // Touch the store so the queue badges stay live as statuses change.
   useAdminData()
 
-  // Only the two queues earn a badge — they are the things an admin is meant to
+  // Only the two queues earn a badge, they are the things an admin is meant to
   // clear. Badges on every tile turn the nav into noise.
   const badges: Record<string, number> = {
     '/admin/submissions': stats.pendingSubmissions,
@@ -50,16 +50,20 @@ export default function AdminLayout() {
       <header className="sticky top-0 z-40 border-b border-line bg-surface/85 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3 sm:px-6">
           {/* The brand is a link home. The admin branch is a sibling of the site
-              route, so it has no public header to inherit — this is the way
+              route, so it has no public header to inherit, this is the way
               back. */}
           <Link
             to="/"
             className="group flex min-w-0 items-center gap-2.5 rounded-lg"
             title="Back to FanHub Plus"
           >
-            <span className="accent-wash flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-white">
-              <LayoutDashboard size={16} aria-hidden="true" />
-            </span>
+            <img
+              src="/logo.svg"
+              alt=""
+              width={32}
+              height={32}
+              className="h-8 w-8 shrink-0 rounded-lg object-cover"
+            />
             <div className="min-w-0 text-left">
               <p className="truncate text-sm font-bold leading-tight text-ink group-hover:text-accent">
                 Control Panel

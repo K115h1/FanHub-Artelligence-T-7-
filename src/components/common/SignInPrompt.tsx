@@ -1,4 +1,4 @@
-// SignInPrompt — signed-out state for the personalised homepage sections.
+// SignInPrompt, signed-out state for the personalised homepage sections.
 // The homepage is public, so these fall back to global picks and say so,
 // rather than rendering empty and looking broken.
 import { Lock } from 'lucide-react'

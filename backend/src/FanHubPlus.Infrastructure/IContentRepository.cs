@@ -1,4 +1,4 @@
-// Content repository — reads and writes the catalogue.
+// Content repository, reads and writes the catalogue.
 //
 // Returns entities, not DTOs. Mapping to DTOs is the Application layer's job,
 // so database entities never reach a controller.
@@ -49,7 +49,7 @@ public interface IContentRepository
     Task UpdateAsync(Content content, CancellationToken ct = default);
     Task<bool> DeleteAsync(uint contentId, CancellationToken ct = default);
     /// Bumps view_count by one. Returns the number of rows affected, which is 0
-    /// when the id does not exist — the caller needs that to answer 404, and
+    /// when the id does not exist, the caller needs that to answer 404, and
     /// learning it here is far cheaper than building a whole detail DTO to
     /// check for null.
     Task<int> IncrementViewCountAsync(uint contentId, CancellationToken ct = default);

@@ -1,4 +1,4 @@
-// ITokenService — issues the JWT the API authenticates with.
+// ITokenService, issues the JWT the API authenticates with.
 //
 // Kept behind an interface so AuthService does not depend on the JWT library
 // directly, and so tests can return a fixed token.

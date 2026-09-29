@@ -1,4 +1,4 @@
-// ResetPassword — set a new password using a tokenized link.
+// ResetPassword, set a new password using a tokenized link.
 //
 // The token arrives in the query string because the emailed link points here.
 // Two things follow from that:

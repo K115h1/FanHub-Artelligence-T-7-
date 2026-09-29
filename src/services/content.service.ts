@@ -1,7 +1,7 @@
-// content.service — the Content Explorer and the detail page.
+// content.service, the Content Explorer and the detail page.
 //
 // Thin by design: call the API, hand back the typed result. No caching, no
-// retry, no state — those belong in the page that owns the data.
+// retry, no state, those belong in the page that owns the data.
 import { http } from './http'
 import type { Paginated, SortOption } from '../types/api'
 import type { CategoryDto, ContentDetail, ContentSummary, Genre } from '../types/models'
@@ -51,8 +51,8 @@ export function getContents(filters: ContentFilters = {}): Promise<Paginated<Con
 }
 
 /**
- * A title by slug. Slug is unique per category, not globally — "akira" exists
- * under movies, anime and comics — so pass `category` when it could be ambiguous.
+ * A title by slug. Slug is unique per category, not globally, "akira" exists
+ * under movies, anime and comics, so pass `category` when it could be ambiguous.
  */export function getContentBySlug(slug: string, category?: string): Promise<ContentDetail> {
   return http.get<ContentDetail>(`/contents/${encodeURIComponent(slug)}`, { category })
 }
@@ -84,7 +84,7 @@ export function getCoverPools(perCategory = 24): Promise<Record<string, string[]
  * and never surfaces a failure, because a view that failed to save is not
  * something a reader can act on.
  *
- * [AllowAnonymous] on the endpoint, deliberately — view counts are meant to
+ * [AllowAnonymous] on the endpoint, deliberately, view counts are meant to
  * describe the whole audience, and asking for a token would only ever count the
  * signed-in slice of it.
  */
@@ -94,7 +94,7 @@ export function recordView(contentId: number): Promise<void> {
 
 // --- per-user actions, all of these need a token ---
 
-/** Rate 1–5. Re-rating replaces the previous value rather than adding a row. */
+/** Rate 1. 5. Re-rating replaces the previous value rather than adding a row. */
 export function rateContent(contentId: number, stars: number): Promise<{ contentId: number; stars: number }> {
   return http.post(`/contents/${contentId}/rating`, { stars })
 }

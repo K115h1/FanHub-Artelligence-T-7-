@@ -1,4 +1,4 @@
-// auth.service — registration, sign-in, the signed-in profile, and the
+// auth.service, registration, sign-in, the signed-in profile, and the
 // tokenized email flows.
 //
 // The token is stored by http.setToken, so no other service has to think about
@@ -24,7 +24,7 @@ export interface ProfileCategories {
   interests: CategoryChip[]
 }
 
-/** One row of the member's activity feed. `createdAt` has no zone suffix — the
+/** One row of the member's activity feed. `createdAt` has no zone suffix, the
  *  API serialises DateTime without one, so it is UTC and gets a Z appended
  *  before parsing. */
 export interface ActivityDto {
@@ -149,7 +149,7 @@ export async function setInterests(categoryIds: number[]): Promise<ProfileCatego
  * Not sent through http.ts: that wrapper is JSON-only, and a FormData body must
  * not have Content-Type set by hand or the boundary is lost and the server sees
  * a malformed part. Returns the API-relative path, e.g.
- * "/images/avatars/<name>.png", which the caller resolves against the API base.
+ * "/images/avatars/FILE.png", where FILE is the stored name, which the caller resolves against the API base.
  */
 export async function uploadAvatar(file: File): Promise<{ avatarPath: string | null }> {
   const { validateImage } = await import('./upload.service')
@@ -194,7 +194,7 @@ export async function getActivity(take = 8): Promise<ActivityDto[]> {
 
 /**
  * Asks for a reset link. There is no mail server, so the API returns the token
- * in the body and also writes the link to its log — that is what makes the flow
+ * in the body and also writes the link to its log, that is what makes the flow
  * demonstrable. Treat `token` as development-only.
  */
 export async function forgotPassword(email: string): Promise<{ token: string; delivered: boolean }> {

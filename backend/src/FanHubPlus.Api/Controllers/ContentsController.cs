@@ -88,9 +88,9 @@ public class ContentsController : ApiControllerBase
     /// Records a view. Fire-and-forget from the client, so a failure here is
     /// not worth surfacing.
     ///
-    /// [AllowAnonymous] on purpose: view counts describe how many people opened a
-    /// title, and requiring an account would count only the signed-in slice of
-    /// the audience, which is the opposite of what the number is for.
+    /// [AllowAnonymous] on purpose. A view count is meant to say how many people
+    /// opened a title, and making people sign in would only ever count the
+    /// signed in slice of them, which is the opposite of the point.
     [HttpPost("{id:int}/view")]
     [AllowAnonymous]
     public Task<IActionResult> RecordView(uint id) =>

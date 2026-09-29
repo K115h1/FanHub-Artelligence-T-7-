@@ -11,7 +11,7 @@
 --
 --   Separately, the default "Most popular" sort is
 --   ORDER BY popularity_score DESC, and popularity_score was also 0 across the
---   table. With every row equal, that sort silently degraded to ORDER BY title —
+--   table. With every row equal, that sort silently degraded to ORDER BY title, 
 --   so the Explorer looked sorted while showing the catalogue alphabetically.
 --
 -- BASE COUNTS
@@ -22,7 +22,7 @@
 --   POW(RAND(), 8) is the exponent that matters. For a value x uniform on [0,1),
 --   x^k concentrates near zero, and the shape is easy to state: roughly 75% of
 --   titles land under 5,000 and about 10% clear 20,000. That is what a real
---   catalogue's traffic looks like — most titles modestly read, a handful
+--   catalogue's traffic looks like, most titles modestly read, a handful
 --   genuinely popular.
 --
 --   An earlier version of this file used an exponent of 2.2, which looked
@@ -33,7 +33,7 @@
 --
 --   They are generated, not authored. This is a demo dataset for a fan hub, not
 --   a measurement of anything, and a plausible-looking spread is the honest way
---   to show a counter working. The alternative — leaving them at 0 — is not
+--   to show a counter working. The alternative, leaving them at 0, is not
 --   more honest, it is just a feature that looks broken.
 --
 -- SAFE TO RE-RUN
@@ -44,12 +44,12 @@
 --
 --   Consequence worth knowing: because it is guarded, this will NOT re-roll an
 --   existing distribution. To change the shape after the fact, zero the column
---   yourself first — it is a demo fill, not real traffic.
+--   yourself first, it is a demo fill, not real traffic.
 --
 -- Charset: utf8mb4, matching the schema.
 
 -- ---------- view_count ----------
--- 40 .. ~48,000, long-tailed. See the note above on the exponent.
+-- 40. ~48,000, long-tailed. See the note above on the exponent.
 UPDATE contents
 SET view_count = FLOOR(POW(RAND(), 8) * 48000) + 40
 WHERE view_count = 0;

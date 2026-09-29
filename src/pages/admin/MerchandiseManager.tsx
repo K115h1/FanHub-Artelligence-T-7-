@@ -1,8 +1,8 @@
-// MerchandiseManager — route: /admin/merchandise.
+// MerchandiseManager, route: /admin/merchandise.
 //
-// Full CRUD over merchandise_items. The public showcase only reads, so without
-// this the catalogue could grow by editing SQL by hand and every product's name,
-// blurb, tag and photo would be fixed at seed time.
+// Lets you add, edit and delete rows in merchandise_items. The public page only
+// reads them, so without this the only way to add a product was editing SQL by
+// hand, and names, blurbs, tags and photos were all fixed at seed time.
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ImageOff, Package, Pencil, Plus, ShoppingBag, Trash2, X } from 'lucide-react'
 import {

@@ -1,21 +1,15 @@
-// coverFallback — an image for titles that ship without one.
+// coverFallback, gives a title an image when it has no cover of its own.
 //
-// WHY NOT A PLAIN PLACEHOLDER
-//   Manga has 449 titles and no cover files at all, and comics has 101 more, so
-//   713 of 3,388 titles render as placeholder tiles. That is a fifth of the
-//   catalogue looking unfinished.
+// Manga has 449 titles and no cover files at all, comics has 101 more. That is
+// 713 titles out of 3,388 just showing a placeholder, which looks unfinished.
 //
-// WHY NOT A TRULY RANDOM IMAGE FROM THE CATALOGUE
-//   A manga card labelled with a manga title showing an anime film poster is
-//   worse than no image: it asserts the poster belongs to that title. So the
-//   pool is scoped to the title's own fandom, and a fandom with no covers at all
-//   (only manga, today) gets its category banner instead — which is deliberately
-//   abstract artwork rather than a claimed title's cover.
+// We pull the fallback from the same fandom rather than the whole catalogue.
+// Putting an anime poster on a manga card is worse than no poster, because it
+// looks like that poster belongs to the title. Manga has no covers to pick from
+// at all, so it just gets the category banner.
 //
-// WHY DETERMINISTIC
-//   Math.random() would reshuffle on every render, so a grid would visibly
-//   flicker and a shared link would show different art for the same title. The
-//   seed is the row's own id, so a title always resolves to the same image.
+// The pick is based on the row id, not Math.random. Otherwise the grid would
+// shuffle every render and a shared link would show different art each time.
 import { getCoverPools } from '../services/content.service'
 import { categoryBanner } from './categoryBanners'
 
@@ -25,9 +19,9 @@ let cached: CoverPools | null = null
 let inflight: Promise<CoverPools> | null = null
 
 /**
- * Fetched once per session. 713 titles would otherwise each ask for the pool.
- * A failed fetch resolves to an empty map, which leaves every caller on its own
- * placeholder — the pools are an improvement, not a dependency.
+ * Only fetched once per session, otherwise all 713 titles ask for it.
+ * If it fails we just return an empty map and every card keeps its own
+ * placeholder. The pools are a nice extra, not something we need to work.
  */
 export function loadCoverPools(): Promise<CoverPools> {
   if (cached) return Promise.resolve(cached)
@@ -48,7 +42,7 @@ export function loadCoverPools(): Promise<CoverPools> {
   return inflight
 }
 
-/** 32-bit FNV-1a. Cheap, stable across reloads, no dependency. */
+/** 32 bit FNV-1a. Quick, gives the same answer every time, no dependency. */
 function hash(value: string): number {
   let h = 0x811c9dc5
   for (let i = 0; i < value.length; i++) {
@@ -59,9 +53,8 @@ function hash(value: string): number {
 }
 
 /**
- * The image to use for a title that has none of its own.
- * Returns undefined when even the fandom has no artwork, so the caller keeps
- * whatever placeholder it already had.
+ * Picks the image for a title with no cover. Returns undefined if the fandom
+ * has no artwork either, so the caller can just keep its own placeholder.
  */
 export function pickCoverFallback(
   categorySlug: string,

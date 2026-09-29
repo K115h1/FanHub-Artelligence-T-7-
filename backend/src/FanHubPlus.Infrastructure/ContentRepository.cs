@@ -126,7 +126,7 @@ public class ContentRepository : IContentRepository
     /// A replace rather than an append, because the admin editor shows genres as
     /// a complete list and saving it back means "these and only these". Names
     /// arrive as strings from the form, so each one is resolved to (or created
-    /// as) a row in `genres` — the join table can only carry ids.
+    /// as) a row in `genres`, the join table can only carry ids.
     ///
     /// Genre is shared across the catalogue rather than owned by a content row,
     /// so a new name here also becomes selectable on every other title in the

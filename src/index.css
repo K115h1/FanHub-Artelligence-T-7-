@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* Dark mode is driven by a `.dark` class on <html> (NOT the OS setting).
+/* Dark mode is driven by a `.dark` class on html element (NOT the OS setting).
    The ThemeProvider (src/app/providers/ThemeProvider.tsx) adds/removes that
    class, and every `dark:` style in the app follows along. */
 @custom-variant dark (&:where(.dark, .dark *));
@@ -8,20 +8,20 @@
 /* ==========================================================================
    DESIGN TOKENS
    --------------------------------------------------------------------------
-   One source of truth for surface / ink / accent colours — don't hardcode hex
-   values in components. Each token is declared on :root for light mode and
+   One source of truth for surface / ink / accent colours, don't hardcode hex
+   values in components. Each token is declared on:root for light mode and
    again under `html.dark`; because the @theme inline utilities reference these
    vars, `bg-surface` / `text-ink-muted` re-theme with no `dark:` prefix needed.
    ========================================================================== */
 
 :root {
-  /* Surfaces — light: white → faint purple. Dark: purple-black ladder. */
+  /* Surfaces, light: white → faint purple. Dark: purple-black ladder. */
   --surface: #ffffff;
   --surface-raised: #faf9ff;
   --surface-sunken: #f4f2fb;
   --surface-inverse: #15001f;
 
-  /* Ink — text and icons. */
+  /* Ink, text and icons. */
   --ink: #0a0a0a;
   --ink-muted: #52525b;
   --ink-subtle: #7c7c86;
@@ -31,7 +31,7 @@
   --line: #e4e0f2;
   --line-strong: #c9c0e8;
 
-  /* Accent — the brand purple. */
+  /* Accent, the brand purple. */
   --accent: #7c3aed;
   --accent-hover: #6d28d9;
   --accent-soft: #f3eeff;
@@ -39,7 +39,7 @@
 
   /* Category hues, kept distinguishable in the 8-across grid (Comics red vs
      Anime orange, Manga teal vs Cosplay sky). Used for dots and icon tints
-     only — surrounding chrome stays purple. */
+     only, surrounding chrome stays purple. */
   --cat-anime: #f97316;
   --cat-gaming: #10b981;
   --cat-movies: #eab308;
@@ -105,7 +105,7 @@ html.dark {
 /* Overrides Tailwind's default `rounded-*` scale with a tighter one. The
    defaults (xl = 12px, 2xl = 16px) made every card and button read soft; these
    pull each step down so the whole app tightens at once. `rounded-full` is
-   untouched — pills and avatars should stay circular. */
+   untouched, pills and avatars should stay circular. */
 @theme {
   --radius-xs: 0.125rem;
   --radius-sm: 0.1875rem;
@@ -153,7 +153,7 @@ html.dark {
   box-shadow: 0 10px 30px -12px color-mix(in srgb, var(--accent) 45%, transparent);
 }
 
-/* Frosted panel — same idea, but translucent, for overlays and hero chrome. */
+/* Frosted panel, same idea, but translucent, for overlays and hero chrome. */
 .glass-panel {
   background-color: color-mix(in srgb, var(--surface) 70%, transparent);
   backdrop-filter: blur(16px);
@@ -182,7 +182,7 @@ html.dark {
 }
 
 /* ---- accessibility preferences -------------------------------------- */
-/* Both written onto <html> by SettingsProvider, since they affect the whole
+/* Both written onto html element by SettingsProvider, since they affect the whole
    document rather than any one component. */
 
 /* Font scale: multiplier on the root font size, so every rem size grows. */
@@ -235,7 +235,7 @@ html[data-reduce-motion] *::after {
   scroll-behavior: auto !important;
 }
 
-/* FOCUS RING — currently OFF. To switch it on, change `none` to
+/* FOCUS RING, currently OFF. To switch it on, change `none` to
    `2px solid var(--accent)` below; nothing else needs editing.
    While off, focus is signalled only by each field's `focus:border-*`.
    A focus indicator is a WCAG 2.4.7 requirement and accessibility is a judging

@@ -1,4 +1,4 @@
-// merchandise.service — the shop showcase.
+// merchandise.service, the shop showcase.
 import { http } from './http'
 import type { Paginated } from '../types/api'
 import type {

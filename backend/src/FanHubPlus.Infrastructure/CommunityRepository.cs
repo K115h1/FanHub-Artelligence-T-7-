@@ -147,7 +147,7 @@ public class CommunityRepository : ICommunityRepository
     {
         // One grouped query rather than three counts, so the filter chips cost
         // a single round trip. Keys go out in the stored lowercase form, because
-        // a Dictionary<SubmissionStatus, _> would serialise as {"Pending": 4} and
+        // a Dictionarya submission status and a cancellation token would serialise as {"Pending": 4} and
         // the client's filter list is spelled in lowercase.
         var grouped = await _db.FanSubmissions.AsNoTracking()
             .GroupBy(s => s.Status)

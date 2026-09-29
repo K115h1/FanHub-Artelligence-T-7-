@@ -1,4 +1,4 @@
-// fetchCosplayImages.mjs — gives every cosplay article and event a photograph.
+// fetchCosplayImages.mjs, gives every cosplay article and event a photograph.
 //
 // WHY IMAGES ARE DOWNLOADED RATHER THAN LINKED
 //   The project rule is no remote images, and CosplayCard renders 100 of these.
@@ -25,7 +25,7 @@
 //   node scripts/fetchCosplayImages.mjs --apply    # download
 //   node scripts/fetchCosplayImages.mjs --apply --resume
 //
-// The API key is PEXELS_API_KEY in .env.local — not a VITE_ variable, because a
+// The API key is PEXELS_API_KEY in.env.local, not a VITE_ variable, because a
 // VITE_ variable would be inlined into the client bundle and readable by anyone.
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync, appendFileSync } from 'node:fs'
@@ -47,7 +47,7 @@ const saveSearches = process.argv.includes('--save-searches')
 // ---------- env ----------
 
 /**
- * Minimal .env reader. Node 20+ has --env-file, but this has to run as a plain
+ * Minimal.env reader. Node 20+ has --env-file, but this has to run as a plain
  * `node script.mjs` from the repo root, and pulling in dotenv for four lines
  * would be the wrong dependency.
  */
@@ -163,7 +163,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 /**
  * Search with backoff on 429.
  *
- * Pexels advertises 25,000 requests an hour — the header confirms it — but it
+ * Pexels advertises 25,000 requests an hour, the header confirms it, but it
  * also enforces a much tighter burst limit, and a tight loop trips it after a
  * couple of hundred calls. A 429 here is therefore a rate-of-fire problem, not
  * a quota problem, so the answer is to slow down and retry rather than to stop.
@@ -198,7 +198,7 @@ async function search(query, attempt = 0) {
  *
  * `used` is the set of Pexels photo ids already claimed by another card. Without
  * it, every generic query returns the same top result and a 100-card grid ends
- * up showing about fifteen photographs — which looks like a bug even though
+ * up showing about fifteen photographs, which looks like a bug even though
  * every card is technically correct. An unused photo is worth far more than a
  * marginally better aspect ratio, so reuse is only allowed once the unused
  * options are exhausted.
@@ -313,7 +313,7 @@ for (const item of todo) {
 
   used.add(photo.id)
   manifest[item.id] = {
-    // Local, not the CDN — see the header. The CDN URL is kept alongside as
+    // Local, not the CDN, see the header. The CDN URL is kept alongside as
     // `remoteUrl` so the download pass needs no second search.
     imageUrl: relPath,
     photographer: photo.photographer || 'Unknown',
@@ -389,7 +389,7 @@ if (apply) {
   let got = 0
   let noUrl = 0
   for (const [id, entry] of Object.entries(manifest)) {
-    // imageUrl is "/images/cosplay/ca1.jpg" — a public-root path, so only the
+    // imageUrl is "/images/cosplay/ca1.jpg", a public-root path, so only the
     // leading slash comes off. Stripping "/images/" as well put the files in
     // public/ instead of public/images/.
     const dest = join(root, 'public', entry.imageUrl.replace(/^\//, ''))

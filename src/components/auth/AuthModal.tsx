@@ -1,9 +1,9 @@
-// AuthModal — sign in and sign up as one full-screen overlay. No /login page.
+// AuthModal, sign in and sign up as one full-screen overlay. No /login page.
 //
-// createPortal to <body> is load-bearing: the header is sticky and the sidebar
+// createPortal to body is load-bearing: the header is sticky and the sidebar
 // fixed, both inside the page column, so an inline overlay cannot paint over
 // them. As a sibling of #root it has no ancestor stacking context to fight.
-// useModalLayer covers what paint cannot — scroll lock and an inert app root.
+// useModalLayer covers what paint cannot, scroll lock and an inert app root.
 //
 // Three views in one dialog so switching forms does not lose the page:
 // 'prompt' (a guard stopped you), 'login', 'register'.

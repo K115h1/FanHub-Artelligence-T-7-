@@ -1,4 +1,4 @@
-// AdminService — the figures behind /admin/stats, and role management.
+// AdminService, the figures behind /admin/stats, and role management.
 //
 // Only counts that can be computed from real rows are returned. Nothing here
 // invents a number, so a metric with no data reads as zero rather than as a
@@ -43,7 +43,7 @@ public class AdminService : IAdminService
         // Named for the same reason as the submissions call below.
         var feedback = await _community.GetFeedbackAsync(null, 1, 1, userId: null, ct);
         // Named, because the repository gained an optional userId filter between
-        // pageSize and ct — passing ct positionally no longer binds.
+        // pageSize and ct, passing ct positionally no longer binds.
         var submissions = await _community.GetSubmissionsAsync(null, 1, 1, userId: null, kind: null, ct);
 
         return new AdminStatsDto(

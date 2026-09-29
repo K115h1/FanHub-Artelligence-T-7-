@@ -1,4 +1,4 @@
-// useContentMutations — the write side of the content manager.
+// useContentMutations, the write side of the content manager.
 //
 // An edit is a real UPDATE and a delete a real DELETE, so there is no uncommitted
 // overlay to revert. Each mutation re-reads the page rather than patching local
@@ -86,7 +86,7 @@ export function useContentMutations(onChanged: () => void): ContentMutations {
           // omitted field as "leave alone", and release_year is non-nullable.
           releaseYear: patch.releaseYear ?? undefined,
           genres: patch.genres,
-          // Distinct fields, not one value written to both — that overwrote the
+          // Distinct fields, not one value written to both, that overwrote the
           // long synopsis with the one-line blurb on every save.
           synopsis: patch.synopsis ?? undefined,
           shortSynopsis: patch.shortSynopsis ?? undefined,

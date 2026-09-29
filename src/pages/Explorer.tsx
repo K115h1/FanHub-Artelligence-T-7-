@@ -1,4 +1,4 @@
-// Explorer — search results and browse. Reads ?q= from the URL (written by the
+// Explorer, search results and browse. Reads ?q= from the URL (written by the
 // header search bar) and filters content, articles and events in one pass.
 // When the services layer lands, only the loader functions change.
 import { useMemo } from 'react'
@@ -29,7 +29,7 @@ export default function Explorer() {
   const [searchParams, setSearchParams] = useSearchParams()
   const query = searchParams.get('q') ?? ''
 
-  // Other pages deep-link in with a category or sort already applied — a
+  // Other pages deep-link in with a category or sort already applied, a
   // content page's "More like this" row sends ?category=anime. Honouring them
   // here is what makes those links land on the right list instead of a generic
   // one.
@@ -129,7 +129,7 @@ export default function Explorer() {
       </header>
 
       {/* Filters sit above the results and stay visible even when a filter has
-          emptied the list — otherwise the way out of a zero-result filter is to
+          emptied the list, otherwise the way out of a zero-result filter is to
           reload the page. */}
       <div className="mb-6">
         <ContentFilters

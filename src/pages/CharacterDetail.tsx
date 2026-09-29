@@ -1,4 +1,4 @@
-// CharacterDetail — route: /characters/:id.
+// CharacterDetail, route: /characters/:id.
 //
 // Reads one character out of the list, because /community/characters has no
 // single-item route. Fine at 89 rows; past a few thousand it needs a real

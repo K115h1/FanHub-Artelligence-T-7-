@@ -1,4 +1,4 @@
-// Register page — create a new account.
+// Register page, create a new account.
 //
 // A thin shell around RegisterForm so the same form serves this route and the
 // sign-up overlay. The route is kept for deep links; the header's Sign up button
@@ -12,7 +12,7 @@ export default function Register() {
   const navigate = useNavigate()
   const location = useLocation()
 
-  // Where to go after signing up — set by a route guard, or '/' by default.
+  // Where to go after signing up, set by a route guard, or '/' by default.
   const from = (location.state as { from?: string } | null)?.from ?? '/'
 
   return (

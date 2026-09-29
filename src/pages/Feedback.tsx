@@ -1,4 +1,4 @@
-// Feedback — the suggestion / bug / query form.
+// Feedback, the suggestion / bug / query form.
 //
 // Public by design: a feedback form that demands a login stops exactly the
 // people most likely to report a problem. Submissions POST to
@@ -15,7 +15,7 @@
 //     lands in MySQL and appears in the moderator's queue on next load.
 //   * The local `FeedbackType` and `FeedbackEntry` interfaces declared here are
 //     gone. They shadowed the API shapes in types/models.ts under the same
-//     names, with incompatible fields — string ids, a non-nullable `rating` of
+//     names, with incompatible fields, string ids, a non-nullable `rating` of
 //     0 for "unrated", and no `status` at all. Anything crossing the wire now
 //     uses the shared type.
 //   * The "Clear history" button is gone with the localStorage it cleared. There

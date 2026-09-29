@@ -1,12 +1,12 @@
 -- ============================================================
--- FanHub Plus — Test Data
+-- FanHub Plus. Test Data
 -- ============================================================
 -- STATUS: Placeholder. Required submission deliverable:
 --         "Test Data Used in the Project".
 --
 -- Planned contents:
 --   * Bulk content rows spanning different categories, genres, release years,
---     popularity scores, and content types — to exercise multi-level
+--     popularity scores, and content types, to exercise multi-level
 --     filtering and sorting in the Fandom Content Explorer.
 --   * Edge cases:
 --       - content with empty descriptions (empty-state UI)

@@ -1,4 +1,4 @@
-// AuthService — register, login, profile, password change and reset.
+// AuthService, register, login, profile, password change and reset.
 //
 // Validation lives here rather than in the controller, because the SRS puts
 // business rules in the Application layer. It is plain method-level checking;

@@ -1,7 +1,7 @@
-// ContentFilters — the Explorer's filter rail: category, genre, type and era.
+// ContentFilters, the Explorer's filter rail: category, genre, type and era.
 //
 // Rewritten rather than wiring up the old FilterPanel. That one hardcoded its
-// options — CONTENT_TYPES was ["Article","Video","Audio","Image"], none of which
+// options. CONTENT_TYPES was ["Article","Video","Audio","Image"], none of which
 // are real content types (the API uses movie/series/game/comic/music_artist),
 // and POPULARITY was a set of labels with no endpoint behind them. It also styled
 // itself with raw purple-950/purple-50 values instead of the app's tokens, so it
@@ -66,8 +66,8 @@ export default function ContentFilters({
   onClear: () => void
   resultCount: number | null
 }) {
-  // Genres are scoped per category — "Action" under Movies is a different row
-  // from "Action" under Gaming — so they are refetched when the category changes
+  // Genres are scoped per category, "Action" under Movies is a different row
+  // from "Action" under Gaming, so they are refetched when the category changes
   // rather than fetched once for the whole catalogue.
   const [genres, setGenres] = useState<Genre[]>([])
 

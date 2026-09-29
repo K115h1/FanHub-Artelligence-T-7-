@@ -1,4 +1,4 @@
-// Fan events — the dataset behind the Events page.
+// Fan events, the dataset behind the Events page.
 //
 // Richer than the date tile the homepage needs: the Events page shows venue,
 // price, attendance and a summary, so that shape lives here and mockData
@@ -208,7 +208,7 @@ export const EVENT_CITIES: string[] = [...new Set(EVENTS.filter((e) => !e.isOnli
 
 export const byDate = (a: FanEvent, b: FanEvent): number => a.date.localeCompare(b.date)
 
-/** "12.4K" / "1.2K" — compact attendance for the card meta line. */
+/** "12.4K" / "1.2K", compact attendance for the card meta line. */
 export function formatGoing(n: number): string {
   if (n >= 1000) return `${(n / 1000).toFixed(1).replace(/\.0$/, '')}K`
   return String(n)

@@ -43,7 +43,7 @@ export const isMojibake = (value) =>
 /**
  * Applies one round of the damage, so a self-test can build a known-bad value.
  * @param {string} good correctly encoded text
- * @param {'latin1'|'cp1252'} [codepage] which codepage did the misreading
+ * @param {'latin1', 'cp1252'} [codepage] which codepage did the misreading
  */
 export const damageOnce = (good, codepage = 'latin1') => {
   const bytes = Buffer.from(good, 'utf8')

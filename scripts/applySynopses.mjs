@@ -1,7 +1,7 @@
-// applySynopses.mjs — writes reviewed synopses into src/data/catalog.json and
+// applySynopses.mjs, writes reviewed synopses into src/data/catalog.json and
 // emits the SQL UPDATE for contents.synopsis / short_synopsis.
 //
-// Input : data/synopses.json  { "<fandom>|<slug>": { synopsis, shortSynopsis } }
+// Input: data/synopses.json, keyed by fandom then slug, each holding a synopsis and a shortSynopsis
 // Output: src/data/catalog.json updated in place
 //         database/07_synopsis_seed.sql
 //
@@ -16,7 +16,7 @@
 // the join is what makes the file correct rather than merely faster.
 //
 //   UPDATE contents c JOIN categories g ON g.category_id = c.category_id
-//   SET c.synopsis = ..., c.short_synopsis = ... WHERE c.slug = ... AND g.slug = ...;
+//   SET c.synopsis =..., c.short_synopsis =. WHERE c.slug =. AND g.slug =...;
 //
 // Usage: node scripts/applySynopses.mjs
 

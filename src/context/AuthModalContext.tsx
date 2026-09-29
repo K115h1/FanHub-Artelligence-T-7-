@@ -1,4 +1,4 @@
-// AuthModalContext — who can ask for the sign-in / sign-up overlay, and how it
+// AuthModalContext, who can ask for the sign-in / sign-up overlay, and how it
 // is dismissed.
 //
 // Separate from AuthContext on purpose: that one answers "is anyone signed in",
@@ -20,8 +20,8 @@ export interface AuthModalContextValue {
    * @param options.prompt Show the "Log in required" notice before the form.
    *
    * `from` and `prompt` are separate because they answer different questions.
-   * `from` is "where should they end up" — set by a route guard so a member-only
-   * page can be resumed. `prompt` is "are they hitting a wall" — true when a
+   * `from` is "where should they end up", set by a route guard so a member-only
+   * page can be resumed. `prompt` is "are they hitting a wall", true when a
    * guard stopped them, false when they asked to sign in themselves.
    *
    * The old /login bookmark is the case that needs both: it returns them to

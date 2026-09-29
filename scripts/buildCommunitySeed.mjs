@@ -3,7 +3,7 @@
 //
 // WHY: fan_events, character_profiles, merchandise_items and upcoming_releases
 // are all empty. The frontend has perfectly good data for events and
-// merchandise already — it just lived in TypeScript instead of MySQL, so the
+// merchandise already, it just lived in TypeScript instead of MySQL, so the
 // API had nothing to return and those sections would render blank.
 //
 // This does not invent anything. Every row here comes from src/lib/events.ts or

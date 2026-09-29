@@ -1,4 +1,4 @@
-// AuthProvider — sign-in state, API-backed with a device fallback.
+// AuthProvider, sign-in state, API-backed with a device fallback.
 import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { AuthContext, type Account } from '../../context/AuthContext'
 import { roleForEmail, DEMO_ACCOUNTS } from '../../lib/demoAccounts'

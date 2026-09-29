@@ -1,8 +1,8 @@
-// useSidebar — open/closed state for the left navigation.
+// useSidebar, open/closed state for the left navigation.
 //
 // One boolean drives both breakpoints; only the CSS differs. At md and up the
 // panel pushes the content sideways, below md it overlays as a drawer with a
-// scrim. The state stays truthful on both — derive anything else in CSS, not here.
+// scrim. The state stays truthful on both, derive anything else in CSS, not here.
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useMediaQuery } from './useMediaQuery'
 

@@ -1,4 +1,4 @@
-// VerifyEmail — the landing page for an emailed verification link.
+// VerifyEmail, the landing page for an emailed verification link.
 //
 // A GET cannot change state, so the token is read from the query string and
 // exchanged with a POST on mount. Two consequences worth stating:

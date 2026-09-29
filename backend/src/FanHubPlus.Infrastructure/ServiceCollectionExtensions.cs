@@ -18,8 +18,8 @@ public static class ServiceCollectionExtensions
         {
             // The server version is declared, not detected. AutoDetect opens a
             // connection while the DbContext is being configured, so on a platform
-            // where the database is a separate container that is still booting —
-            // Render, where MySQL and the API start independently — the first
+            // where the database is a separate container that is still booting, 
+            // Render, where MySQL and the API start independently, the first
             // request fails and the health check takes the API down before MySQL
             // has finished its first-boot schema import.
             //

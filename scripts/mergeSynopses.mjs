@@ -1,4 +1,4 @@
-// mergeSynopses.mjs — folds a batch file into data/synopses.json.
+// mergeSynopses.mjs, folds a batch file into data/synopses.json.
 //
 // Usage: node scripts/mergeSynopses.mjs data/synopses.batchN.json
 //

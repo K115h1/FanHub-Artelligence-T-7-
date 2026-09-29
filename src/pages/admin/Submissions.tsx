@@ -1,4 +1,4 @@
-// Submissions — route: /admin/submissions.
+// Submissions, route: /admin/submissions.
 //
 // The moderation queue for user fan-content. Each pending entry is read in full
 // and then approved or rejected; a rejection is confirmed because the fan wrote
@@ -70,7 +70,7 @@ export default function Submissions() {
     return map
   }, [submissions])
 
-  // Pending first — it is the queue the admin is here to clear. Everything else
+  // Pending first, it is the queue the admin is here to clear. Everything else
   // is history, so it sorts by date underneath.
   const filtered = useMemo(() => {
     const needle = search.trim().toLowerCase()
@@ -174,7 +174,7 @@ export default function Submissions() {
               <li key={item.id} className="surface-card p-4">
                 <div className="mb-2 flex flex-wrap items-center gap-2">
                   <StatusPill value={item.status} />
-                  {/* What kind of fan content this is — the thing the SRS asks
+                  {/* What kind of fan content this is, the thing the SRS asks
                       the queue to distinguish between. */}
                   <span className="rounded-full bg-accent-soft px-2 py-0.5 text-[11px] font-semibold text-accent">
                     {KIND_LABEL[item.kind] ?? item.kind}

@@ -1,4 +1,4 @@
-// Stats — route: /admin/stats.
+// Stats, route: /admin/stats.
 //
 // Usage statistics for the catalogue and the moderation queues.
 //
@@ -6,7 +6,7 @@
 // it wants active-user counts, view counts and chatbot interaction volume. None
 // of those can be measured yet. There is no API collecting events, `contents`
 // has no view data populated, and the chatbot is a deferred feature. Rather
-// than draw a chart of zeroes — which reads as a bug to a reviewer — those
+// than draw a chart of zeroes, which reads as a bug to a reviewer, those
 // panels are listed as unavailable with the reason. They get filled in when the
 // API starts recording them.
 

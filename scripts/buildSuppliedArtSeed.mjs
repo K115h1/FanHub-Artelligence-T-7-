@@ -1,4 +1,4 @@
-// buildSuppliedArtSeed.mjs — rebuilds database/08_supplied_art_seed.sql from the
+// buildSuppliedArtSeed.mjs, rebuilds database/08_supplied_art_seed.sql from the
 // artwork actually sitting in public/images/.
 //
 // WHY THIS EXISTS
@@ -20,7 +20,7 @@
 //   images. This is only the step that turns what landed on disk into rows.
 //
 // OUTPUT
-//   Every statement is INSERT ... SELECT ... WHERE NOT EXISTS, so the file is
+//   Every statement is INSERT. SELECT. WHERE NOT EXISTS, so the file is
 //   safe to re-run and safe to run against a database that already has rows.
 //   It never deletes: a row that is in the database but not on disk is left
 //   alone for a human to decide on, rather than silently disappearing.

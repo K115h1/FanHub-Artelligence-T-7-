@@ -32,7 +32,7 @@ public class MerchandiseItem
     public string? Description { get; set; }
     public string? ImagePath { get; set; }
 
-    // Limited Edition | Pre-Order | Collectible
+    // Limited Edition, Pre-Order, Collectible
     public string? Tag { get; set; }
 
     public string? PriceNote { get; set; }
@@ -59,7 +59,7 @@ public class UpcomingRelease
     public Content? Content { get; set; }
 }
 
-// Schema only — the chatbot is a deferred feature.
+// Schema only, the chatbot is a deferred feature.
 public class ChatbotQuery
 {
     public uint QueryId { get; set; }

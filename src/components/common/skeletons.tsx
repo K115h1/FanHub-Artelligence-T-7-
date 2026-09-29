@@ -1,12 +1,12 @@
-// Page skeletons — composed placeholders shaped like the page they stand in for.
+// Page skeletons, composed placeholders shaped like the page they stand in for.
 //
 // A skeleton is only worth more than a spinner if it predicts the layout, so
 // each of these is a copy of the real page's block structure with the text and
-// images blanked. When the real markup changes, this should change with it —
+// images blanked. When the real markup changes, this should change with it, 
 // that coupling is the whole point, and it is why they live next to each other
 // rather than in a generic "Loading..." component.
 //
-// All of them are full-page-width, because every one replaces a whole <main>
+// All of them are full-page-width, because every one replaces a whole main element
 // during a route's data fetch. The padding matches the page it replaces so
 // nothing shifts when the data lands.
 import { Skeleton, SkeletonRegion, SkeletonText } from '../ui/Skeleton'

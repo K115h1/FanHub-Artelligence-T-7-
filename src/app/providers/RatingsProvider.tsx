@@ -1,4 +1,4 @@
-// RatingsProvider — per-account star ratings, persisted to localStorage.
+// RatingsProvider, per-account star ratings, persisted to localStorage.
 import { useCallback, useMemo, useState, type ReactNode } from 'react'
 import { RatingsContext, type RatingKind } from '../../context/RatingsContext'
 import { useAuth } from '../../context/AuthContext'
@@ -46,7 +46,7 @@ function RatingsStore({ accountId, children }: { accountId: string | null; child
       try {
         localStorage.setItem(storageKey(accountId), JSON.stringify(next))
       } catch {
-        // Ignore storage failures — the in-memory rating still works.
+        // Ignore storage failures, the in-memory rating still works.
       }
     },
     [map, accountId],

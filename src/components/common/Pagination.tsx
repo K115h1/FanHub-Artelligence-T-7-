@@ -1,4 +1,4 @@
-// Pagination — numbered page controls for a long list.
+// Pagination, numbered page controls for a long list.
 //
 // Lives in common/ rather than the admin folder because the category pages need
 // the same control: a fandom can hold 575 titles, which does not fit on one

@@ -1,7 +1,7 @@
-// ThemeProvider — dark-mode state for the whole app.
+// ThemeProvider, dark-mode state for the whole app.
 // Business logic: theme choice + font-scale (SRS accessibility), persisted to
-// localStorage, applied by toggling the `.dark` class on <html>.
-// (Tailwind's `dark:` variant reads that class — see src/index.css.)
+// localStorage, applied by toggling the `.dark` class on html element.
+// (Tailwind's `dark:` variant reads that class, see src/index.css.)
 import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { ThemeContext, type Theme } from '../../context/ThemeContext'
 
@@ -13,7 +13,7 @@ function getInitialTheme(): Theme {
     const saved = localStorage.getItem(STORAGE_KEY)
     if (saved === 'light' || saved === 'dark') return saved
   } catch {
-    // localStorage can be blocked (private mode) — just fall through.
+    // localStorage can be blocked (private mode)   just fall through.
   }
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }
@@ -21,13 +21,13 @@ function getInitialTheme(): Theme {
 export default function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<Theme>(getInitialTheme)
 
-  // Every time the theme changes: paint <html> and remember the choice.
+  // Every time the theme changes: paint html element and remember the choice.
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark')
     try {
       localStorage.setItem(STORAGE_KEY, theme)
     } catch {
-      // Ignore storage failures — the in-memory theme still works.
+      // Ignore storage failures, the in-memory theme still works.
     }
   }, [theme])
 

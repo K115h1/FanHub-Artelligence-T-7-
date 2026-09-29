@@ -1,4 +1,4 @@
-// BackButton — returns to the previous page instead of the homepage.
+// BackButton, returns to the previous page instead of the homepage.
 //
 // A content page is almost always reached from somewhere specific (a category
 // grid, a bookmark, a search result), so "back to home" throws that context
@@ -7,7 +7,7 @@
 // The one case history cannot cover: the visitor opened this page directly, by
 // pasting the link or by refreshing. React Router marks the app's very first
 // location with `key: 'default'`, and every in-app navigation after that gets
-// a unique key — so a key other than 'default' is a reliable signal that there
+// a unique key, so a key other than 'default' is a reliable signal that there
 // is somewhere to go back to. When there isn't, the button falls back to
 // `fallbackTo` (the title's category on a content page, the homepage otherwise).
 

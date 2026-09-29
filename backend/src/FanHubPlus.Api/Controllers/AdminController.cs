@@ -1,4 +1,4 @@
-// Admin endpoints. Every action here requires the admin role — the guard is on
+// Admin endpoints. Every action here requires the admin role, the guard is on
 // the controller, so a new action cannot accidentally be left unprotected.
 //
 // The client also hides /admin from non-admins, but that is convenience only.

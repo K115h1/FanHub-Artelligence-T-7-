@@ -1,6 +1,6 @@
-// Ratings — per-account star ratings for content and articles.
+// Ratings, per-account star ratings for content and articles.
 //
-// Stored locally as `kind:refId → 1–5`, so the detail page can write a rating
+// Stored locally as `kind:refId → 1. 5`, so the detail page can write a rating
 // and every card showing that item can display it. A real average across users
 // arrives with the API; until then this is one person's score.
 import { createContext, useContext } from 'react'

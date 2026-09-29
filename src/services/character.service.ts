@@ -1,4 +1,4 @@
-// character.service — character profiles.
+// character.service, character profiles.
 import { http } from './http'
 import type { Character } from '../types/models'
 

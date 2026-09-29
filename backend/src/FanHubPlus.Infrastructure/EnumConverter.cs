@@ -2,7 +2,7 @@
 //
 // The default string conversion writes the C# member name verbatim, so
 // ContentType.MusicArtist would be written as "MusicArtist" and fail to convert
-// back on read — the column holds 'music_artist'. This maps in both directions.
+// back on read, the column holds 'music_artist'. This maps in both directions.
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FanHubPlus.Infrastructure;

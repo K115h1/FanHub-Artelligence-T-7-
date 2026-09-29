@@ -1,4 +1,4 @@
-// useSubmissions — the member's own fan submissions: listing them and adding one.
+// useSubmissions, the member's own fan submissions: listing them and adding one.
 //
 // The endpoint and the client service already existed; nothing was calling them
 // from the member's side, so this is the first code path that actually creates a
@@ -59,7 +59,7 @@ export function useSubmissions(): UseSubmissions {
     setError(null)
 
     // The category list is public and the same one the explorer uses, so it is
-    // requested even for a signed-out visitor... except this panel is only
+    // requested even for a signed-out visitor. except this panel is only
     // rendered when signed in, so there is nothing to request in that case.
     void Promise.allSettled([getMySubmissions(), getCategories()]).then(([subs, cats]) => {
       if (mine !== runId.current) return

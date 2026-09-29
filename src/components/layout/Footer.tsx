@@ -1,6 +1,6 @@
-// Footer — site footer containing the SRS-required sitemap section:
+// Footer, site footer containing the SRS-required sitemap section:
 // a full text hierarchy of every route, plus category shortcuts and attribution.
-// Glass style, purple accents, low roundness — same design language as Home.
+// Glass style, purple accents, low roundness, same design language as Home.
 import { Link } from 'react-router-dom'
 import { toSlug } from '../../lib/mockData'
 import { useAuth } from '../../context/AuthContext'
@@ -9,7 +9,7 @@ import { useAuthModal, type AuthMode } from '../../context/AuthModalContext'
 const glassPanel =
   'border-t border-purple-500/20 bg-white/60 backdrop-blur-xl dark:bg-white/[0.04]'
 
-// Sitemap — every route in the app, grouped by area (the SRS sitemap item).
+// Sitemap, every route in the app, grouped by area (the SRS sitemap item).
 const SITEMAP: {
   heading: string
   links: { to: string; label: string; auth?: AuthMode }[]
@@ -50,7 +50,7 @@ const SITEMAP: {
     ],
   },
   {
-    // Rendered only for administrators — see the isAdmin check in Footer.
+    // Rendered only for administrators, see the isAdmin check in Footer.
     heading: 'Admin',
     adminOnly: true,
     links: [
@@ -83,7 +83,7 @@ export default function Footer() {
   return (
     <footer className={glassPanel}>
       <div className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        {/* Sitemap. The Admin column is only rendered for administrators —
+        {/* Sitemap. The Admin column is only rendered for administrators, 
             a registered user following "Admin Dashboard" would just hit the
             gate, so the link is dead weight for them. */}
         <nav aria-label="Site map" className="grid grid-cols-2 gap-8 sm:grid-cols-4">
@@ -96,8 +96,8 @@ export default function Footer() {
                 {links.map(({ to, label, auth }) => (
                   <li key={to}>
                     {/* `auth` links open the overlay instead of navigating. A
-                        footer link is a dead end by nature — the visitor clicked
-                        to look something up, not to leave — so a dialog that
+                        footer link is a dead end by nature, the visitor clicked
+                        to look something up, not to leave, so a dialog that
                         closes back to where they were is the better behaviour
                         than a route change. */}
                     {auth ? (
@@ -141,7 +141,14 @@ export default function Footer() {
 
         {/* Attribution */}
         <div className="mt-6 flex flex-col items-center justify-between gap-3 border-t border-purple-500/20 pt-6 text-xs text-black/50 sm:flex-row dark:text-white/50">
-          <p>
+          <p className="flex items-center gap-2">
+            <img
+              src="/logo.svg"
+              alt=""
+              width={20}
+              height={20}
+              className="h-5 w-5 shrink-0 rounded object-cover"
+            />
             <span className="font-bold text-black/70 dark:text-white/70">FanHub Plus</span> — all
             your fandoms, one home.
           </p>

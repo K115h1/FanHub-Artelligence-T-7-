@@ -1,4 +1,4 @@
-// FeedbackModerator — route: /admin/feedback.
+// FeedbackModerator, route: /admin/feedback.
 //
 // Works the feedback queue: filter by status or type, read the entry, and move
 // it through open -> reviewed -> resolved / dismissed. Mirrors the `feedback`
@@ -62,7 +62,7 @@ export default function FeedbackModerator() {
         if (status !== 'all' && item.status !== status) return false
         if (type !== 'all' && item.type !== type) return false
         if (needle && !item.message.toLowerCase().includes(needle)) return false
-        // userName is nullable — feedback can be submitted without an account,
+        // userName is nullable, feedback can be submitted without an account,
         // and the local seed had no anonymous rows, so this was never a null.
         if (needle && !(item.userName ?? '').toLowerCase().includes(needle)) return false
         return true
@@ -191,7 +191,7 @@ export default function FeedbackModerator() {
                       status arrives as a plain string from the API rather than a
                       union, so a value outside the four the table knows (a row
                       written by an older build, say) would index to undefined and
-                      throw on .map. Falling back to no actions shows the entry
+                      throw on.map. Falling back to no actions shows the entry
                       read-only instead of taking the queue down.
                     */}
                     {(item.status in NEXT_ACTIONS

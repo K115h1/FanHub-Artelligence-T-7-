@@ -1,4 +1,4 @@
-// PosterThumb — renders a title's poster, or the app's own placeholder.
+// PosterThumb, renders a title's poster, or the app's own placeholder.
 //
 // The catalogue carries a posterPath for 2,696 of 2,934 titles, but the rest
 // have none and a delivered file can still fail to load, so the placeholder is

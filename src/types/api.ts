@@ -1,7 +1,7 @@
 // API contracts shared by every service in src/services/.
-// Pages never see a raw fetch response — they see these shapes.
+// Pages never see a raw fetch response, they see these shapes.
 
-// The API's paged list response. Field names match what the C# PagedResponse<T>
+// The API's paged list response. Field names match what the C# PagedResponseT
 // actually returns, so a service can return it without reshaping.
 export interface Paginated<T> {
   items: T[]

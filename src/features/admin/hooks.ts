@@ -1,4 +1,4 @@
-// Feature: Admin Control Panel — business logic layer.
+// Feature: Admin Control Panel, business logic layer.
 //
 // Pages under pages/admin/ read through these hooks, so the data source is
 // swappable in one file. Filtering and paging happen in SQL.

@@ -1,11 +1,11 @@
 -- ============================================================
--- Fan Hub Plus — Database Schema (MySQL 8.0+)
+-- Fan Hub Plus. Database Schema (MySQL 8.0+)
 -- ============================================================
 -- Conventions (per project README):
 --   * Every PK is <entity>_id
 --   * FKs are named <referenced_table>_id, with an explicit ON DELETE rule
 --   * Timestamps default to CURRENT_TIMESTAMP
---   * All access is parameterized — never string-concatenated SQL
+--   * All access is parameterized, never string-concatenated SQL
 --
 -- Charset: utf8mb4 everywhere. The legacy `utf8` cannot store 4-byte
 -- characters, which would silently corrupt accented titles
@@ -109,8 +109,8 @@ CREATE TABLE IF NOT EXISTS email_verification_tokens (
     CONSTRAINT fk_email_verify_user FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Genre names REPEAT across fandoms — "Action" means different things to a
--- games and a films catalogue — so a genre is unique per (category, name)
+-- Genre names REPEAT across fandoms, "Action" means different things to a
+-- games and a films catalogue, so a genre is unique per (category, name)
 -- rather than globally. That is why "Action" appears once under Gaming and
 -- again under Movies.
 
@@ -162,7 +162,7 @@ CREATE TABLE IF NOT EXISTS contents (
 
     language     VARCHAR(16) NULL,
     country      VARCHAR(64) NULL,
-    -- Director, studio, author, artist — whatever "creator" means per fandom.
+    -- Director, studio, author, artist, whatever "creator" means per fandom.
     creator      VARCHAR(255) NULL,
     -- JSON array of names, e.g. ["Ada Lovelace","Grace Hopper"].
     cast_list    JSON         NULL,
@@ -173,7 +173,7 @@ CREATE TABLE IF NOT EXISTS contents (
     poster_path    VARCHAR(255) NULL,
     backdrop_path  VARCHAR(255) NULL,
 
-    -- External community score, 0–10, e.g. TMDB vote_average. Distinct from
+    -- External community score, 0. 10, e.g. TMDB vote_average. Distinct from
     -- per-user ratings in media_ratings, which the app collects itself.
     community_rating       DECIMAL(3,1) NULL,
     community_rating_count INT UNSIGNED   NULL,
@@ -350,7 +350,7 @@ CREATE TABLE IF NOT EXISTS fan_submissions (
     CONSTRAINT fk_submissions_decider  FOREIGN KEY (decided_by) REFERENCES users (user_id)      ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ---------- Merchandise (display only — no payments per SRS) ----------
+-- ---------- Merchandise (display only, no payments per SRS) ----------
 
 CREATE TABLE IF NOT EXISTS merchandise_items (
     item_id     INT UNSIGNED     NOT NULL AUTO_INCREMENT,

@@ -1,4 +1,4 @@
-// ComingSoon — shared placeholder rendered by every route until its real page
+// ComingSoon, shared placeholder rendered by every route until its real page
 // is built. Reads the route's `handle.title` from src/app/router.tsx, so the
 // router stays the single source of truth for page names.
 // When a real page is built, only its one route entry changes (→ lazy import).

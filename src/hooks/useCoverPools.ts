@@ -1,4 +1,4 @@
-// useCoverPools — one shared fetch of the per-fandom cover samples.
+// useCoverPools, one shared fetch of the per-fandom cover samples.
 //
 // Every card needs the map, so it is fetched once at module level and read from
 // here. A card that rendered before the pools arrive uses its own placeholder and

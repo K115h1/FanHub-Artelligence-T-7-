@@ -1,4 +1,4 @@
-// toSlug — normalises a display label into a route/category slug.
+// toSlug, normalises a display label into a route/category slug.
 //
 // Lives in its own module because both mockData and events need it, and
 // mockData imports from events (to derive UPCOMING_EVENTS). Keeping it here

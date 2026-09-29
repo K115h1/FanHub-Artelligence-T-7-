@@ -26,8 +26,8 @@ export const router = createBrowserRouter([
     // cold start is a blank page. Later navigations keep the current page up.
     HydrateFallback: RouteFallback,
     // The app had no error boundary at all before this. A failed dynamic import
-    // is the most likely thing to throw here — a visitor who left the tab open
-    // across a deploy gets a chunk request for a file that no longer exists —
+    // is the most likely thing to throw here, a visitor who left the tab open
+    // across a deploy gets a chunk request for a file that no longer exists, 
     // and without this the router unmounts to a blank page. The root route is
     // the right place because it also covers a bad route config, which happens
     // before any child could handle it.
@@ -55,7 +55,7 @@ export const router = createBrowserRouter([
         handle: { title: 'Login' },
       },
       { path: 'register', lazy: async () => ({ Component: (await import('../pages/Register')).default }), handle: { title: 'Register' } },
-      // The tokenized email flows. All three are public — a member following a
+      // The tokenized email flows. All three are public, a member following a
       // link from their inbox is by definition not signed in yet.
       {
         path: 'forgot-password',
@@ -112,7 +112,7 @@ export const router = createBrowserRouter([
     ],
   },
 
-  // Admin control panel — a SIBLING of the site route, not a child of it, so it
+  // Admin control panel, a SIBLING of the site route, not a child of it, so it
   // does not inherit the public Header/Sidebar/Footer. AdminLayout supplies its
   // own chrome and AdminRoutes owns the role gate, so this branch is not also
   // wrapped in RequireAuth: the gate shows its own sign-in prompt instead.

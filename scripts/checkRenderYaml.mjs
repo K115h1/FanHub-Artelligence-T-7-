@@ -5,7 +5,7 @@
 //
 // Deliberately not a full YAML parse: the project has no yaml dependency, and
 // pulling one in to lint a 60-line file is the wrong trade. This catches the
-// three things that bite — tab indentation, a health check that is not an HTTP
+// three things that bite, tab indentation, a health check that is not an HTTP
 // path, and a service missing a key Render requires.
 
 import { readFileSync } from 'node:fs'

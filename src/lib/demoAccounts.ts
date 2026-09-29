@@ -1,10 +1,10 @@
-// Demo accounts — the two seeded accounts, used by the offline sign-in
+// Demo accounts, the two seeded accounts, used by the offline sign-in
 // fallback and to pre-populate the account switcher.
 //
 // WHY THE ADMIN PASSWORD IS "admin". It is a demo credential for a student
 // project, listed in docs/credentials.md and printed on the login page. The
 // real enforcement is the Argon2id hash in database/05_reference_data.sql
-// checked by AuthService — this file grants no access on its own.
+// checked by AuthService, this file grants no access on its own.
 //
 // Ada Lovelace is the only administrator. `roleForEmail` exists to keep the
 // offline fallback usable, and it is a CLIENT-side approximation, so it is
@@ -13,7 +13,7 @@
 // second admin would appear to exist.
 //
 // SECURITY NOTE: this is a mock, and only the fallback path reads it. When the
-// API answers — including a rejection — the server's role is what counts, and
+// API answers, including a rejection, the server's role is what counts, and
 // `/api/admin/*` is behind [Authorize(Roles = "admin")]. See the header comment
 // in app/providers/AuthProvider.tsx for why a network failure may fall back
 // here but a rejection never does.

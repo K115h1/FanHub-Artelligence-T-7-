@@ -1,4 +1,4 @@
-// submission.service — fan submissions that need an administrator's approval.
+// submission.service, fan submissions that need an administrator's approval.
 import { http } from './http'
 import type { SubmissionEntry } from '../types/models'
 
@@ -27,7 +27,7 @@ export type SubmissionKind = (typeof SUBMISSION_KINDS)[number]['value']
 
 export interface CreateSubmissionPayload {
   categoryId: number
-  /** Required — the moderation queue filters and routes on this. */
+  /** Required, the moderation queue filters and routes on this. */
   kind: SubmissionKind
   title: string
   body: string

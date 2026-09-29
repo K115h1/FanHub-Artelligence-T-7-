@@ -139,7 +139,7 @@ writeFileSync(
   'utf8',
 )
 
-// Feed the SQL over stdin rather than shelling out to `type ... | mysql`.
+// Feed the SQL over stdin rather than shelling out to `type..., mysql`.
 // The cmd.exe pipe fails on paths with spaces, and reading the file here keeps
 // the encoding explicit.
 const mysql = spawnSync(

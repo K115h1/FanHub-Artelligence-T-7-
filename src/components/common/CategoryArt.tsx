@@ -1,4 +1,4 @@
-// CategoryArt — artwork for a category tile, so the app needs no remote images.
+// CategoryArt, artwork for a category tile, so the app needs no remote images.
 //
 // A fandom photograph is used when one is on disk (see lib/categoryBanners),
 // over the same generated wash the site shipped with. The wash is not a
@@ -6,9 +6,9 @@
 // wherever the photograph fails to load, and the hue tint sits over both so the
 // grid still reads as one system rather than eight unrelated pictures.
 //
-// The photograph is a CSS background rather than an <img> on purpose. A missing
-// file then fails silently and the gradient shows through, where an <img> would
-// paint a broken-image glyph. A fandom with no photograph — manga — is a missing
+// The photograph is a CSS background rather than an img element on purpose. A missing
+// file then fails silently and the gradient shows through, where an img element would
+// paint a broken-image glyph. A fandom with no photograph, manga, is a missing
 // decoration, not a broken tile.
 import type { LucideIcon } from 'lucide-react'
 import { categoryBanner } from '../../lib/categoryBanners'
@@ -74,7 +74,7 @@ export default function CategoryArt({
         className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent"
       />
 
-      {/* Ghosted icon — oversized and clipped by the tile, which reads as
+      {/* Ghosted icon, oversized and clipped by the tile, which reads as
           artwork rather than as an icon in a box. Kept over the photograph as
           a watermark, at low opacity, so the silhouette adds texture. */}
       <Icon

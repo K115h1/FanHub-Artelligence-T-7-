@@ -1,4 +1,4 @@
-// verifyCatalog.mjs — proves src/data/catalog.json agrees with the seed SQL.
+// verifyCatalog.mjs, proves src/data/catalog.json agrees with the seed SQL.
 //
 // The admin panel and the database must describe the same catalogue, otherwise
 // the panel shows titles the database has never heard of. This parses the
@@ -25,8 +25,8 @@ const fromJson = new Map(catalogue.map((row) => [row.id, row]));
  * Pulls the contents rows out of one seed file as { id -> { slug, title, posterPath } }.
  *
  * Line-based on purpose. Slicing the file at the first ";" breaks on titles
- * that contain one — "Chaos;Head" and "Steins;Gate" are both in the games
- * seed — and silently truncates the comparison. The files put one row per
+ * that contain one, "Chaos;Head" and "Steins;Gate" are both in the games
+ * seed, and silently truncates the comparison. The files put one row per
  * line, so read the contents block a line at a time instead.
  */
 function parseSeed(file) {
@@ -61,8 +61,8 @@ function parseSeed(file) {
  *
  * This is the check whose absence let the catalogue and the database disagree
  * while verifyCatalog still printed OK. All 513 movie rows carried
- * "/images/movies/<hash>.jpg" for a download that never ran, while catalog.json
- * had posterPath null over the same titles — the comparison only looked at
+ * "/images/movies/HASH.jpg" for a download that never ran, while catalog.json
+ * had posterPath null over the same titles, the comparison only looked at
  * title and slug, so the disagreement was invisible. A path in the database
  * that resolves to nothing is a broken image in the UI, so it is worth proving.
  *

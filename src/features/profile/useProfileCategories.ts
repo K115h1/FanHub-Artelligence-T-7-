@@ -1,4 +1,4 @@
-// useProfileCategories — the member's two category lists, backed by the API.
+// useProfileCategories, the member's two category lists, backed by the API.
 //
 // Favourites and interests are deliberately separate on the server, so they are
 // separate state here too. Each PUT returns BOTH lists, and this replaces its

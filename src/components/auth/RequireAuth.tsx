@@ -1,4 +1,4 @@
-// RequireAuth — route guard for members-only pages.
+// RequireAuth, route guard for members-only pages.
 //
 // Guests never see the protected page. The guard opens the auth overlay on its
 // "Log in required" prompt, remembering where they were headed so signing in

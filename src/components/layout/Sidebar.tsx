@@ -1,4 +1,4 @@
-// Sidebar — left navigation. Fixed and full height so it slides as a drawer:
+// Sidebar, left navigation. Fixed and full height so it slides as a drawer:
 // pushes content at md and up, overlays below (see useSidebar). Open state is
 // owned by RootLayout, since the header's hamburger and the scrim share it.
 // NavLink highlights the current row; `end` on Home only, so "/" isn't always active.
@@ -100,7 +100,7 @@ function SidebarLink({
         <>
           <item.icon size={big ? 22 : 18} className="shrink-0" />
           <span className={`truncate ${big ? 'text-base' : 'text-sm'}`}>{item.label}</span>
-          {/* The category dot — decorative, so it's hidden from screen readers
+          {/* The category dot, decorative, so it's hidden from screen readers
               because the category name is already the link text. */}
           {'tone' in item && item.tone && (
             <span
@@ -188,10 +188,10 @@ export default function Sidebar({
         isOpen ? 'translate-x-0 shadow-2xl md:shadow-none' : '-translate-x-full'
       }`}
       // `inert` (not just aria-hidden) so a collapsed panel also leaves the
-      // tab order — otherwise keyboard users tab into a sidebar they can't see.
+      // tab order, otherwise keyboard users tab into a sidebar they can't see.
       inert={!isOpen}
     >
-      {/* Close button — only reachable when it's actually a drawer. */}
+      {/* Close button, only reachable when it's actually a drawer. */}
       {!isDesktop && (
         <button
           type="button"

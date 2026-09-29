@@ -1,5 +1,5 @@
-// ThemeContext — carries the current theme across the app.
-// Provides: theme ('light' | 'dark'), setTheme(), toggleTheme().
+// ThemeContext, carries the current theme across the app.
+// Provides: theme ('light', 'dark'), setTheme(), toggleTheme().
 // Backs the SRS dark-mode toggle (the switch lives in the sidebar).
 // The real state + persistence lives in src/app/providers/ThemeProvider.tsx.
 import { createContext, useContext } from 'react'
@@ -12,7 +12,7 @@ export interface ThemeContextValue {
   toggleTheme: () => void
 }
 
-// Default value only matters if someone renders UI outside <ThemeProvider>.
+// Default value only matters if someone renders UI outside ThemeProvider component.
 export const ThemeContext = createContext<ThemeContextValue>({
   theme: 'light',
   setTheme: () => {},

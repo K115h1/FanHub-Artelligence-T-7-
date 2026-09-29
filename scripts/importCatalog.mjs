@@ -1,7 +1,7 @@
-// importCatalog.mjs — converts a *_by_genre.json fandom list into SQL seed data.
+// importCatalog.mjs, converts a *_by_genre.json fandom list into SQL seed data.
 //
-// Input  : a { "<genre>": ["<title>", ...] } JSON file, per fandom.
-// Output : database/04_<fandom>_seed.sql, with INSERTs for the category,
+// Input: one JSON file per fandom, mapping each genre to a list of titles.
+// Output: database/04_fandom element_seed.sql, with INSERTs for the category,
 //          genres, contents and content_genres.
 //
 // Design notes:
@@ -13,14 +13,14 @@
 //     where a confident match exists. "Family" (from "E.T. (Family)") folds
 //     into "Family / Children" so filtering returns all 36 rather than 6.
 //     Anything that can't be matched confidently is KEPT as its own genre and
-//     reported — silently mis-filing a genre is worse than an extra bucket.
+//     reported, silently mis-filing a genre is worse than an extra bucket.
 //
 //   * Detail columns (synopsis, cast, ratings) are left NULL. The import loads
 //     what actually exists rather than inventing plot summaries; the
 //     enrichment step fills them in later.
 //
 // Usage:
-//   node scripts/importCatalog.mjs <fandomKey> <inputJson> [enrichJson]
+//   node scripts/importCatalog.mjs fandomKey element inputJson element [enrichJson]
 // Examples:
 //   node scripts/importCatalog.mjs movies data/movies_by_genre.json \
 //                                src/data/movies-with-posters.json
@@ -36,10 +36,10 @@ import { FANDOMS, parseTitle, slugify } from "./lib/catalogParse.mjs";
 // produces by matching the files in public/images/ against these same slugs.
 //
 // It deliberately does NOT come from the TMDB enrichment file any more. That
-// path stored "/images/movies/<tmdb-hash>.jpg" for every film, but the download
+// path stored "/images/movies/TMDBHASH.jpg" for every film, where TMDBHASH is TMDB's own id, but the download
 // step behind it never ran, so all 513 rows pointed at files that do not exist.
 // The catalog's own posterPath was null over the same titles, and verifyCatalog
-// only compared title and slug — so the two drifted apart while still reporting
+// only compared title and slug, so the two drifted apart while still reporting
 // OK. Posters now come from files that are verifiably on disk.
 const MANIFEST = "src/data/posters.json";
 

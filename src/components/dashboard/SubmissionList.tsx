@@ -1,4 +1,4 @@
-// SubmissionList — what this member has sent, and where each one got to.
+// SubmissionList, what this member has sent, and where each one got to.
 //
 // Pairs with CreateSubmission. A freshly posted row is 'pending' and appears
 // only here and in the admin queue, which is why the status is spelled out

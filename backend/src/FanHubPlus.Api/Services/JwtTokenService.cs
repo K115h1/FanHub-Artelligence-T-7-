@@ -1,4 +1,4 @@
-// JwtTokenService — issues the bearer token the API authenticates with.
+// JwtTokenService, issues the bearer token the API authenticates with.
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;

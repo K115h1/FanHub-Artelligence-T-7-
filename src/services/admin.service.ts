@@ -1,4 +1,4 @@
-// admin.service — the control panel's data layer.
+// admin.service, the control panel's data layer.
 //
 // Every call here needs an admin token; the API enforces that with
 // [Authorize(Roles = "admin")], so a 403 here means the session lost the role.
@@ -62,7 +62,7 @@ export function updateUserRole(userId: number, role: string): Promise<void> {
 export interface AdminContentFilters {
   search?: string
   category?: string
-  /** released | upcoming | ongoing | ended | cancelled — the real column values. */
+  /** released, upcoming, ongoing, ended, cancelled, the real column values. */
   status?: string
   genreId?: number
   page?: number
@@ -128,7 +128,7 @@ export function getFeedback(
   return http.get<Paginated<FeedbackEntry>>('/admin/feedback', { status, page, pageSize })
 }
 
-/** Status is open | reviewed | resolved | dismissed. */
+/** Status is open, reviewed, resolved, dismissed. */
 export function updateFeedbackStatus(id: number, status: string): Promise<void> {
   return http.put(`/admin/feedback/${id}/status`, { status })
 }
@@ -146,7 +146,7 @@ export function getSubmissions(
 }
 
 /**
- * Status is pending | approved | rejected. `note` is stored on the row and shown
+ * Status is pending, approved, rejected. `note` is stored on the row and shown
  * back to the fan, so a rejection can explain itself.
  */
 export function updateSubmissionStatus(

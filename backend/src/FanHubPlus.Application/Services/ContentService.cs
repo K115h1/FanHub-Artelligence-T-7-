@@ -1,4 +1,4 @@
-// ContentService — maps catalogue entities to DTOs and drives browsing.
+// ContentService, maps catalogue entities to DTOs and drives browsing.
 using System.Globalization;
 using System.Text;
 using FanHubPlus.Application.DTOs;
@@ -11,7 +11,7 @@ public interface IContentService
 {
     Task<PagedResponse<ContentSummaryDto>> BrowseAsync(ContentQuery query, uint? currentUserId, CancellationToken ct = default);
 
-    /// `categorySlug` disambiguates titles that share a slug across fandoms —
+    /// `categorySlug` disambiguates titles that share a slug across fandoms, 
     /// "akira" exists in both Anime and Comics.
     Task<ContentDetailDto?> GetDetailAsync(string slug, string? categorySlug, uint? currentUserId, CancellationToken ct = default);
     Task<ContentDetailDto?> GetByIdAsync(uint contentId, uint? currentUserId, CancellationToken ct = default);
@@ -82,9 +82,9 @@ public class ContentService : IContentService
 
     public async Task<bool> RecordViewAsync(uint contentId, CancellationToken ct = default)
     {
-        // The affected-row count is the existence check, so this is one UPDATE
-        // and no read. The previous version built a full ContentDetailDto — genre
-        // join, category join and a rating lookup — purely to test for null.
+        // Row count doubles as the does it exist check, so this is one UPDATE and
+        // no read. The old version built a whole ContentDetailDto, genre join,
+        // category join and a rating lookup, just to see if it was null.
         return await _content.IncrementViewCountAsync(contentId, ct) > 0;
     }
 
@@ -136,7 +136,7 @@ public class ContentService : IContentService
 
         // Re-read rather than returning the entity we just built. A constructed
         // Content has no Category or ContentGenres navigation loaded, so
-        // ToDetailAsync would report an empty categorySlug and no genres — and
+        // ToDetailAsync would report an empty categorySlug and no genres, and
         // the admin panel renders the response it is given straight into its
         // table, showing a blank fandom badge for a title that exists.
         var created = await _content.GetByIdAsync(content.ContentId, ct) ?? content;

@@ -10,19 +10,19 @@ export type FandomKey = 'movies' | 'anime' | 'games' | 'comics' | 'kpop' | 'tvsh
 
 /** A row in the admin content table. */
 export interface CatalogRow {
-  /** content_id in MySQL — the per-fandom 1000-wide block from importCatalog. */
+  /** content_id in MySQL, the per-fandom 1000-wide block from importCatalog. */
   id: number
   title: string
   slug: string
   fandom: FandomKey
-  /** `categories.slug` — note `games` maps to "gaming" and `kpop` to "k-pop". */
+  /** `categories.slug`, note `games` maps to "gaming" and `kpop` to "k-pop". */
   categorySlug: string
   contentType: string
   releaseYear: number | null
   genres: string[]
   posterPath: string | null
   /**
-   * The one-line blurb, from `contents.short_synopsis` — the field every card
+   * The one-line blurb, from `contents.short_synopsis`, the field every card
    * and the detail hero render.
    *
    * This is what the panel used to call `synopsis`, and the name was wrong in a
@@ -41,7 +41,7 @@ export interface CatalogRow {
  * Mirrors `contents.status` in the database:
  *   ENUM('released','upcoming','ongoing','ended','cancelled')
  *
- * This used to be 'released' | 'announced' | 'discontinued', which matched no
+ * This used to be 'released', 'announced', 'discontinued', which matched no
  * column anywhere. It went unnoticed because the whole bundled catalogue was
  * one value ('released'), so the filter had nothing to exclude. Against the
  * real column, filtering by status would have matched nothing at all.

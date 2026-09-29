@@ -10,7 +10,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         // The framework's hasher, not a hand-rolled one. It is an interface, so
-        // services depend on IPasswordHasher<User> and tests can swap it.
+        // services depend on IPasswordHasherUser component and tests can swap it.
         services.AddScoped<IPasswordHasher<FanHubPlus.Domain.User>, PasswordHasher<FanHubPlus.Domain.User>>();
 
         services.AddScoped<IAuthService, AuthService>();

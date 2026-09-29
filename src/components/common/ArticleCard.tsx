@@ -1,5 +1,5 @@
-// ArticleCard — the tile used by the article rows.
-// <article> rather than a <Link> wrapper, for the same reason as ContentCard:
+// ArticleCard, the tile used by the article rows.
+// article element rather than a Link component wrapper, for the same reason as ContentCard:
 // the bookmark button can't sit inside an anchor.
 import { Link } from 'react-router-dom'
 import type { Article } from '../../lib/mockData'

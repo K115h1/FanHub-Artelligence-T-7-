@@ -1,9 +1,9 @@
-// Category icons — a presentation detail, so it lives in the frontend.
+// Category icons, a presentation detail, so it lives in the frontend.
 //
 // The database's categories table carries slug, name, description and accent
 // colour, but not an icon: which glyph represents a fandom is a design choice,
 // not data. Keying it by slug means adding a category to the database does not
-// require a matching entry here to avoid a crash — the fallback below handles
+// require a matching entry here to avoid a crash, the fallback below handles
 // anything unmapped.
 import {
   BookOpen,

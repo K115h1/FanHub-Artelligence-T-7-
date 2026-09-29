@@ -1,4 +1,4 @@
-// EventDetail — one event in full.
+// EventDetail, one event in full.
 //
 // The Events list links here, which is where the interest toggle, a shareable
 // link and the "what's on around the same time" list live.
@@ -17,7 +17,7 @@ import { CATEGORY_MAP, toSlug } from '../lib/mockData'
 
 const INTEREST_KEY = 'fanhub-event-interest'
 
-/** "Saturday 22 October 2026" — fuller than the card's day/month tiles. */
+/** "Saturday 22 October 2026", fuller than the card's day/month tiles. */
 // An event with no confirmed date shows as such rather than as "Invalid Date".
 function longDate(iso: string | null): string {
   if (!iso) return 'Date to be announced'
@@ -146,7 +146,7 @@ export default function EventDetail() {
               </div>
             </div>
             {/* Attendance and ticket price have no column in fan_events, so
-                they are omitted rather than shown as "0 people" / "—". */}
+                they are omitted rather than shown as "0 people" / ", ". */}
             {event.priceNote && (
               <div className="flex items-start gap-2">
                 <Ticket size={16} className="mt-0.5 shrink-0 text-ink-subtle" aria-hidden="true" />

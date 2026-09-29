@@ -1,4 +1,4 @@
-// Admin gate — role checking for the control panel.
+// Admin gate, role checking for the control panel.
 //
 // Split into a hook and a component so the whole admin branch can be one lazy
 // route: `AdminRoutes` composes AdminGate with AdminDataProvider and the admin
@@ -69,10 +69,10 @@ function AdminGateDialog({ from, reason }: { from: string; reason: GateReason })
     return () => document.removeEventListener('keydown', onKeyDown)
   }, [navigate])
 
-  // The app behind stops scrolling and goes inert — the admin layout included.
+  // The app behind stops scrolling and goes inert, the admin layout included.
   useModalLayer(true)
 
-  // Portalled to <body> so the overlay is a sibling of the app root and always
+  // Portalled to body so the overlay is a sibling of the app root and always
   // covers the full viewport, whatever the admin layout does with stacking.
   return createPortal(
     <div
@@ -108,7 +108,7 @@ function AdminGateDialog({ from, reason }: { from: string; reason: GateReason })
           ) : (
             /* Opens the auth overlay in place rather than linking to a sign-in
                page. `from` is carried through, so signing in still lands back on
-               /admin — and because RequireAuth is layered above this route, a
+               /admin, and because RequireAuth is layered above this route, a
                guest normally never reaches this branch: they are already looking
                at the shared prompt. */
             <button

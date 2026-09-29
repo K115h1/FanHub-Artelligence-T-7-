@@ -11,7 +11,7 @@ export interface ContentDetail {
   credit: string
   year: number
   genres: string[]
-  /** Episodes for series, runtime for films, "—" for one-offs. */
+  /** Episodes for series, runtime for films, ", " for one-offs. */
   length: string
   /** Cast or principal cast. */
   cast: string[]
@@ -235,7 +235,7 @@ export function getArticleDetail(id: number): ArticleDetail | null {
   return articleDetails[id] ?? null
 }
 
-/** Same category, different id — the "more like this" row. */
+/** Same category, different id, the "more like this" row. */
 export function relatedContent(id: number, limit = 4) {
   const source = FEATURED_CONTENT.find((item) => item.id === id)
   if (!source) return []

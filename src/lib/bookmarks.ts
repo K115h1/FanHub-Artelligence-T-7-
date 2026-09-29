@@ -1,11 +1,11 @@
-// Bookmarks — the saved-items model and its per-account storage format.
+// Bookmarks, the saved-items model and its per-account storage format.
 //
 // State lives in app/providers/BookmarksProvider.tsx so every button on a page
 // shares one source of truth; this file holds the shape, the seed and the
 // lookup that resolves a saved id against the current fixtures.
 import { ARTICLES, FEATURED_CONTENT, type Article, type ContentItem } from './mockData'
 
-/** What kind of thing was saved — decides which dataset resolves it. */
+/** What kind of thing was saved, decides which dataset resolves it. */
 export type BookmarkKind = 'content' | 'article'
 
 export interface Bookmark {

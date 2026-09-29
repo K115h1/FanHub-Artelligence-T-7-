@@ -1,4 +1,4 @@
-// buildCatalog.mjs — flattens the fandom JSON lists into one catalogue the
+// buildCatalog.mjs, flattens the fandom JSON lists into one catalogue the
 // frontend can browse.
 //
 // The database already holds these titles, but there is no API yet, so the
@@ -42,7 +42,7 @@ function loadPosters() {
   }
   const raw = JSON.parse(readFileSync(MANIFEST, "utf8"));
   // Keyed by fandom as well as slug: slugs are unique per fandom but not
-  // across fandoms — a comic and a film can both be "django".
+  // across fandoms, a comic and a film can both be "django".
   return new Map(raw.map((p) => [`${p.fandom}|${p.slug}`, p]));
 }
 
@@ -79,7 +79,7 @@ for (const fandom of FANDOMS) {
   }
 
   // Sort by slug and lay ids out in the fandom's own 1000-wide block, exactly
-  // as importCatalog.mjs does — so a title's id here is its content_id in MySQL.
+  // as importCatalog.mjs does, so a title's id here is its content_id in MySQL.
   const rows = [...contents.values()].sort((a, b) => a.slug.localeCompare(b.slug));
   rows.forEach((row, i) => {
     const poster = posters.get(`${fandom.key}|${row.slug}`);

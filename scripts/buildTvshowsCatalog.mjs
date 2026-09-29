@@ -1,4 +1,4 @@
-// buildTvshowsCatalog.mjs — generates data/tvshows_by_genre.json.
+// buildTvshowsCatalog.mjs, generates data/tvshows_by_genre.json.
 //
 // The other five fandoms were transcribed by hand into data/*_by_genre.json.
 // Television was not, but the scraper that produced the tvshows posters left a
@@ -13,7 +13,7 @@
 // ("Jujutsu Kaisen", "Spy x Family") or are mangled scraper artefacts ("From").
 //
 // Usage:
-//   node scripts/buildTvshowsCatalog.mjs <resultsCsv> [outJson]
+//   node scripts/buildTvshowsCatalog.mjs resultsCsv element [outJson]
 
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname } from "node:path";

@@ -1,5 +1,5 @@
-// SettingsTab — display and motion preferences. Font size and reduce motion act
-// on <html> via SettingsProvider, since that's what index.css reads.
+// SettingsTab, display and motion preferences. Font size and reduce motion act
+// on html element via SettingsProvider, since that's what index.css reads.
 import { useSettings } from '../../context/SettingsContext'
 import { useTheme, type Theme } from '../../context/ThemeContext'
 import { FONT_SCALES } from '../../types/models'

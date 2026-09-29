@@ -1,12 +1,12 @@
-// Merchandise — the shop is not open yet.
+// Merchandise, the shop showcase. Not open for sale yet.
 //
-// Per the SRS this is DISPLAY ONLY: no cart, no checkout, no payments. The page
-// shows what has been photographed, takes email sign-ups for launch news, and
-// says plainly that nothing is for sale.
+// SRS says display only, so no cart and no payments. We show what has been
+// photographed, take email sign ups for launch news, and say plainly that none
+// of it is for sale yet.
 //
-// The grid below reads merchandise_items through /community/merchandise, which
-// is paged and filterable like the Explorer so the page scales past the 45 rows
-// currently seeded.
+// The grid reads merchandise_items through /community/merchandise. That is paged
+// and filterable like the Explorer, so it keeps working once there is more than
+// the 45 rows we have now.
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { Bell, Check, Clock, CreditCard, Package, Search, ShoppingBag, Sparkles, Tag } from 'lucide-react'

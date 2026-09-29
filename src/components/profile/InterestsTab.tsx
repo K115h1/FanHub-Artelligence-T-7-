@@ -1,4 +1,4 @@
-// InterestsTab — the member's two category lists, plus email verification.
+// InterestsTab, the member's two category lists, plus email verification.
 //
 // The picture upload used to live here and has moved to the Profile tab: it is
 // part of who you are rather than what you like. What stays is the two

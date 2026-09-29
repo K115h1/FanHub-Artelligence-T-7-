@@ -1,4 +1,4 @@
-// App constants (scaffold placeholder) — UPPER_SNAKE_CASE per the rubric.
+// App constants (scaffold placeholder)   UPPER_SNAKE_CASE per the rubric.
 //
 // Planned:
 //   CATEGORIES = ['Anime','Gaming','Movies','TV Shows','K-Pop','Comics','Manga','Cosplay']

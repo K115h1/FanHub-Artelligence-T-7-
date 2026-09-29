@@ -15,13 +15,13 @@
 //
 // FALLBACK
 //   These are set as a CSS background-image. A path that 404s simply fails to
-//   paint, and the gradient underneath still shows — there is no broken-image
+//   paint, and the gradient underneath still shows, there is no broken-image
 //   icon and no error state to handle.
 //
 // WHERE THEY CAME FROM
 //   Seven of these were supplied as 1600x900 photographs and copied in by
 //   scripts/placeCategoryArt.mjs, which also reports their dimensions. Re-run it
-//   to refresh them from Downloads. It handles the photographic set only — it
+//   to refresh them from Downloads. It handles the photographic set only, it
 //   will not touch manga.svg.
 
 /** Category slug -> banner path. Missing key means "gradient only". */
@@ -34,7 +34,7 @@ export const CATEGORY_BANNERS: Record<string, string> = {
   'tv-shows': '/images/categories/tv-shows.jpg',
   cosplay: '/images/categories/cosplay.jpg',
   // Manga is the odd one out: no photograph was supplied, so this is a GENERATED
-  // SVG (panels, screentone, speed lines) rather than a photograph — which is
+  // SVG (panels, screentone, speed lines) rather than a photograph, which is
   // why it is the one `.svg` among the `.jpg` files. It is deliberately abstract:
   // a generated illustration of a fictional character would misrepresent the
   // category, whereas a panel composition reads as "manga" without claiming to

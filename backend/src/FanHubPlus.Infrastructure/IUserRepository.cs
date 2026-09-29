@@ -1,4 +1,4 @@
-// User repository — accounts, roles, bookmarks and ratings.
+// User repository, accounts, roles, bookmarks and ratings.
 using FanHubPlus.Domain;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,6 +1,6 @@
-// FontSizeControl — the A− / A+ pair in the header.
+// FontSizeControl, the A− / A+ pair in the header.
 //
-// Applies a scale factor to <html> as --app-font-scale (see index.css), which
+// Applies a scale factor to html element as --app-font-scale (see index.css), which
 // every text size is derived from, so one control resizes the whole app rather
 // than just the header. The chosen step is persisted by SettingsProvider.
 //

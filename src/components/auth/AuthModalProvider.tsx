@@ -1,4 +1,4 @@
-// AuthModalProvider — owns whether the sign-in / sign-up overlay is on screen.
+// AuthModalProvider, owns whether the sign-in / sign-up overlay is on screen.
 //
 // Mounted inside the router (from RootLayout) rather than alongside the other
 // providers in app/providers/, because it navigates after a successful sign-in

@@ -1,4 +1,4 @@
-// Dashboard — the member's landing page.
+// Dashboard, the member's landing page.
 //
 // Four panels, all from one hook: a greeting, the fandoms they have favourited,
 // what they have been doing, and what they have bookmarked. Previously a static

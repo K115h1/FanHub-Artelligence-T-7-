@@ -95,7 +95,7 @@ const PILL_TONES = {
   pending: 'bg-amber-500/15 text-amber-700 dark:text-amber-300',
   approved: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300',
   rejected: 'bg-rose-500/15 text-rose-700 dark:text-rose-300',
-  // Content — the contents.status column:
+  // Content, the contents.status column:
   // ENUM('released','upcoming','ongoing','ended','cancelled').
   // 'announced' and 'discontinued' were here and matched no column, so a title
   // in any real non-released state fell through to the muted default.
@@ -162,7 +162,7 @@ export function FilterInput({
   )
 }
 
-/** A <select> styled to match FilterInput. */
+/** A select element styled to match FilterInput. */
 export function FilterSelect({
   value,
   onChange,
@@ -300,7 +300,7 @@ export function formatRelative(iso: string): string {
  * Placeholder rows for a table awaiting its first page.
  *
  * The admin tables fetch on mount, so without this they render an
- * "EmptyState — no titles match those filters" for the duration of the request,
+ * "EmptyState, no titles match those filters" for the duration of the request,
  * which reads as "your filters matched nothing" and invites the administrator to
  * clear filters that were fine. Showing table-shaped rows is the honest state.
  */

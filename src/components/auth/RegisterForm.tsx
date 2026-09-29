@@ -1,4 +1,4 @@
-// RegisterForm — create a new account.
+// RegisterForm, create a new account.
 //
 // Extracted from the Register page so the sign-up overlay and the page share one
 // form. The page is a thin shell around this; the overlay renders it directly and

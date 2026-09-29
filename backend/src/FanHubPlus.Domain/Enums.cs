@@ -47,7 +47,7 @@ public enum SubmissionStatus
 /// <summary>
 /// What a fan submitted. The SRS names three kinds of user-created content:
 /// rich-text articles, card-based character profiles, and timeline-style event
-/// highlights. Stored as 'article' | 'character_profile' | 'event_highlight'.
+/// highlights. Stored as 'article', 'character_profile', 'event_highlight'.
 /// </summary>
 public enum SubmissionKind
 {

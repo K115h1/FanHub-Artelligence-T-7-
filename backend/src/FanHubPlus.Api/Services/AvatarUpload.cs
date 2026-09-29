@@ -1,11 +1,11 @@
-// AvatarUpload — validates and stores a member's avatar image.
+// AvatarUpload, validates and stores a member's avatar image.
 //
 // The client already rejects a wrong type or an oversized file in
 // src/services/upload.service.ts, but that check is a convenience, not a
 // control: the browser can be skipped entirely. Everything is re-checked here.
 //
 // Storage is the filesystem under the API's wwwroot, and the stored value is a
-// public path ("/images/avatars/<file>"). The name is generated rather than
+// public path ("/images/avatars/FILE"). The name is generated rather than
 // taken from the upload, so a caller cannot choose the path it writes to or
 // collide with another member's file.
 using System.Security.Cryptography;

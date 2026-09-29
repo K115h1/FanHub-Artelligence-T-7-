@@ -1,20 +1,17 @@
-// MerchandiseCard — one product, used by the per-fandom product strips on a
-// category page.
+// MerchandiseCard, one product, for the product strips on a category page.
 //
-// This is the only merchandise card in the tree. It used to live at
-// components/merch/MerchCard, and pages/Merchandise.tsx had a showcase grid that
-// used it; both were removed when the merchandise feature was reworked. The card
-// survived because the category page still needs one — a fandom like Cosplay
-// holds products but no titles, so without a strip the rows were unreachable.
+// This is the only merchandise card going now. It used to be
+// components/merch/MerchCard and the old /merchandise grid used it, but that
+// whole bit got reworked and taken out. We still need a card here though,
+// because a fandom like Cosplay has products and no titles, so without a strip
+// those rows were not reachable from anywhere.
 //
-// The image is a CSS background rather than an <img>: a path that fails to load
-// then paints nothing and the layer underneath shows, where an <img> would
-// leave a broken-image glyph in the middle of a product grid. Merchandise
-// artwork is the most likely thing on the site to be missing, so the fallback
-// has to be quiet.
+// Image is a CSS background. Bad path means it paints nothing and you see the
+// layer under it, instead of a broken image icon sat in the middle of the grid.
+// The artwork we were given is the most likely thing to be missing.
 //
-// <li> so it drops straight into a <ul> grid. Nothing here is buyable — the
-// shop has no cart — so there is deliberately no price link or product page.
+// Renders as a list item so it drops into a grid. Nothing here is buyable, the
+// shop has no cart, so there is no price link or product page on purpose.
 import { ImageOff } from 'lucide-react'
 import type { MerchandiseItem } from '../../types/models'
 import { CategoryDot } from './CategoryArt'

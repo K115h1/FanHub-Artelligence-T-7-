@@ -1,4 +1,4 @@
-// SearchOverlay — the header's search field, expanded to fill the screen.
+// SearchOverlay, the header's search field, expanded to fill the screen.
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useNavigate } from 'react-router-dom'
@@ -23,13 +23,13 @@ export default function SearchOverlay({
   const navigate = useNavigate()
   const [query, setQuery] = useState(initialQuery)
 
-  // Results carry the term they belong to, so comparing against the debounced
-  // term derives the loading state instead of tracking it separately.
+  // Results remember which search they belong to, so we can work out if we are
+  // still loading by comparing that to the current search. Saves storing a flag.
   const [result, setResult] = useState<{ term: string; items: ContentSummary[] } | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const debounced = useDebounce(query, 250)
 
-  // Load-bearing: this must render outside #root, which useModalLayer makes inert.
+  // This has to sit outside #root, because useModalLayer sets that inert.
   useModalLayer(true)
 
   useEffect(() => {
@@ -49,7 +49,7 @@ export default function SearchOverlay({
     const term = debounced.trim()
     if (term.length < 2) return
 
-    // Stops a slow earlier response landing after a newer one.
+    // Stops an older slow reply landing on top of a newer one.
     let cancelled = false
     void getContents({ search: term, pageSize: MAX_RESULTS, sort: 'popular' })
       .then((page) => {
@@ -71,7 +71,8 @@ export default function SearchOverlay({
 
   function openResult(item: ContentSummary) {
     onClose()
-    // Slug alone is ambiguous: "akira" is four different titles across fandoms.
+    // Need the category too. Slugs are only unique per fandom, and "akira" is
+    // four separate titles, so without it all four would open the same one.
     navigate(`/content/${item.slug}?category=${encodeURIComponent(item.categorySlug)}`)
   }
 
@@ -91,7 +92,7 @@ export default function SearchOverlay({
         role="dialog"
         aria-modal="true"
         aria-label="Search the site"
-        // Stops a click inside the panel from hitting the dismiss-on-backdrop handler.
+        // Stops clicks inside the panel from closing it.
         onClick={(event) => event.stopPropagation()}
         className="animate-overlay-drop-in mx-auto w-full max-w-2xl px-3 pt-3 sm:px-4 sm:pt-6"
       >

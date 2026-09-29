@@ -1,4 +1,4 @@
-// Profile — the member's account area, in three tabs: identity, settings and
+// Profile, the member's account area, in three tabs: identity, settings and
 // privacy. The active tab lives in the URL (`?tab=settings`) so it can be
 // linked to and survives a reload. Sits behind RequireAuth in the router.
 import { useSearchParams } from 'react-router-dom'

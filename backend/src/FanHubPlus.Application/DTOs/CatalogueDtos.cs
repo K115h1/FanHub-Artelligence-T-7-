@@ -13,7 +13,7 @@ public record CategoryDto(
     string? AccentHex,
     int ContentCount);
 
-// Card view. Deliberately short — a listing page does not need the synopsis.
+// Card view. Deliberately short, a listing page does not need the synopsis.
 public record ContentSummaryDto(
     uint Id,
     string Title,

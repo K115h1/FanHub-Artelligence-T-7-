@@ -1,4 +1,4 @@
-// Mock data — local fixtures for the homepage + dashboard.
+// Mock data, local fixtures for the homepage + dashboard.
 // Stands in for the C# API until the backend is connected; swapping to real
 // data later means replacing these arrays with service calls (see src/services).
 import { toSlug } from './slug'
@@ -84,7 +84,7 @@ export interface Slide {
   blurb: string
   /**
    * Backdrop photograph, taken from the category banner set rather than shipped
-   * separately — the same file already on the category page, so the homepage and
+   * separately, the same file already on the category page, so the homepage and
    * the category it advertises look like one place.
    *
    * Optional. Absent means "the purple wash alone", which is what a general
@@ -324,7 +324,7 @@ export const UPCOMING_EVENTS: UpcomingEvent[] = EVENTS.slice(0, 3).map((event) =
 // One pass over each list groups its items by category slug, so every page
 // can pull "its" data with a single O(1) lookup instead of re-filtering.
 
-// "TV Shows" → "tv-shows" — same shape as the slugs used in CATEGORIES.
+// "TV Shows" → "tv-shows", same shape as the slugs used in CATEGORIES.
 // Re-exported so existing imports from mockData keep working; the
 // implementation lives in slug.ts to avoid an events ↔ mockData cycle.
 export { toSlug } from './slug'

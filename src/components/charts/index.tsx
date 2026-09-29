@@ -1,11 +1,11 @@
-// Charts — lightweight SVG/CSS visualisations for the admin statistics page.
+// Charts, lightweight SVG/CSS visualisations for the admin statistics page.
 //
 // Deliberately no charting library. Every chart here is a bar, a ring or a
 // stacked meter, all of which are a few lines of SVG and keep the bundle small
 // (see the rubric: no heavy dependency for a dashboard nobody needs axes on).
 //
 // RULE FOR THIS MODULE: only chart numbers that exist. There is no fabricated
-// activity curve and no chatbot series — the chatbot is a deferred feature, and
+// activity curve and no chatbot series, the chatbot is a deferred feature, and
 // a chart full of zeroes reads as a bug rather than as an honest "no data yet".
 // When a chart has nothing to show, the page renders an EmptyState instead.
 
@@ -16,7 +16,7 @@ export interface BarDatum {
   value: number
   /** Right-hand annotation, e.g. a percentage. */
   hint?: string
-  /** Overrides the bar's fill — used to flag a zero or warning value. */
+  /** Overrides the bar's fill, used to flag a zero or warning value. */
   tone?: 'accent' | 'muted' | 'warning'
 }
 
@@ -114,7 +114,7 @@ export function RingStat({
   return (
     <div className="flex items-center gap-4">
       {/* The arcs are rotated as a group so the sweep starts at 12 o'clock. Doing
-          it on a <g> rather than the whole svg means the percentage label needs
+          it on a g element rather than the whole svg means the percentage label needs
           no counter-rotation to stay upright. */}
       <svg
         viewBox="0 0 80 80"

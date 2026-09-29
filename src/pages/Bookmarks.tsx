@@ -1,4 +1,4 @@
-// Bookmarks — everything the member has saved.
+// Bookmarks, everything the member has saved.
 //
 // Filterable by category and sortable, with per-item removal and a guarded
 // "clear all". Sits behind RequireAuth, so guests get the login popup.
@@ -22,7 +22,7 @@ const SORTS: { key: SortKey; label: string }[] = [
   { key: 'az', label: 'A – Z' },
 ]
 
-/** "20 Sep" / "20 Sep 2026" — omits the year for anything recent. */
+/** "20 Sep" / "20 Sep 2026", omits the year for anything recent. */
 function formatSaved(iso: string): string {
   const d = new Date(iso)
   const sameYear = d.getFullYear() === new Date().getFullYear()
@@ -44,7 +44,7 @@ function BookmarkRow({
 
   return (
     <li className="surface-card group flex items-start gap-4 p-4">
-      {/* Type badge — distinguishes an article from a title/movie row. */}
+      {/* Type badge, distinguishes an article from a title/movie row. */}
       <span
         className={`mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${
           isArticle ? 'bg-accent-soft text-accent' : 'accent-wash text-white'

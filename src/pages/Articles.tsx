@@ -1,4 +1,4 @@
-// Articles — the full list, filterable by fandom and sortable.
+// Articles, the full list, filterable by fandom and sortable.
 //
 // Linked from the home page, the sidebar, the category pages and the article
 // detail page, so it needs to be a real index rather than a placeholder.

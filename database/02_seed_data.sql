@@ -1,5 +1,5 @@
 -- ============================================================
--- FanHub Plus — Seed Data
+-- FanHub Plus. Seed Data
 -- ============================================================
 -- STATUS: Placeholder. Will be written after 01_schema.sql.
 --
@@ -7,9 +7,9 @@
 --   1. The 8 fandom categories:
 --      Anime, Gaming, Movies, TV Shows, K-Pop, Comics, Manga, Cosplay
 --   2. Demo accounts (passwords also documented in docs/credentials.md):
---      * admin@fanhubplus.com      (Admin role — Ada Lovelace, the only admin)
+--      * admin@fanhubplus.com      (Admin role. Ada Lovelace, the only admin)
 --      * user@fanhubplus.test       (Registered role)
---      * — visitors need no account
+--      *, visitors need no account
 --   3. Sample content per category (articles, videos, audio, images)
 --   4. Sample character profiles, merchandise items, upcoming releases,
 --      and local fan events for the calendar/map feature

@@ -5,7 +5,7 @@
 // API shapes
 //
 // These are what the services return, and they match the C# DTOs exactly.
-// Ids are numbers because the database uses INT UNSIGNED — the string-id
+// Ids are numbers because the database uses INT UNSIGNED, the string-id
 // shapes further down are the older localStorage mock shapes, kept until the
 // remaining mock consumers are migrated.
 // ---------------------------------------------------------------------------
@@ -164,7 +164,7 @@ export interface SubmissionEntry {
   title: string
   body: string
   status: string
-  /** SubmissionKind as the API spells it: article | character_profile | event_highlight. */
+  /** SubmissionKind as the API spells it: article, character_profile, event_highlight. */
   kind: string
   categorySlug: string
   userName: string
@@ -178,7 +178,7 @@ export interface SubmissionEntry {
 // Local mock shapes (pre-API)
 // ---------------------------------------------------------------------------
 
-/** Mirrors the `roles` table. Visitor is implicit — it means not signed in. */
+/** Mirrors the `roles` table. Visitor is implicit, it means not signed in. */
 export type UserRole = 'registered' | 'admin'
 
 /** How prominently an account appears in public lists and recommendations. */
@@ -207,7 +207,7 @@ export type FeedbackStatus = 'open' | 'reviewed' | 'resolved' | 'dismissed'
 export interface UserSettings {
   /** Master switch for the home hero carousel. */
   carouselAutoplay: boolean
-  /** Text scale applied to <html> as a CSS custom property. */
+  /** Text scale applied to html element as a CSS custom property. */
   fontScale: number
   /** Disables non-essential animation app-wide (SRS accessibility item). */
   reduceMotion: boolean

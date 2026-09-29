@@ -1,4 +1,4 @@
-// PrivacyPolicy — describes what the app actually does: there is no server,
+// PrivacyPolicy, describes what the app actually does: there is no server,
 // analytics or email sending, so data stays in the visitor's own localStorage.
 // The per-account switches that back this up are in Profile → Privacy.
 import { Link } from 'react-router-dom'

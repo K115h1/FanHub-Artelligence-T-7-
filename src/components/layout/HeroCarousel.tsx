@@ -1,4 +1,4 @@
-// HeroCarousel — homepage banner. One track of full-width panels translated by
+// HeroCarousel, homepage banner. One track of full-width panels translated by
 // -index * 100%; only the track moves, so panels never remount.
 // No arrows or dots: autoplay only, paused from Profile → Settings. If controls
 // return, keep them outside the track. Artwork is generated, not remote.
@@ -19,7 +19,7 @@ export default function HeroCarousel() {
   const [paused, setPaused] = useState(false)
   const total = SLIDES.length
 
-  // The visitor's autoplay preference (Profile → Settings) — with no on-screen
+  // The visitor's autoplay preference (Profile → Settings)   with no on-screen
   // controls, this is the only way to stop the carousel.
   const { settings } = useSettings()
   const autoplay = settings.carouselAutoplay
@@ -77,7 +77,7 @@ export default function HeroCarousel() {
                 entirely would have made these panels look like a different site
                 from the purple ones above the fold.
 
-                Set as a CSS background rather than an <img> on purpose: a
+                Set as a CSS background rather than an img element on purpose: a
                 missing file then fails to paint and the wash shows through,
                 instead of leaving a broken-image icon in the middle of the
                 homepage. */}
@@ -96,7 +96,7 @@ export default function HeroCarousel() {
                 opacity: slide.image ? 0.6 : 1,
               }}
             />
-            {/* Left-weighted scrim — keeps the white text legible over the
+            {/* Left-weighted scrim, keeps the white text legible over the
                 artwork at every viewport width. */}
             <div
               aria-hidden="true"

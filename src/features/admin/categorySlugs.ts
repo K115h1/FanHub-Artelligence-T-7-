@@ -1,4 +1,4 @@
-// categorySlugs — the two directions of the fandom <-> category mapping, in one
+// categorySlugs, the two directions of the fandom to  category mapping, in one
 // place.
 //
 // They are not the same value in either direction, which is why this is a pair of
@@ -29,7 +29,7 @@ export const FANDOM_BY_SLUG: Record<string, FandomKey> = {
 
 /**
  * Fallback slug per fandom, used before the server's category list has loaded.
- * Prefer resolving it from that list — see useCatalog's `slugFor`.
+ * Prefer resolving it from that list, see useCatalog's `slugFor`.
  */
 export const SLUG_BY_FANDOM: Record<FandomKey, string> = {
   movies: 'movies',

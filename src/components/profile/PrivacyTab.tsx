@@ -1,4 +1,4 @@
-// PrivacyTab — what the account shares, plus a link to the policy.
+// PrivacyTab, what the account shares, plus a link to the policy.
 // These toggles are not decorative: personalisedRecommendations and
 // profileVisibility are read by the homepage (pages/Home.tsx).
 import { Link } from 'react-router-dom'

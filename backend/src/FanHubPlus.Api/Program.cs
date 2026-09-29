@@ -1,4 +1,4 @@
-// Program.cs — composition root. Registers services, auth, CORS and Swagger.
+// Program.cs, composition root. Registers services, auth, CORS and Swagger.
 // No business logic here; the SRS puts that in the Application layer.
 using System.Text;
 using FanHubPlus.Api.Services;
@@ -69,11 +69,11 @@ var app = builder.Build();
 
 // Serves uploaded avatars out of wwwroot/images/avatars. Before routing and
 // before authentication, because these are public files referenced by a plain
-// <img src> that carries no bearer token.
+// img element (src) that carries no bearer token.
 //
 // The directory must exist BEFORE UseStaticFiles runs. UseStaticFiles builds a
 // PhysicalFileProvider over wwwroot at startup, and if that folder is missing at
-// that moment the provider 404s everything — including files written later. A
+// that moment the provider 404s everything, including files written later. A
 // fresh clone has no wwwroot at all, so this is the normal case, not an edge one.
 System.IO.Directory.CreateDirectory(
     Path.Combine(app.Environment.WebRootPath ?? "wwwroot", "images", "avatars"));

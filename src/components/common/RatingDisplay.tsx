@@ -1,4 +1,4 @@
-// RatingDisplay — read-only stars for a card.
+// RatingDisplay, read-only stars for a card.
 //
 // Shows nothing until the member has rated the item, so cards don't all carry a
 // misleading "0 stars". The interactive version lives on the detail page.

@@ -1,9 +1,9 @@
-// Home — the public landing page.
+// Home, the public landing page.
 //
 // Sections, in order: Hero, Categories, Trending, For You, Try Something New,
 // Featured, Recent Activity, Upcoming Events, Events Near You, Latest Articles,
-// Browse by Fandom. Each is <section aria-labelledby> pointing at its own
-// SectionHeader heading — don't add a second sr-only heading, it double-announces.
+// Browse by Fandom. Each is section element (aria-labelledby) pointing at its own
+// SectionHeader heading, don't add a second sr-only heading, it double-announces.
 import { Link } from 'react-router-dom'
 import {
   Drama,
@@ -327,7 +327,7 @@ export default function Home() {
     <div className="mx-auto w-full max-w-7xl space-y-10 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
       <HeroCarousel />
 
-      {/* Categories — the eight fandoms, as square artwork tiles like the
+      {/* Categories, the eight fandoms, as square artwork tiles like the
           reference design. The dot colour is the only place the per-category
           hues appear in the grid; the tile itself stays on-brand purple. */}
       <section aria-labelledby="categories-heading">
@@ -405,7 +405,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Category quick-links — every one of the eight, so a visitor who
+      {/* Category quick-links, every one of the eight, so a visitor who
           scrolled past the grid can still reach any fandom. */}
       <section aria-labelledby="browse-heading">
         <SectionHeader id="browse-heading" title="Browse by Fandom" icon={Compass} />

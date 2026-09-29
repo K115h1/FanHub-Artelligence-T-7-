@@ -1,4 +1,4 @@
-// ContentDetail — everything about one title.
+// ContentDetail, everything about one title.
 //
 // Reachable from every content card, and the place bookmarks and ratings are
 // actually written. Signed out, the write controls become a login prompt rather
@@ -61,7 +61,7 @@ export default function ContentDetail() {
   // `category` this used to pull out of useParams() was permanently undefined and
   // the API was always asked for a bare slug.
   //
-  // That mattered because slug is unique per category and not globally — 273
+  // That mattered because slug is unique per category and not globally. 273
   // slugs in this catalogue exist in more than one, and "akira" is four separate
   // titles (movies, anime, comics, manga). The repository resolves a bare slug
   // with FirstOrDefault, so a link without a category lands on an arbitrary one
@@ -78,18 +78,16 @@ export default function ContentDetail() {
     [slug, categoryParam],
   )
 
-  // ---- view counting ----
-  //
-  // One POST per title per opening, after the detail has loaded so the id is
-  // known. The guard is a ref rather than a state flag because StrictMode
-  // double-invokes effects in development, and a flag set in an effect would
-  // still see itself unset on the second pass — the ref survives it. Keying on
-  // the id rather than a bare boolean means moving between two titles in the
-  // same mount records both, while a re-render of the same title records once.
+  // View counting. One POST per title, once the detail has loaded so we know
+  // the id. Guarded with a ref and not a state flag, because StrictMode runs
+  // effects twice in dev and a flag set inside an effect still reads as unset
+  // the second time round. A ref survives that. Keying on the id rather than a
+  // plain true/false means going title to title records both, but a re-render
+  // of the same title only records once.
   const recordedId = useRef<number | null>(null)
-  // Seeded from the fetched count, then bumped locally so the number on screen
-  // moves when the view is recorded. Refetching the whole detail to pick up a
-  // single increment would be a second round trip for one digit.
+  // Starts from the count we fetched, then goes up by one locally so the number
+  // on screen actually moves. Refetching the whole detail to pick up a single
+  // increment would be a whole extra request for one digit.
   const [views, setViews] = useState<number | null>(null)
 
   useEffect(() => {
@@ -196,8 +194,8 @@ export default function ContentDetail() {
 
   return (
     <div className="mx-auto w-full max-w-7xl space-y-8 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
-      {/* Returns to wherever the visitor came from — a category grid, a
-          bookmark, a search result — and falls back to this title's category
+      {/* Returns to wherever the visitor came from, a category grid, a
+          bookmark, a search result, and falls back to this title's category
           when the page was opened directly. */}
       <BackButton
         fallbackTo={`/category/${item.categorySlug}`}
@@ -247,7 +245,7 @@ export default function ContentDetail() {
             )}
 
             {/* Only the fields this title actually has are shown, so the
-                block never fills with "—". */}
+                block never fills with ", ". */}
             <dl className="mt-4 grid gap-3 sm:grid-cols-2">
               {item.creator && (
                 <div className="flex items-start gap-2">

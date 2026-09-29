@@ -1,4 +1,4 @@
-// AppDbContext — the EF Core model for the tables in database/01_schema.sql.
+// AppDbContext, the EF Core model for the tables in database/01_schema.sql.
 //
 // Migrations are deliberately NOT used here. The schema is version-controlled
 // as plain SQL (01_schema.sql plus the 04_*_seed.sql files), so EF is only the
@@ -44,7 +44,7 @@ public class AppDbContext : DbContext
     {
         // Enums are stored as the snake_case words the ENUM columns already
         // contain ('music_artist', not 'MusicArtist'). Each enum property below
-        // opts in via EnumConverter.SnakeCase<T>().
+        // opts in via EnumConverter.SnakeCaseT().
 
         modelBuilder.Entity<Role>(entity =>
         {

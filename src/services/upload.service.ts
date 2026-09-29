@@ -1,4 +1,4 @@
-// upload.service — avatar and fan-content images.
+// upload.service, avatar and fan-content images.
 //
 // The API has no upload endpoint yet (there is no multipart route in
 // FanHubPlus.Api), so these are not wired to anything yet. The client-side

@@ -1,4 +1,4 @@
-// AdminDataProvider — the admin panel's data layer, backed by the API.
+// AdminDataProvider, the admin panel's data layer, backed by the API.
 //
 // The catalogue is paged in SQL (useCatalog in hooks.ts) rather than held in the
 // browser, so an edit is a real row the public site reads. The moderation queues

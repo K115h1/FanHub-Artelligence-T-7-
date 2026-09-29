@@ -1,4 +1,4 @@
-// LoginRedirect — stands in for the deleted /login page.
+// LoginRedirect, stands in for the deleted /login page.
 //
 // Signing in happens in the auth overlay, so this route exists only so an old
 // bookmark, a link in a confirmation email, or a hand-typed URL lands somewhere
@@ -22,7 +22,7 @@ export default function LoginRedirect() {
   const from = (location.state as { from?: string } | null)?.from ?? '/'
 
   useEffect(() => {
-    // Already signed in, so this link was stale — send them where they meant to
+    // Already signed in, so this link was stale, send them where they meant to
     // go rather than asking for a password they already supplied.
     if (isAuthed) {
       navigate(from, { replace: true })

@@ -1,8 +1,8 @@
-// PageHero — the banner at the top of a non-home page.
+// PageHero, the banner at the top of a non-home page.
 //
 // Same visual language as the home carousel (purple wash, left-weighted scrim)
 // but shorter and static, so interior pages still open with a hero without
-// stealing the homepage's sliding banner. Artwork is generated, not remote —
+// stealing the homepage's sliding banner. Artwork is generated, not remote, 
 // unless the page passes `image`, in which case that artwork is layered over
 // the same wash (see the comment on the image layer below).
 import type { ReactNode } from 'react'
@@ -21,7 +21,7 @@ export default function PageHero({
   blurb?: string
   icon?: LucideIcon
   /**
-   * Artwork to sit behind the title — the same image the originating card
+   * Artwork to sit behind the title, the same image the originating card
    * showed. Omit it and the banner is the purple wash alone, which is what
    * every page without a specific image wants.
    */
@@ -38,7 +38,7 @@ export default function PageHero({
 
       {/* The artwork, as a CSS background for the same reason CategoryArt uses
           one: a bad path fails silently and the wash under it still paints,
-          where an <img> would show a broken-image glyph. The title and blurb
+          where an img element would show a broken-image glyph. The title and blurb
           are real text, so the picture is decoration and stays aria-hidden. */}
       {image && (
         <div

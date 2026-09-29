@@ -1,7 +1,7 @@
-// SearchBar — the shared search field, in two looks:
+// SearchBar, the shared search field, in two looks:
 //   "default" → standalone dark pill   "header" → compact pill in the Header
 //
-// Pass onSubmit (the Header does) to get a <form> that submits on Enter.
+// Pass onSubmit (the Header does) to get a form element that submits on Enter.
 // Omit it and onSearch fires on a debounce, for results that update as you type.
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Search, X } from 'lucide-react'
@@ -33,7 +33,7 @@ export function SearchBar({
   const isHeader = variant === 'header'
 
   // Keep the newest callbacks in refs so the effects below don't need them as
-  // dependencies — otherwise a caller passing an inline arrow function would
+  // dependencies, otherwise a caller passing an inline arrow function would
   // re-fire the search on every render.
   const onSearchRef = useRef(onSearch)
   const onSubmitRef = useRef(onSubmit)
@@ -69,7 +69,7 @@ export function SearchBar({
 
   // The custom clear button. `type="search"` also gives the field the browser's
   // own cancel control, which Chrome and Safari render at the input's right edge
-  // — so an unstyled search field ends up with two of them side by side. The
+  //, so an unstyled search field ends up with two of them side by side. The
   // inputs below suppress it with appearance-none on the pseudo-element; this
   // styled one is the only clear affordance the field should have.
   const clearButton = query && (

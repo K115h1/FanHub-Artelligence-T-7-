@@ -1,6 +1,6 @@
-// SettingsProvider — the visitor's preferences, persisted to localStorage.
+// SettingsProvider, the visitor's preferences, persisted to localStorage.
 //
-// fontScale and reduceMotion are applied to <html> rather than passed down as
+// fontScale and reduceMotion are applied to html element rather than passed down as
 // props, because index.css is what reads them. Everything else goes through
 // useSettings() (the hero reads carouselAutoplay; the profile page writes).
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
@@ -33,16 +33,16 @@ export default function SettingsProvider({ children }: { children: ReactNode }) 
     try {
       localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings))
     } catch {
-      // Ignore storage failures — the in-memory settings still work.
+      // Ignore storage failures, the in-memory settings still work.
     }
   }, [settings])
 
-  // Font scale → a custom property on <html>, read by index.css.
+  // Font scale → a custom property on html element, read by index.css.
   useEffect(() => {
     document.documentElement.style.setProperty('--app-font-scale', String(settings.fontScale))
   }, [settings.fontScale])
 
-  // Reduce motion → an attribute on <html>, read by index.css.
+  // Reduce motion → an attribute on html element, read by index.css.
   useEffect(() => {
     document.documentElement.toggleAttribute('data-reduce-motion', settings.reduceMotion)
   }, [settings.reduceMotion])

@@ -1,4 +1,4 @@
-// EventCard — used by the "Upcoming events" and "Events near you" rows.
+// EventCard, used by the "Upcoming events" and "Events near you" rows.
 //
 // Takes the API's FanEvent. The date tile is derived from startsAt here rather
 // than stored pre-formatted, so the database keeps one real date instead of a
@@ -36,7 +36,7 @@ export default function EventCard({
       to={`/events/${event.id}`}
       className="surface-card flex items-center gap-4 p-4 hover:-translate-y-0.5"
     >
-      {/* Date block — the anchor of the card, so the eye lands on it first. */}
+      {/* Date block, the anchor of the card, so the eye lands on it first. */}
       <div className="accent-wash flex h-16 w-16 shrink-0 flex-col items-center justify-center rounded-lg text-white">
         <span className="text-xl leading-none font-bold">{day}</span>
         <span className="mt-0.5 text-[11px] font-semibold tracking-wider uppercase">{month}</span>

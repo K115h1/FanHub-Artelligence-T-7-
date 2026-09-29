@@ -1,4 +1,4 @@
-// LoginForm — the sign-in card, shared by the /login page and the overlay.
+// LoginForm, the sign-in card, shared by the /login page and the overlay.
 //
 // Extracted so the form has exactly one implementation. The page and the modal
 // differ only in what happens after a successful sign-in: the page navigates to
@@ -28,7 +28,7 @@ export default function LoginForm({
   onSignedIn: () => void
   /**
    * Called when a link inside the form starts a navigation, e.g. "Forgot
-   * password". The overlay needs this to dismiss itself — it is mounted above
+   * password". The overlay needs this to dismiss itself, it is mounted above
    * the router, so a route change alone will not unmount it.
    */
   onNavigateAway?: () => void
@@ -191,7 +191,7 @@ export default function LoginForm({
       {/* Credentials, shown rather than signed in with. The previous version of
           this was a pair of one-click "Quick sign-in" buttons: a click filled
           the form and called signIn() with a hardcoded password, so reaching the
-          control panel never required knowing a password at all — and the
+          control panel never required knowing a password at all, and the
           buttons re-sent those credentials over the network on every click. The
           accounts are listed instead, so a demonstration can read the details
           off the page and type them, and the sign-in path is the same one every

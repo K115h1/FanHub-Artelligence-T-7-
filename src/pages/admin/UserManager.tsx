@@ -1,9 +1,9 @@
-// UserManager — route: /admin/users.
+// UserManager, route: /admin/users.
 //
 // Lists real accounts from the database and lets an administrator change a role.
 // It used to read the accounts saved in localStorage on this browser and change
 // their role there, which meant each administrator saw a different list and a
-// demotion only removed a badge until the page reloaded — the API's role check
+// demotion only removed a badge until the page reloaded, the API's role check
 // never saw it. The current SRS asks for suspension as well, but there is no
 // `suspended` column on Account yet and the API has no endpoint to enforce it, so
 // this page does role changes only rather than shipping a toggle that does
@@ -156,7 +156,7 @@ export default function UserManager() {
                   // These are different id spaces: the API row's `id` is the
                   // user's numeric user_id, while current.id is a device-local
                   // key like "acc_api_4". Comparing them never matched, so the
-                  // "You" badge and the sign-out button were unreachable — and
+                  // "You" badge and the sign-out button were unreachable, and
                   // self-demotion was offered instead, which locks the
                   // administrator out of the panel they are standing in.
                   const isSelf = current?.userId != null && account.id === current.userId

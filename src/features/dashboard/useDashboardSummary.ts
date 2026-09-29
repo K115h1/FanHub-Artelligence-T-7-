@@ -1,4 +1,4 @@
-// useDashboardSummary — everything the member's dashboard shows, in one hook.
+// useDashboardSummary, everything the member's dashboard shows, in one hook.
 //
 // The scaffold this replaces asked for "greeting, recent activity, favourite
 // fandoms, bookmarked items in as few requests as possible". So: three requests,
@@ -7,7 +7,7 @@
 // visitor is.
 //
 // Each source degrades on its own. A failed bookmark fetch shows an empty
-// bookmark shelf, not an error page over the whole dashboard — these are four
+// bookmark shelf, not an error page over the whole dashboard, these are four
 // independent panels, and one broken panel should not take the other three with
 // it.
 import { useEffect, useMemo, useState } from 'react'
@@ -20,7 +20,7 @@ import type { ContentSummary } from '../../types/models'
 /**
  * "Good evening" and so on.
  *
- * Computed from the visitor's own clock, not UTC — a server-side greeting would
+ * Computed from the visitor's own clock, not UTC, a server-side greeting would
  * be wrong for most of the world, and the offset is a one-line change rather
  * than a configuration surface.
  */
@@ -51,7 +51,7 @@ export function describeActivity(entry: ActivityDto): string {
       return 'Bookmarked a title'
     default:
       // An action this build does not know about yet. Showing the raw token beats
-      // hiding the row — it is honest, and it is a visible prompt to add a case.
+      // hiding the row, it is honest, and it is a visible prompt to add a case.
       return entry.action.replace(/_/g, ' ')
   }
 }

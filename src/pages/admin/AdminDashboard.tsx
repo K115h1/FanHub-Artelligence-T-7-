@@ -1,4 +1,4 @@
-// AdminDashboard — route: /admin.
+// AdminDashboard, route: /admin.
 //
 // Overview of the catalogue and the two moderation queues, with shortcuts into
 // each section. Every figure is derived from real data by useAdminStats(); the
@@ -53,7 +53,7 @@ export default function AdminDashboard() {
     value: category.total,
   }))
 
-  // Coverage as a share of the whole catalogue, not per fandom — the point is
+  // Coverage as a share of the whole catalogue, not per fandom, the point is
   // "how much of the site is still empty", which is one number.
   const coverage = [
     { label: 'Release year', value: stats.withYear },
@@ -102,7 +102,7 @@ export default function AdminDashboard() {
         />
       </div>
 
-      {/* Alerts — only rendered when there is genuinely something to act on.
+      {/* Alerts, only rendered when there is genuinely something to act on.
           This used to count un-committed localStorage edits waiting to be
           "published". Writes go straight to the database now, so there is no
           such queue; the moderation alerts below are the real pending work. */}

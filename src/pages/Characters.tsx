@@ -1,4 +1,4 @@
-// Characters — route: /characters.
+// Characters, route: /characters.
 //
 // Bios are usually absent: the supplied files are wallpapers and cosplay
 // photographs with no descriptions, and inventing one would be fabricating

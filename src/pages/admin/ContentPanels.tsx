@@ -1,4 +1,4 @@
-// Content panels — the add and edit forms for the Content Manager.
+// Content panels, the add and edit forms for the Content Manager.
 //
 // Split out of ContentManager.tsx so that file stays page layout. Both panels
 // share the same modal shell and field set, because an added title and an edited
@@ -23,7 +23,7 @@ const CATEGORY_SLUGS = SLUG_BY_FANDOM
 
 // The contents.status column: ENUM('released','upcoming','ongoing','ended',
 // 'cancelled'). This list used to say 'announced' and 'discontinued', which are
-// not values the column accepts — the API now rejects them, and a status that
+// not values the column accepts, the API now rejects them, and a status that
 // cannot be saved is worse than one that is never offered.
 const STATUSES: ContentStatus[] = ['released', 'upcoming', 'ongoing', 'ended', 'cancelled']
 
@@ -244,7 +244,7 @@ export function EditPanel({
 
   // Only send fields that actually changed, so an untouched panel saves nothing.
   // A browse row carries the blurb but not the long synopsis, so an unchanged
-  // long field is omitted rather than sent as null — the API reads an omitted
+  // long field is omitted rather than sent as null, the API reads an omitted
   // field as "leave alone" and would otherwise blank the stored paragraph.
   function save() {
     const patch: Partial<CatalogEdit> = {}

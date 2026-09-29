@@ -1,4 +1,4 @@
-// RouteBootFailure — last-resort screen when the router cannot start.
+// RouteBootFailure, last-resort screen when the router cannot start.
 //
 // This is NOT the normal loading state. The normal one is RouteFallback, shown
 // while a lazy chunk downloads. This renders only when the router itself throws
@@ -7,8 +7,8 @@
 // no router context, so this cannot be a page component and has to stand alone.
 //
 // It offers a reload rather than a dead end, because the usual cause is a stale
-// chunk after a deploy — the old index.html referencing assets that no longer
-// exist — and a refresh is what actually fixes that.
+// chunk after a deploy, the old index.html referencing assets that no longer
+// exist, and a refresh is what actually fixes that.
 import { TriangleAlert } from 'lucide-react'
 
 export default function RouteBootFailure() {

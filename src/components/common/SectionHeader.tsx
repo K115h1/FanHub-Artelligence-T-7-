@@ -1,4 +1,4 @@
-// SectionHeader — the heading row that opens every homepage section, shared so
+// SectionHeader, the heading row that opens every homepage section, shared so
 // the spacing and "View all" link stay identical across them.
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
@@ -17,7 +17,7 @@ export default function SectionHeader({
   icon?: LucideIcon
   viewAllHref?: string
   subtitle?: string
-  /** Set this and point the wrapping <section aria-labelledby> at it, so the
+  /** Set this and point the wrapping section element (aria-labelledby) at it, so the
       heading is announced once rather than twice. */
   id?: string
   /** A control on the right, e.g. a sort dropdown. Takes precedence over the

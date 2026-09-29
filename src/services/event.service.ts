@@ -1,4 +1,4 @@
-// event.service — fan events and the location-aware listing.
+// event.service, fan events and the location-aware listing.
 import { http } from './http'
 import type { FanEvent } from '../types/models'
 

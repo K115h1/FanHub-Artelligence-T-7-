@@ -1,4 +1,4 @@
-// BookmarkButton — saves or unsaves an item.
+// BookmarkButton, saves or unsaves an item.
 //
 // Sits on every content and article card, so the button has to stop the click
 // from also following the card's link. Signed out it shows a login hint instead
@@ -17,7 +17,7 @@ export default function BookmarkButton({
 }: {
   kind: BookmarkKind
   refId: number
-  /** Used for the accessible name, e.g. "Save One Piece — The Final Saga". */
+  /** Used for the accessible name, e.g. "Save One Piece. The Final Saga". */
   title: string
   size?: 'sm' | 'md'
 }) {
@@ -25,7 +25,7 @@ export default function BookmarkButton({
   const { isAuthed } = useAuth()
   // Opens the overlay over the page rather than navigating to a sign-in page.
   // This button sits on a card the visitor is already reading, and the save
-  // they attempted is about the item on it — replacing the page would lose both.
+  // they attempted is about the item on it, replacing the page would lose both.
   const { open } = useAuthModal()
 
   const saved = isSaved(kind, refId)

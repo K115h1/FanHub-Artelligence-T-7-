@@ -1,4 +1,4 @@
-// EmptyState — the "nothing here yet" panel.
+// EmptyState, the "nothing here yet" panel.
 import type { LucideIcon } from 'lucide-react'
 
 interface EmptyStateProps {

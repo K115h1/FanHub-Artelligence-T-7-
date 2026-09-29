@@ -1,4 +1,4 @@
-// dedupeCatalog.mjs — merges same-fandom near-duplicate titles.
+// dedupeCatalog.mjs, merges same-fandom near-duplicate titles.
 //
 // The importer turns a source list entry like "Bleach (Supernatural)" into its
 // own row instead of merging the qualifier into the base title's genres, so one

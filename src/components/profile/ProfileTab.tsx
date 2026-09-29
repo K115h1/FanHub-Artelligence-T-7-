@@ -1,4 +1,4 @@
-// ProfileTab — identity: picture, name and bio.
+// ProfileTab, identity: picture, name and bio.
 //
 // The picture is editable here, not on the Interests tab: it is part of who you
 // are rather than what you like, and the uploader lives in AvatarUploader so
@@ -114,7 +114,7 @@ export default function ProfileTab() {
             </div>
           </div>
 
-          {/* Email is an identity field — shown, but not editable. */}
+          {/* Email is an identity field, shown, but not editable. */}
           <div>
             <span className="block text-xs font-medium text-ink-muted">Email</span>
             <p className="mt-1 flex items-center gap-2 rounded-lg border border-line bg-surface-sunken px-3 py-2 text-sm text-ink-subtle">

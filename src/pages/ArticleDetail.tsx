@@ -1,4 +1,4 @@
-// ArticleDetail — one article, readable.
+// ArticleDetail, one article, readable.
 //
 // The article list and every article card link here, so this is where the
 // bookmark and rating actions live for articles.
