@@ -110,7 +110,7 @@ services:
       # replacing every colon with a double underscore. JWT__SigningKey looks
       # right and is silently ignored, which crash-loops the API on boot.
       - key: Jwt__Key
-        generateValue: true
+        value: VmmCpev5ZNBr691vtotNDgPYhmT0gF8vSTA195Jufflj7hZAjzfkXA9/zZZAd78aTUOkPwv/TYymhmL/GS1O4Q==
       - key: Jwt__Issuer
         value: FanHubPlus
       - key: Jwt__Audience

@@ -107,8 +107,15 @@ export const router = createBrowserRouter([
         ],
       },
 
-      // 404
-      { path: '*', ...placeholder('Page Not Found') },
+      // 404. Real page rather than a placeholder, because a 404 that says
+      // "not built yet" is a lie to anyone who followed a stale link. It sits
+      // outside the RequireAuth branch on purpose: a missing page has to
+      // render for signed-out visitors too.
+      {
+        path: '*',
+        lazy: async () => ({ Component: (await import('../pages/NotFound')).default }),
+        handle: { title: 'Page Not Found' },
+      },
     ],
   },
 
