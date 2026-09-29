@@ -1,10 +1,19 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./*"]
-    },
-    "ignoreDeprecations": "6.0",
+    // No baseUrl, and no `paths`. TypeScript 6 deprecated baseUrl and later
+    // versions removed it, which broke every clean build:
+    //
+    //     tsconfig.app.json(3,5): error TS5102: Option 'baseUrl' has been removed.
+    //
+    // The `ignoreDeprecations: "6.0" escape hatch that made it work here only
+    // silenced the deprecation — it cannot un-remove an option, so the build
+    // passed locally on 6.0.3 and failed on a machine with a newer compiler.
+    //
+    // Both keys were also dead: no file in src/ imports through the "@/" alias
+    // (0 occurrences), so nothing resolved through them. If the alias is ever
+    // wanted back it needs no baseUrl — `"paths": { "@/*": ["./*"] }` resolves
+    // relative to this file on its own — and vite.config.ts would have to mirror
+    // it, which it currently does not.
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "es2023",
     "lib": ["ES2023", "DOM"],
