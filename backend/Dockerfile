@@ -15,7 +15,7 @@
 # compiler, MSBuild or NuGet client in it, which is most of the size saving.
 
 # ---------- build ----------
-FROM mcr.microsoft.com/dotnet/sdk:10 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
 # Restore on its own layer, copied before any source. A change to a .cs file then
@@ -40,7 +40,7 @@ RUN dotnet publish src/FanHubPlus.Api/FanHubPlus.Api.csproj \
       --no-restore
 
 # ---------- runtime ----------
-FROM mcr.microsoft.com/dotnet/aspnet:10 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 
 # mysql-client is not needed by the app. It is here because the container has no
 # other way to prove the database is reachable, and "is the API actually talking
