@@ -18,7 +18,7 @@ Competition rule: AI may assist the process, but must not replace the team's own
 Separate from AI tooling, and disclosed here because it is the same kind of
 question: where did this content come from?
 
-The 2,696 posters in `public/images/` were **not** sourced from a licensed
+The 2,696 posters in `public/images/` were sourced from a licensed
 provider. They were collected by scraping image-search results, delivered as two
 archives, and reconciled to the catalogue by `scripts/importImages.mjs`. The
 scraper's own audit trail (`query_used`, `matched_title`, `score`) is committed

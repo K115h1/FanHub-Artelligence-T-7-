@@ -1,22 +1,38 @@
 -- Generated from Merchandise.zip
 -- Image metadata catalog (image bytes are not embedded). Works in SQLite; adjust auto-increment syntax for other databases.
 
+-- CONVERTED FROM SQLITE
+--   Like 09_cosplay_pictures_catalog.sql, this was generated as SQLite DDL and
+--   fails on MySQL: `INTEGER PRIMARY KEY` does not auto-increment there, and
+--   `name TEXT NOT NULL UNIQUE` is rejected with ERROR 1170. See that file for
+--   the full explanation; the fix is the same.
+--
+-- Charset: utf8mb4, matching the schema.
+
 CREATE TABLE merchandise_categories (
-  category_id INTEGER PRIMARY KEY,
-  name TEXT NOT NULL UNIQUE
-);
+  category_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  name        VARCHAR(96) NOT NULL,
+  PRIMARY KEY (category_id),
+  UNIQUE KEY uq_merch_categories_name (name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE merchandise_images (
-  image_id INTEGER PRIMARY KEY,
-  category_id INTEGER NOT NULL REFERENCES merchandise_categories(category_id),
-  file_name TEXT NOT NULL,
-  zip_path TEXT NOT NULL,
-  file_size_bytes INTEGER NOT NULL,
-  width_px INTEGER,
-  height_px INTEGER,
-  format TEXT,
-  sha256 TEXT NOT NULL
-);
+  image_id        INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  category_id     INT UNSIGNED NOT NULL,
+  file_name       VARCHAR(255) NOT NULL,
+  zip_path        VARCHAR(500) NOT NULL,
+  file_size_bytes INT UNSIGNED NOT NULL,
+  width_px        INT UNSIGNED NULL,
+  height_px       INT UNSIGNED NULL,
+  format          VARCHAR(16)  NULL,
+  sha256          CHAR(64) NOT NULL,
+  PRIMARY KEY (image_id),
+  KEY ix_merch_images_category (category_id),
+  KEY ix_merch_images_sha256 (sha256),
+  CONSTRAINT fk_merch_images_category
+    FOREIGN KEY (category_id) REFERENCES merchandise_categories (category_id)
+    ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE INDEX idx_merchandise_images_category ON merchandise_images(category_id);
 CREATE INDEX idx_merchandise_images_sha256 ON merchandise_images(sha256);

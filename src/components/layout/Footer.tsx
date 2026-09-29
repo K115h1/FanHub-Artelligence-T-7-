@@ -20,7 +20,7 @@ const SITEMAP: {
     heading: 'Browse',
     links: [
       { to: '/', label: 'Home' },
-      { to: '/explore', label: 'Explorer' },
+      { to: '/explorer', label: 'Explorer' },
       { to: '/characters', label: 'Characters' },
       { to: '/articles', label: 'Articles' },
       { to: '/merchandise', label: 'Merchandise' },

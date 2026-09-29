@@ -1,50 +1,29 @@
-// importSuppliedArt.mjs — places the supplied Merchandise and cosplay artwork.
+// importSuppliedArt.mjs — places the supplied merchandise and character artwork.
 //
 //   node scripts/importSuppliedArt.mjs            # report only
 //   node scripts/importSuppliedArt.mjs --apply    # write the image files
+//   node scripts/importSuppliedArt.mjs --apply --seed   # ...and the catalogue rows
 //
-// PLACES IMAGES ONLY. This deliberately writes no seed SQL, no JSON under src/,
-// and no database rows: the artwork is staged on disk, and nothing references it
-// yet. Wiring it to the catalogue and the pages is a separate, later step.
+// --apply places images only. Catalogue rows are opt-in via --seed, so
+// refreshing artwork can never silently rewrite the database.
 //
-// WHY THIS SCRIPT EXISTS
-//   Two archives were delivered: Merchandise.zip (50 photos across Anime,
-//   cosplay and K-Pop folders) and "cosplay pictures.zip" (22 cosplay photos).
-//   Both are laid out for browsing a shop, not for serving, and neither is
-//   usable as delivered:
+// THREE PROBLEMS WITH THE ARCHIVES AS DELIVERED, all handled here:
 //
-//   1. MOJIBAKE AND EMOJI IN FILENAMES. Entries arrive as "#?????? #riyadh_.jpg"
-//      and "Tasse d?mon slayer.jpg" — the accents and emoji were lost or never
-//      decoded, and several names are only punctuation once that happens. Those
-//      cannot become slugs, and cannot become readable product names either.
+//   1. Filenames carry mojibake and emoji ("#?????? #riyadh_.jpg", "Tasse
+//      d?mon slayer.jpg"), and a third carry no name at all ("download (14).jpg").
+//      Unnameable entries get a stable index rather than an invented title, and
+//      the report marks every one with "*".
+//   2. Byte-identical duplicates are common: "Hinata y naruto.jpg" and its
+//      (1)(2)(3) copies are the same 217,501 bytes. Deduped by SHA-256 of the
+//      CONTENT, never by filename, or one photo appears five times under five
+//      "different" names.
+//   3. Folder names do not match category slugs ("Tv shows" is `tv-shows`).
 //
-//   2. "download (14).jpg". Roughly a third of the entries carry no name at all.
-//      There is no honest way to recover a product title from one, so those are
-//      labelled by fandom and given a stable index, and the report says so.
-//
-//   3. BYTE-IDENTICAL DUPLICATES. "Hinata y naruto.jpg" and its (1)(2)(3) copies
-//      are the same 217,501 bytes; "download (12)" through "(16)" are five copies
-//      of one 206,535-byte file. Filenames imply variety that is not there, so
-//      de-duplication is by SHA-256 of the CONTENT, never by filename. Without it
-//      the shop would show the same photo five times under five "different" names.
-//
-// WHY A HAND-ROLLED ZIP READER
-//   There is no zip library in node_modules, and this project has no image
-//   library either (scripts/placeCategoryArt.mjs reads JPEG headers by hand for
-//   the same reason). Zip is a simple enough container to read directly: find the
-//   end-of-central-directory record, walk the central directory for sizes and
-//   offsets, then inflate each entry with the zlib that ships with Node.
-//   Windows' own extractor is not an option — several entries exceed the 260
-//   character path limit outright.
-//
-// EVERYTHING IS REPORTED, NOTHING IS GUESSED
-//   A name that cannot be cleaned into something readable is reported rather than
-//   invented, and a photo is only attached to a row when the source name actually
-//   supports one. This is the same rule scripts/importImages.mjs uses for posters:
-//   report the unmatched, never silently resolve it.
+// The zip reader is hand-rolled: no zip library is installed, and Windows' own
+// extractor fails on entries that exceed the 260-character path limit.
 
 import { createHash } from 'node:crypto'
-import { existsSync, mkdirSync, readFileSync, writeFileSync, readdirSync, statSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { inflateRawSync } from 'node:zlib'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
@@ -52,9 +31,9 @@ import { dirname, join } from 'node:path'
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const downloads = join(process.env.USERPROFILE || '', 'Downloads')
 const apply = process.argv.includes('--apply')
-
-const MERCH_OUT = join(root, 'public', 'images', 'merchandise')
-const CHAR_OUT = join(root, 'public', 'images', 'characters', 'cosplay')
+// Emitting catalogue rows is separate from placing images, so refreshing the
+// artwork can never quietly rewrite the database.
+const seed = process.argv.includes('--seed')
 
 // ---------------------------------------------------------------- zip reading
 
@@ -132,16 +111,19 @@ function readZip(path) {
 const PLACEHOLDER_WORDS = new Set(['download', 'image', 'images', 'photo', 'pic', 'untitled', 'default', 'img'])
 
 function meaningful(filename) {
-  const base = filename.replace(/\.[a-z0-9]+$/i, '').replace(/\s*\(\d+\)\s*$/, '')
+  const base = filename.replace(IMAGE_EXT, '').replace(/\s*\(\d+\)\s*$/, '')
   const words = base.toLowerCase().match(/[a-z]{3,}/g) ?? []
   if (words.length === 0) return false
   if (words.every((w) => PLACEHOLDER_WORDS.has(w))) return false
   return words.length >= 2 || words.some((w) => !PLACEHOLDER_WORDS.has(w))
 }
 
+/** The only extensions these archives use. Anything else after a dot is a name. */
+const IMAGE_EXT = /\.(jpe?g|png|gif|webp|bmp)$/i
+
 /** "Hinata y naruto (2).jpg" -> "hinata-y-naruto" */
 function cleanName(filename) {
-  let base = filename.replace(/\.[a-z0-9]+$/i, '')
+  let base = filename.replace(IMAGE_EXT, '')
   // Strip the duplicate-suffix convention, but only the trailing "(n)".
   base = base.replace(/\s*\(\d+\)\s*$/, '').trim()
   // Emoji and non-Latin survive as junk; drop anything that is not a letter,
@@ -152,6 +134,20 @@ function cleanName(filename) {
     .replace(/\s+/g, ' ')
     .trim()
   return ascii.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 70)
+}
+
+/**
+ * The real image format, from the file's magic bytes.
+ *
+ * One delivered entry has no extension at all (`Monkey_D.Luffy`), so the name
+ * cannot be trusted to say what the bytes are. JPEG and PNG are the only two the
+ * archives contain, and both are unambiguous from the first few bytes.
+ */
+function detectExtension(data) {
+  if (data[0] === 0xff && data[1] === 0xd8) return 'jpg'
+  if (data[0] === 0x89 && data[1] === 0x50) return 'png'
+  if (data[0] === 0x47 && data[1] === 0x49) return 'gif'
+  return 'bin'
 }
 
 /** Title Case from a slug, for a display name. */
@@ -188,7 +184,7 @@ const merchRows = []
 const charRows = []
 const skipped = []
 
-function consider(kind, category, filename, data) {
+function consider(kind, category, filename, data, { group = null } = {}) {
   const hash = createHash('sha256').update(data).digest('hex').slice(0, 16)
 
   if (seenHashes.has(hash)) {
@@ -198,14 +194,23 @@ function consider(kind, category, filename, data) {
 
   let slug = cleanName(filename)
   let label = null
-  let named = meaningful(filename)
+  // The source filename, not the group-prefixed one. `BTS download (7).jpg` is
+  // still an unusable name; the group only rescues the LABEL, not the check.
+  const sourceName = group ? filename.slice(group.length + 1) : filename
+  let named = meaningful(sourceName)
 
   if (!named || !slug || slug.replace(/-/g, '').length < 4) {
-    // "download (14).jpg" and the punctuation-only names. Counted per category
-    // so the fallback label is stable across runs.
-    const n = [...merchRows, ...charRows].filter((r) => r.category === category && !r.named).length + 1
-    slug = `${category}-item-${String(n).padStart(2, '0')}`
-    label = `${CATEGORY_NAMES[category] ?? category} Item ${String(n).padStart(2, '0')}`
+    // Numbered within the group, not the whole fandom: a global counter gave
+    // "bts-item-09" and "straykids-item-11" from the same K-pop folder, which
+    // reads as if eleven came before nine.
+    const bucket = group ?? category
+    const n =
+      [...merchRows, ...charRows].filter(
+        (r) => !r.named && `${r.category}:${r.group ?? ''}` === `${category}:${group ?? ''}`,
+      ).length + 1
+    slug = `${bucket.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-item-${String(n).padStart(2, '0')}`
+    const who = group ?? (CATEGORY_NAMES[category] ?? category)
+    label = `${who} Item ${String(n).padStart(2, '0')}`
     named = false
     skipped.push({ kind, category, filename, reason: 'no usable name in the source filename', fallback: label })
   }
@@ -226,13 +231,17 @@ function consider(kind, category, filename, data) {
   taken.add(slug)
 
   seenHashes.set(hash, filename)
-  const ext = /\.png$/i.test(filename) ? 'png' : 'jpg'
+  // Trust the CONTENT over the extension. One delivered file is
+  // `Monkey_D.Luffy` with no extension at all, and defaulting that to .jpg would
+  // leave a JPEG named .jpg only by luck; sniffing the magic byte is the same
+  // approach placeCategoryArt.mjs takes to read dimensions.
+  const ext = detectExtension(data)
   const rel = kind === 'merch'
     ? `/images/merchandise/${category}/${slug}.${ext}`
     : `/images/characters/${category}/${slug}.${ext}`
 
   const row = {
-    kind, category, slug, name: label ?? titleCase(slug), rel, named,
+    kind, category, group, slug, name: label ?? titleCase(slug), rel, named,
     bytes: data.length, source: filename, data,
   }
   ;(kind === 'merch' ? merchRows : charRows).push(row)
@@ -240,12 +249,26 @@ function consider(kind, category, filename, data) {
 
 // ---------------------------------------------------------------------- main
 
+// Source folder name -> category slug. None of these match their slug, which is
+// the whole reason this is a table and not a cast: "Tv shows" is `tv-shows`,
+// "Kpop" is `k-pop`, and "Gaming" happens to be right for once.
+const CHAR_FOLDERS = {
+  Anime: 'anime',
+  Comics: 'comics',
+  cosplay: 'cosplay',
+  Gaming: 'gaming',
+  Kpop: 'k-pop',
+  Manga: 'manga',
+  'Tv shows': 'tv-shows',
+}
+
 const sources = [
   { zip: join(downloads, 'Merchandise.zip'), kind: 'merch' },
-  { zip: join(downloads, 'cosplay pictures.zip'), kind: 'char' },
+  { zip: join(downloads, 'cosplay pictures.zip'), kind: 'char', flatCategory: 'cosplay' },
+  { zip: join(downloads, 'Characters.zip'), kind: 'char' },
 ]
 
-for (const { zip, kind } of sources) {
+for (const { zip, kind, flatCategory } of sources) {
   if (!existsSync(zip)) {
     console.error(`MISSING  ${zip}`)
     continue
@@ -257,20 +280,39 @@ for (const { zip, kind } of sources) {
     if (parts.length < 2) continue
 
     if (kind === 'merch') {
-      const folder = parts[1]
-      const category = MERCH_FOLDERS[folder]
-      if (!category) { skipped.push({ kind, category: folder, filename: name, reason: 'unrecognised folder' }); continue }
+      const category = MERCH_FOLDERS[parts[1]]
+      if (!category) {
+        skipped.push({ kind, category: parts[1], filename: name, reason: 'unrecognised folder' })
+        continue
+      }
       consider('merch', category, parts[parts.length - 1], data)
-    } else {
-      // A flat folder of cosplay photographs; the folder is the category.
-      consider('char', 'cosplay', parts[parts.length - 1], data)
+      continue
     }
+
+    if (flatCategory) {
+      consider('char', flatCategory, parts[parts.length - 1], data)
+      continue
+    }
+
+    // Characters.zip is Characters/<fandom>[/<band>/]<file>. The K-pop folder
+    // nests one level deeper per band (BTS, Blackpink, Twice, Straykids), and for
+    // those the band name is the only naming information in the path — a file
+    // called `download (7).jpg` under `Kpop/BTS/` is a BTS character, and without
+    // passing the band through it would land as a nameless `k-pop-item-07`.
+    const category = CHAR_FOLDERS[parts[1]]
+    if (!category) {
+      skipped.push({ kind, category: parts[1], filename: name, reason: 'unrecognised folder' })
+      continue
+    }
+    const file = parts[parts.length - 1]
+    const group = parts.length > 3 ? parts[2] : null
+    consider('char', category, group ? `${group} ${file}` : file, data, { group })
   }
 }
 
 // ------------------------------------------------------------------- report
 
-console.log(`\nread ${merchRows.length} merchandise + ${charRows.length} cosplay images`)
+console.log(`\nread ${merchRows.length} merchandise + ${charRows.length} character images`)
 
 const groups = new Map()
 for (const r of [...merchRows, ...charRows]) {
@@ -319,17 +361,53 @@ for (const r of [...merchRows, ...charRows]) {
 }
 console.log(`\nwrote ${written} images under public/images/`)
 
-// The manifest is PRINTED, not written into src/. Nothing under src/ references
-// these images yet, and nothing in the database does either: the catalogue rows
-// and the pages that would show them are deliberately not wired up. A JSON file
-// in src/data would imply a connection that does not exist.
-console.log(`\nMANIFEST (placed on disk, referenced by nothing yet)`)
+// The manifest is printed rather than written into src/: a JSON file in
+// src/data would imply a data dependency the pages do not have.
+console.log(`\nMANIFEST`)
 for (const [key, list] of groups) {
   console.log(`  ${key}`)
   for (const r of list) console.log(`    ${r.rel}\t${r.name}`)
 }
-console.log(
-  `\nNot linked to the database or the app, by request. To wire them up later:` +
-  `\n  - add merchandise_items / character_profiles rows, resolving category by slug` +
-  `\n  - build the Merchandise grid and the Characters page against /community/*`,
-)
+
+// ------------------------------------------------------------------ seed (opt-in)
+
+/**
+ * Emit character_profiles rows. Opt-in via --seed, because --apply alone places
+ * images and nothing else; a build that silently wrote catalogue rows would be
+ * a surprise to anyone re-running it to refresh artwork.
+ *
+ * Categories resolve by SLUG through a subselect rather than a literal
+ * category_id. That key is a surrogate that differs between a fresh database and
+ * the live one — they already disagree about the TV Shows slug — so a hardcoded
+ * id is a latent bug and a subselect is not.
+ *
+ * Re-running is safe: every statement is INSERT ... WHERE NOT EXISTS on slug.
+ */
+if (!seed) {
+  console.log(`\nNo catalogue rows written (pass --seed to emit database/09_characters_seed.sql).`)
+  process.exit(0)
+}
+
+const q = (s) => String(s).replace(/'/g, "''")
+const SEED_FILE = '09_characters_seed.sql'
+const lines = [
+  '-- Character profiles from the supplied artwork.',
+  '-- Generated by scripts/importSuppliedArt.mjs --apply --seed. Do not hand-edit.',
+  '-- Safe to re-run: every row is INSERT ... WHERE NOT EXISTS on slug.',
+  '',
+]
+
+for (const r of charRows) {
+  lines.push(
+    `INSERT INTO character_profiles (category_id, name, slug, image_path)\n` +
+    `SELECT c.category_id, '${q(r.name)}', '${q(r.slug)}', '${q(r.rel)}'\n` +
+    `FROM categories c\n` +
+    `WHERE c.slug = '${q(r.category)}'\n` +
+    `  AND NOT EXISTS (SELECT 1 FROM character_profiles p WHERE p.slug = '${q(r.slug)}');`,
+    '',
+  )
+}
+
+writeFileSync(join(root, 'database', SEED_FILE), lines.join('\n'))
+console.log(`\nwrote database/${SEED_FILE} (${charRows.length} character rows)`)
+console.log(`merchandise: not seeded. The shop page is still the "coming soon" preview.`)

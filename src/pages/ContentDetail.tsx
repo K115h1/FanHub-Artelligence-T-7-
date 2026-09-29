@@ -22,6 +22,8 @@ import { useRatings } from '../context/RatingsContext'
 import { useAsync } from '../hooks/useAsync'
 import { getContentBySlug, getContents, recordView } from '../services/content.service'
 import { categoryIcon } from '../lib/categoryIcons'
+import { useCoverPools } from '../hooks/useCoverPools'
+import { pickCoverFallback } from '../lib/coverFallback'
 
 // ARTICLES is still local: the schema has no articles table.
 import { ARTICLES } from '../lib/mockData'
@@ -116,11 +118,11 @@ export default function ContentDetail() {
 
   const viewCount = views ?? item?.viewCount ?? 0
 
-  // "More like this" means SHARED GENRE, not merely the same fandom. Asking for
-  // the category sorted by popularity returned whatever else was popular, which
-  // for a broad fandom is mostly unrelated — a Batman film surfaced under an
-  // anime series. So the first shared genre becomes the filter, and the category
-  // stays as the scope so results never leak into a different fandom.
+  const pools = useCoverPools()
+
+  // Shared genre, not merely the same fandom: category-by-popularity returned
+  // whatever else was popular, so a Batman film surfaced under an anime series.
+  // The category stays as the scope so results never leak into another fandom.
   const leadGenreId = useMemo(() => item?.genreIds?.[0] ?? null, [item])
 
   // The label the section wears, so it says WHY these were chosen. A title with
@@ -207,10 +209,10 @@ export default function ContentDetail() {
         title={item.title}
         icon={categoryIcon(item.categorySlug)}
         blurb={item.shortSynopsis ?? undefined}
-        // The poster the originating card showed, so the banner and the card
-        // are visibly the same title. Null for roughly one title in eight, and
-        // PageHero falls back to the wash in that case.
-        image={item.posterPath}
+        // The artwork the originating card showed, so the banner and the card are
+        // visibly the same title. Same resolution as the card: a real poster, else
+        // a same-fandom sample, else the fandom banner.
+        image={item.posterPath ?? pickCoverFallback(item.categorySlug, item.id, pools)}
       >
         <div className="flex flex-wrap items-center gap-2">
           <BookmarkButton kind="content" refId={item.id} title={item.title} size="md" />
@@ -226,12 +228,14 @@ export default function ContentDetail() {
               About
             </h2>
 
-            {/* The synopsis is the one genuinely optional part of this panel.
-                It used to wrap everything below it, so a title with no
-                description also lost its year, genres and cast. No row in
-                `contents` carries a synopsis yet, so every About panel on the
-                site collapsed to a single line. The metadata below therefore
-                always renders and only the prose is conditional. */}
+            {/* The prose is the one optional part of this panel. It used to
+                wrap everything below it, so a title with no description also
+                lost its year, genres and cast. The metadata below therefore
+                always renders and only the prose is conditional.
+
+                Most titles carry a long synopsis; the blurb is the fallback for
+                the 54 whose description has not been written yet, and it is
+                what the hero banner above shows in either case. */}
             {item.synopsis ? (
               <p className="mt-2 text-sm leading-relaxed text-ink-muted">{item.synopsis}</p>
             ) : item.shortSynopsis ? (
@@ -408,10 +412,8 @@ export default function ContentDetail() {
 
       {related.length > 0 && (
         <section aria-labelledby="related-content">
-          {/* viewAllHref carries the genre, so "view all" lands on the same
-              filtered set this section is showing rather than the whole fandom.
-              Omitted when there is no genre to filter on, which leaves the plain
-              category browse: the only thing that would be truthful. */}
+          {/* "View all" carries the genre so it lands on the same filtered set
+              this section is showing, not the whole fandom. */}
           <SectionHeader
             id="related-content"
             title={relatedLabel}

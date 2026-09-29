@@ -61,7 +61,11 @@ function toCatalogRow(row: adminApi.BrowseRow): CatalogRow {
     releaseYear: row.releaseYear,
     genres: row.genres,
     posterPath: row.posterPath,
-    synopsis: row.shortSynopsis,
+    // Both kept apart. A browse row carries the blurb but not the long
+    // synopsis, and collapsing them meant the edit panel sent the blurb back
+    // for both columns and overwrote the reviewed paragraph.
+    shortSynopsis: row.shortSynopsis,
+    synopsis: null,
     status: row.status as ContentStatus,
   }
 }

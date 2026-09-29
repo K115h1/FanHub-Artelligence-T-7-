@@ -1,0 +1,92 @@
+# Render blueprint — the whole stack in one file.
+#
+#   services:
+#     fanhubplus-db   MySQL 8, private service, 10 GB disk, schema on first boot
+#     fanhubplus-api  ASP.NET Core 10 web service, talks to the db over the
+#                     private network at mysql:3306
+#
+# Nothing here is a secret. Values marked sync:false are prompts: Render shows an
+# empty box and you paste the value in, so a password never exists in this file
+# or in git history.
+#
+# Deploy: push the repo, then in Render choose "New > Blueprint", point it at the
+# repository, and Render reads this file.
+
+services:
+  # ---------- database ----------
+  # Not a `databases:` entry: Render has no first-party MySQL, so this is a
+  # private service running the official image with our schema baked in.
+  # See deploy/mysql/Dockerfile and docs/deployment.md.
+  - type: web
+    name: fanhubplus-db
+    runtime: docker
+    dockerfilePath: ./deploy/mysql/Dockerfile
+    dockerContext: .
+    plan: starter # a Disk is not available on the free tier
+    disk:
+      name: mysql-data
+      mountPath: /var/lib/mysql # must match the mysql image exactly
+      sizeGB: 10
+    # Not published: no `fromService` and no public host, so this is only
+    # reachable from other services in the workspace.
+    envVars:
+      - key: MYSQL_DATABASE
+        value: fanhubplus
+      - key: MYSQL_USER
+        value: fanhub
+      - key: MYSQL_PASSWORD
+        generateValue: true
+      - key: MYSQL_ROOT_PASSWORD
+        generateValue: true
+    # No healthCheckPath. Render's health check is an HTTP GET, and MySQL speaks
+    # no HTTP, so there is no path to poll. The container's own entrypoint is the
+    # readiness signal: it runs the schema import and only then starts listening
+    # on 3306, so a connection refused means it is genuinely not ready yet.
+    #
+    # This is also why the API does not use ServerVersion.AutoDetect — see
+    # ServiceCollectionExtensions.
+    autoDeploy: false
+
+  # ---------- API ----------
+  - type: web
+    name: fanhubplus-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: .
+    plan: free
+    healthCheckPath: /health
+    # Same workspace as the database, so this resolves to the private service.
+    # fromService is Render's mechanism for referencing another service's
+    # environment by name.
+    envVars:
+      - key: ConnectionStrings__FanhubPlus
+        fromService:
+          name: fanhubplus-db
+          type: web
+          envVarKey: CONNECTION_URL
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      # The database host on the private network. Render names it after the
+      # service; the port is the one mysql listens on.
+      - key: DB_HOST
+        value: fanhubplus-db
+      - key: DB_NAME
+        value: fanhubplus
+      - key: DB_USER
+        value: fanhub
+      - key: DB_PASSWORD
+        fromService:
+          name: fanhubplus-db
+          type: web
+          envVarKey: MYSQL_PASSWORD
+      # The connection string is assembled in ServiceCollectionExtensions from
+      # DB_* because the password contains characters that are awkward in a URL.
+      - key: JWT__SigningKey
+        generateValue: true
+      # CORS is a list, so each entry is its own key. Add one per deployed
+      # frontend origin — see docs/deployment.md.
+      - key: Cors__Origins__0
+        value: http://localhost:5180
+      - key: Cors__Origins__1
+        sync: false # the deployed frontend origin, e.g. https://fanhubplus.onrender.com
+    autoDeploy: true

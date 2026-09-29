@@ -45,30 +45,20 @@ function StatTile({ label, value }: { label: string; value: string | number }) {
 const SORT_OPTIONS = CONTENT_SORT_OPTIONS
 
 /**
- * The category page's native <select> styling, shared by the Sort and Genre
- * controls.
+ * Native <select> styling for the Sort and Genre controls.
  *
- * The `[&>option]:` variants reach the option ELEMENTS, which is the part that
- * actually needed fixing: the open dropdown list is painted by the operating
- * system, so without them it appeared as a plain grey list against the purple
- * theme. They take the theme tokens, so light and dark are both correct from one
- * class string with no `dark:` twin to keep in sync.
- *
- * `accent-*` sets accent-color, which tints the selected row in the open list;
- * without it that row is the OS highlight blue, the one part of the popup that
- * no amount of option background will reach.
- *
- * Scoped to this file on purpose — see the note on the selects below.
+ * The `[&>option]:` variants are the point: the open list is painted by the OS,
+ * so it showed as a plain grey list against the purple theme. Theme tokens mean
+ * light and dark are both right from one class string. `accent-*` tints the
+ * selected row, which is otherwise the OS highlight blue.
  */
 const SELECT_CLASS = [
   'rounded-lg border border-accent/40 px-3 py-1.5 text-sm transition focus:border-accent',
-  // Closed control: the theme's own raised surface and ink.
   'bg-[var(--surface-raised)] text-[var(--ink)]',
-  // Open list: the same tokens, so the popup matches the control around it.
   '[&>option]:bg-[var(--surface-raised)]',
   '[&>option]:text-[var(--ink)]',
-  // Native option lists bold the active row on some platforms; the page uses
-  // medium weight for labels, so left alone it looks like a rendering fault.
+  // Some platforms bold the active row; left alone it looks like a fault.
+  '[&>option]:font-normal',
   '[&>option]:font-normal',
   'accent-[var(--accent)]',
 ].join(' ')
@@ -375,27 +365,7 @@ export default function Category() {
               <SectionTitle title="Content" count={totalTitles} />
 
               {/* Sort + genre. Hidden entirely for a fandom with one genre
-                  bucket, so a thin category does not show a pointless select.
-
-                  The two selects below share one class string, so it is built
-                  once rather than repeated and drifting.
-
-                  WHY THE OPTION ELEMENTS ARE STYLED EXPLICITLY. The closed
-                  control is an ordinary box the page can style, but the OPEN
-                  list is painted by the OS, not the page: browsers render the
-                  popup with the platform's own list colours, which on Windows is
-                  a near-neutral grey. Against a purple-black dark theme that
-                  popup reads as a different application entirely, even though
-                  the control around it is correct. Setting the option background
-                  and ink is the only way to pull the list back onto the theme.
-
-                  The values are the theme's own tokens rather than fixed hex, so
-                  both themes follow automatically and neither needs a `dark:`
-                  twin: --surface-raised is #faf9ff light and #1e0533 dark, and
-                  --ink is #0a0a0a / #ffffff. accent-color tints the selected
-                  row purple instead of the OS blue. `color-scheme` on <html>
-                  already tells the popup which palette to use, so the closed
-                  control follows the theme too. */}
+                  bucket, so a thin category does not show a pointless select. */}
               <div className="mb-4 flex flex-wrap items-center gap-3">
                 <label className="flex items-center gap-2 text-xs font-medium text-ink-muted">
                   Sort

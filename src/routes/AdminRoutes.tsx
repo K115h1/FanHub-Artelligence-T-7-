@@ -1,12 +1,8 @@
-// AdminRoutes — the lazily-loaded entry point for everything under /admin.
-//
-// Composed as one route element so the panel's code is only fetched when an
-// administrator navigates here. Order is deliberate: the gate is outermost so a
-// non-admin never causes the provider to mount or the data to load.
-//
-// The gate reads the role off the signed-in account, but it is a UX affordance
-// and not the security boundary — every /admin endpoint is [Authorize(Roles =
-// "admin")] on the server, so bypassing this in the console buys nothing.
+// AdminRoutes - the lazily-loaded entry point for everything under /admin, so
+// the panel's code is only fetched when an administrator navigates here. The gate
+// is outermost so a non-admin never mounts the provider or loads the data; it is
+// a UX affordance, not the security boundary (the endpoints are
+// [Authorize(Roles = "admin")] server-side).
 
 import { useLocation } from 'react-router-dom'
 import AdminLayout from '../components/admin/AdminLayout'

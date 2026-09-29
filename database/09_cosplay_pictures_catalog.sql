@@ -1,22 +1,52 @@
 -- Generated from cosplay_pictures.zip
--- Image metadata catalog (image bytes are not embedded). Works in SQLite; adjust auto-increment syntax for other databases.
+-- Image metadata catalog (image bytes are not embedded).
+--
+-- CONVERTED FROM SQLITE
+--   This file was originally generated as SQLite DDL and would not load on
+--   MySQL at all:
+--
+--     * `INTEGER PRIMARY KEY` is a SQLite rowid alias, so it auto-increments.
+--       MySQL reads it as a plain INTEGER column and inserts a literal 0 for
+--       every row, so the second row collides with the first.
+--     * `name TEXT NOT NULL UNIQUE` is rejected outright with
+--       ERROR 1170: BLOB/TEXT column used in key specification without a key
+--       length. MySQL will not index a TEXT column without a prefix length.
+--
+--   Both are fixed below, and the types now match 01_schema.sql: unsigned
+--   integers for keys, sized VARCHARs for anything indexed, utf8mb4, InnoDB.
+--
+-- Charset: utf8mb4, matching the schema.
 
 CREATE TABLE cosplay_pictures_categories (
-  category_id INTEGER PRIMARY KEY,
-  name TEXT NOT NULL UNIQUE
-);
+  category_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  -- VARCHAR(96) rather than TEXT so UNIQUE can index it directly. A prefix
+  -- length on a TEXT column would work too, but then the uniqueness rule
+  -- silently stops applying past that length.
+  name         VARCHAR(96) NOT NULL,
+  PRIMARY KEY (category_id),
+  UNIQUE KEY uq_cosplay_pic_categories_name (name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE cosplay_pictures_images (
-  image_id INTEGER PRIMARY KEY,
-  category_id INTEGER NOT NULL REFERENCES cosplay_pictures_categories(category_id),
-  file_name TEXT NOT NULL,
-  zip_path TEXT NOT NULL,
-  file_size_bytes INTEGER NOT NULL,
-  width_px INTEGER,
-  height_px INTEGER,
-  format TEXT,
-  sha256 TEXT NOT NULL
-);
+  image_id        INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  category_id     INT UNSIGNED NOT NULL,
+  file_name       VARCHAR(255) NOT NULL,
+  zip_path        VARCHAR(500) NOT NULL,
+  file_size_bytes INT UNSIGNED NOT NULL,
+  width_px        INT UNSIGNED NULL,
+  height_px       INT UNSIGNED NULL,
+  format          VARCHAR(16)  NULL,
+  -- A SHA-256 digest is 64 hex characters, so VARCHAR(64) is exact rather than
+  -- generous. It is indexed to make an integrity re-check cheap.
+  sha256          CHAR(64) NOT NULL,
+  PRIMARY KEY (image_id),
+  -- Sized so a category listing and a digest lookup are both indexed scans.
+  KEY ix_cosplay_pic_images_category (category_id),
+  KEY ix_cosplay_pic_images_sha256 (sha256),
+  CONSTRAINT fk_cosplay_pic_images_category
+    FOREIGN KEY (category_id) REFERENCES cosplay_pictures_categories (category_id)
+    ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE INDEX idx_cosplay_pictures_images_category ON cosplay_pictures_images(category_id);
 CREATE INDEX idx_cosplay_pictures_images_sha256 ON cosplay_pictures_images(sha256);

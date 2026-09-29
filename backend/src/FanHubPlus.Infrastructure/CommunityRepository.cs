@@ -159,6 +159,39 @@ public class CommunityRepository : ICommunityRepository
             x => x.Count);
     }
 
+    public async Task<Dictionary<byte, List<string>>> GetCoverPoolsAsync(
+        int perCategory, CancellationToken ct = default)
+    {
+        var take = perCategory is < 1 or > 200 ? 24 : perCategory;
+
+        var rows = await _db.Contents
+            .AsNoTracking()
+            .Where(c => c.PosterPath != null)
+            .OrderBy(c => c.ContentId)
+            .Select(c => new { c.CategoryId, c.PosterPath })
+            .ToListAsync(ct);
+
+        var pools = new Dictionary<byte, List<string>>();
+        var counts = new Dictionary<byte, int>();
+
+        foreach (var row in rows)
+        {
+            if (!counts.TryGetValue(row.CategoryId, out var seen)) { seen = 0; }
+            if (seen >= take) continue;
+
+            if (!pools.TryGetValue(row.CategoryId, out var list))
+            {
+                list = new List<string>(take);
+                pools[row.CategoryId] = list;
+            }
+
+            list.Add(row.PosterPath!);
+            counts[row.CategoryId] = seen + 1;
+        }
+
+        return pools;
+    }
+
     public Task<List<MerchandiseItem>> GetMerchandiseAsync(byte? categoryId = null, CancellationToken ct = default)
     {
         var q = _db.MerchandiseItems.AsNoTracking().Include(m => m.Category).AsQueryable();

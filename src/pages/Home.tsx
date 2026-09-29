@@ -75,7 +75,7 @@ function Trending() {
         id="trending-heading"
         title="Trending Now"
         icon={TrendingUp}
-        viewAllHref="/explore"
+        viewAllHref="/explorer"
         subtitle="What the community is watching right now"
       />
       {error ? (
@@ -111,7 +111,7 @@ function ForYou() {
         id="foryou-heading"
         title="For You"
         icon={User}
-        viewAllHref="/explore"
+        viewAllHref="/explorer"
         subtitle={
           !personalised
             ? 'General popular picks — personalisation is off'

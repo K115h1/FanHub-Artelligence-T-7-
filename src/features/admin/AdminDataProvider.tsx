@@ -1,25 +1,10 @@
 // AdminDataProvider — the admin panel's data layer, backed by the API.
 //
-// This used to hold everything on the device: the whole 2,934-title catalogue
-// was bundled as JSON and layered with edits in localStorage, and the feedback
-// and submission queues were seeded arrays. Every "edit" was a browser-local
-// overlay that vanished for the next administrator and was never visible to a
-// visitor. It now reads and writes the same tables the public site reads.
-//
-// What changed and why it is shaped this way:
-//
-//   * The catalogue is no longer held in memory. It is ~2,934 rows and the
-//     content manager already paged it to 25 at a time, so paging now happens in
-//     SQL (see useCatalog in hooks.ts) instead of filtering a bundled array.
-//     That is what lets the 441KB JSON drop out of the bundle entirely.
-//   * Moderation queues keep their array shape. The pages filter them by status
-//     and free text across the whole set, and both queues are small enough that
-//     a single fetch beats paging. Mutations are optimistic: the row updates
-//     immediately and reverts if the API refuses, because a moderator working
-//     through a queue should not wait on a round trip per click.
-//
-// Every call here is [Authorize(Roles = "admin")], so a 403 means the session
-// lost the role rather than that the panel is broken.
+// The catalogue is paged in SQL (useCatalog in hooks.ts) rather than held in the
+// browser, so an edit is a real row the public site reads. The moderation queues
+// keep their array shape: both are small enough that one fetch beats paging, and
+// mutations are optimistic so working a queue does not wait on a round trip per
+// click. A 403 here means the session lost the admin role.
 import {
   createContext,
   useCallback,

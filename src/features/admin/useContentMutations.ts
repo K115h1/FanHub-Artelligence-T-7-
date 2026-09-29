@@ -1,15 +1,8 @@
 // useContentMutations — the write side of the content manager.
 //
-// The panel used to keep a localStorage overlay of edits, deletions and additions
-// and offered "revert this row" and "discard all changes" on top of it. That
-// whole model disappears once the API is the source of truth: an edit is a real
-// UPDATE, and a delete is a real DELETE, so there is nothing to revert to. The
-// undo affordances are gone rather than faked, because a button that appears to
-// restore a deleted row and silently does nothing is worse than no button.
-//
-// Each mutation re-reads the current page afterwards instead of patching local
-// state, so what the administrator sees is what the database holds — including
-// server-side effects like a slug collision or a genre that had to be created.
+// An edit is a real UPDATE and a delete a real DELETE, so there is no uncommitted
+// overlay to revert. Each mutation re-reads the page rather than patching local
+// state, so the table always shows what the database holds.
 import { useCallback, useEffect, useState } from 'react'
 import * as adminApi from '../../services/admin.service'
 import { getCategories } from '../../services/content.service'
@@ -18,16 +11,11 @@ import { CONTENT_TYPE_BY_FANDOM, FANDOM_BY_SLUG } from './categorySlugs'
 
 export interface ContentMutations {
   /**
-   * Apply an edit to a row, then re-read the page.
-   *
-   * Partial on purpose: the edit panel sends only the fields that changed, and
-   * the API treats an omitted field as "leave it alone". Sending all six
-   * unconditionally would blank a genre list and a synopsis on every save.
+   * Partial on purpose: the API treats an omitted field as "leave it alone", so
+   * sending every field would blank a genre list on each save.
    */
   updateRow(id: number, patch: Partial<CatalogEdit>): Promise<void>
-  /** Create a title, then re-read the page. */
   addRow(draft: Omit<CatalogRow, 'id'>): Promise<void>
-  /** Permanently delete a row, then re-read the page. */
   deleteRow(id: number): Promise<void>
   /** True while any mutation is in flight. */
   busy: boolean
@@ -40,14 +28,10 @@ export function useContentMutations(onChanged: () => void): ContentMutations {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // contents.category_id is a foreign key, so creating a title needs the numeric
-  // id — the form only knows the fandom, and the two are not the same value
-  // ('games' is category 3, whose slug is 'gaming').
-  //
-  // Resolved from the server's own category list rather than a hardcoded map,
-  // because the live database and the seed file disagree on the TV Shows slug
-  // ('tv-shows' vs 'tvshows'). A title created against a slug the database does
-  // not hold would fail on the foreign key with nothing the administrator could
+  // category_id is a foreign key and the form only knows the fandom, which is a
+  // different value ('games' is the category whose slug is 'gaming'). Resolved
+  // from the server's list because the live database and the seed file disagree
+  // on the TV Shows slug; a wrong slug fails on the foreign key.
   // act on, so the mapping comes from the same place the filter does.
   const [categoryIdByFandom, setCategoryIdByFandom] = useState<
     Partial<Record<FandomKey, number>>
@@ -66,8 +50,8 @@ export function useContentMutations(onChanged: () => void): ContentMutations {
         )
       })
       .catch(() => {
-        // Surfaced on submit as "the category could not be resolved", which is
-        // more useful than a create that fails on a foreign key.
+        // Surfaces on submit as "the category could not be resolved", which beats
+        // a create that dies on a foreign key.
         if (!cancelled) setCategoryIdByFandom({})
       })
     return () => {
@@ -75,13 +59,8 @@ export function useContentMutations(onChanged: () => void): ContentMutations {
     }
   }, [])
 
-  /**
-   * Run one mutation, then always re-read.
-   *
-   * `onChanged` runs in a finally so the table refreshes even after a failure:
-   * a partial failure (the row saved, the genre did not) must not leave the
-   * administrator looking at a stale row.
-   */
+  // onChanged runs in a finally, so a partial failure (row saved, genre not)
+  // still refreshes rather than leaving a stale row on screen.
   const run = useCallback(
     async (work: () => Promise<unknown>) => {
       setBusy(true)
@@ -103,14 +82,14 @@ export function useContentMutations(onChanged: () => void): ContentMutations {
       run(() =>
         adminApi.updateContent(id, {
           title: patch.title,
-          // `null` means "clear this field" in the panel, but the API reads an
-          // omitted field as "leave alone" and null as an explicit value, so a
-          // cleared year has to be left out rather than sent as null — a
-          // non-nullable ushort column would reject it.
+          // A cleared value must be omitted, not sent as null: the API reads an
+          // omitted field as "leave alone", and release_year is non-nullable.
           releaseYear: patch.releaseYear ?? undefined,
           genres: patch.genres,
+          // Distinct fields, not one value written to both — that overwrote the
+          // long synopsis with the one-line blurb on every save.
           synopsis: patch.synopsis ?? undefined,
-          shortSynopsis: patch.synopsis ?? undefined,
+          shortSynopsis: patch.shortSynopsis ?? undefined,
           status: patch.status,
           posterPath: patch.posterPath ?? undefined,
         }),
@@ -139,7 +118,7 @@ export function useContentMutations(onChanged: () => void): ContentMutations {
           contentType: CONTENT_TYPE_BY_FANDOM[draft.fandom],
           status: draft.status,
           synopsis: draft.synopsis ?? undefined,
-          shortSynopsis: draft.synopsis ?? undefined,
+          shortSynopsis: draft.shortSynopsis ?? undefined,
           releaseYear: draft.releaseYear ?? undefined,
           posterPath: draft.posterPath ?? undefined,
           genres: draft.genres,

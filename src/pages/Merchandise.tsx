@@ -261,11 +261,11 @@ export default function Merchandise() {
         ) : items.length === 0 ? (
           <EmptyState
             icon={hasFilters ? Search : ShoppingBag}
-            title={hasFilters ? 'Nothing matches those filters' : 'Nothing photographed yet'}
+            title={hasFilters ? 'Nothing matches those filters' : 'Currently restocking'}
             body={
               hasFilters
                 ? 'Try a different fandom, or clear the search box.'
-                : 'Merchandise is still being shot and catalogued. Sign up above and you will hear when the shop opens.'
+                : "We're currently restocking, so merchandise is unavailable right now. Sign up above and we'll let you know when it's back."
             }
             actionText={hasFilters ? 'Clear filters' : undefined}
             onAction={

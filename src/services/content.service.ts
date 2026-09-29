@@ -53,8 +53,7 @@ export function getContents(filters: ContentFilters = {}): Promise<Paginated<Con
 /**
  * A title by slug. Slug is unique per category, not globally — "akira" exists
  * under movies, anime and comics — so pass `category` when it could be ambiguous.
- */
-export function getContentBySlug(slug: string, category?: string): Promise<ContentDetail> {
+ */export function getContentBySlug(slug: string, category?: string): Promise<ContentDetail> {
   return http.get<ContentDetail>(`/contents/${encodeURIComponent(slug)}`, { category })
 }
 
@@ -68,6 +67,14 @@ export function getCategories(): Promise<CategoryDto[]> {
 
 export function getGenres(categoryId?: number): Promise<Genre[]> {
   return http.get<Genre[]>('/contents/genres', { categoryId })
+}
+
+/**
+ * A sample of real cover paths per fandom, used for titles that have none.
+ * See lib/coverFallback.ts for why this is scoped per fandom and capped.
+ */
+export function getCoverPools(perCategory = 24): Promise<Record<string, string[]>> {
+  return http.get<Record<string, string[]>>('/community/cover-pools', { perCategory })
 }
 
 // --- view counting ---

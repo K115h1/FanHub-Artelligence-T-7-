@@ -229,6 +229,7 @@ export function EditPanel({
   const [title, setTitle] = useState(row.title)
   const [year, setYear] = useState<number | null>(row.releaseYear)
   const [genres, setGenres] = useState<string[]>(row.genres)
+  const [shortSynopsis, setShortSynopsis] = useState(row.shortSynopsis ?? '')
   const [synopsis, setSynopsis] = useState(row.synopsis ?? '')
   const [status, setStatus] = useState<ContentStatus>(row.status)
   const [posterPath, setPosterPath] = useState(row.posterPath ?? '')
@@ -236,14 +237,22 @@ export function EditPanel({
   const titleError = title.trim() === '' ? 'A title is required.' : null
   const yearError =
     year !== null && (year < 1888 || year > 2100) ? 'Enter a year between 1888 and 2100.' : null
-  const invalid = titleError !== null || yearError !== null
+  // short_synopsis is VARCHAR(300). MySQL in strict mode rejects a longer value,
+  // so the panel has to catch it before the request rather than after.
+  const shortTooLong = shortSynopsis.length > 300
+  const invalid = titleError !== null || yearError !== null || shortTooLong
 
   // Only send fields that actually changed, so an untouched panel saves nothing.
+  // A browse row carries the blurb but not the long synopsis, so an unchanged
+  // long field is omitted rather than sent as null — the API reads an omitted
+  // field as "leave alone" and would otherwise blank the stored paragraph.
   function save() {
     const patch: Partial<CatalogEdit> = {}
     if (title.trim() !== row.title) patch.title = title.trim()
     if (year !== row.releaseYear) patch.releaseYear = year
     if (genres.join('|') !== row.genres.join('|')) patch.genres = genres
+    const cleanShort = shortSynopsis.trim()
+    if (cleanShort !== (row.shortSynopsis ?? '')) patch.shortSynopsis = cleanShort || null
     const cleanSynopsis = synopsis.trim()
     if (cleanSynopsis !== (row.synopsis ?? '')) patch.synopsis = cleanSynopsis || null
     if (status !== row.status) patch.status = status
@@ -327,13 +336,35 @@ export function EditPanel({
         </div>
 
         <div className="sm:col-span-2">
-          <Label htmlFor="edit-synopsis">Synopsis</Label>
+          <Label htmlFor="edit-short-synopsis">Card blurb</Label>
+          <textarea
+            id="edit-short-synopsis"
+            value={shortSynopsis}
+            onChange={(event) => setShortSynopsis(event.target.value)}
+            rows={2}
+            placeholder="One line, shown on cards and under the detail banner."
+            className={`${FIELD_CLASS} resize-y`}
+            aria-describedby="edit-short-synopsis-hint"
+          />
+          <p id="edit-short-synopsis-hint" className="mt-1 text-[11px] text-ink-subtle">
+            Up to 300 characters. This is <code className="font-mono">short_synopsis</code>, not the
+            full description.
+          </p>
+          {shortTooLong && (
+            <p className="mt-1 text-[11px] text-rose-500">
+              {shortSynopsis.length} characters — the column holds 300.
+            </p>
+          )}
+        </div>
+
+        <div className="sm:col-span-2">
+          <Label htmlFor="edit-synopsis">Full synopsis</Label>
           <textarea
             id="edit-synopsis"
             value={synopsis}
             onChange={(event) => setSynopsis(event.target.value)}
-            rows={4}
-            placeholder="A short summary of the title."
+            rows={5}
+            placeholder="The description shown on the detail page."
             className={`${FIELD_CLASS} resize-y`}
           />
         </div>
@@ -364,13 +395,15 @@ export function CreatePanel({
   const [year, setYear] = useState<number | null>(null)
   const [genres, setGenres] = useState<string[]>([])
   const [posterPath, setPosterPath] = useState('')
+  const [shortSynopsis, setShortSynopsis] = useState('')
   const [synopsis, setSynopsis] = useState('')
   const [status, setStatus] = useState<ContentStatus>('released')
 
   const titleError = title.trim() === '' ? 'A title is required.' : null
   const yearError =
     year !== null && (year < 1888 || year > 2100) ? 'Enter a year between 1888 and 2100.' : null
-  const invalid = titleError !== null || yearError !== null
+  const shortTooLong = shortSynopsis.length > 300
+  const invalid = titleError !== null || yearError !== null || shortTooLong
 
   function submit() {
     const clean = title.trim()
@@ -386,6 +419,7 @@ export function CreatePanel({
       releaseYear: year,
       genres,
       posterPath: posterPath.trim() || null,
+      shortSynopsis: shortSynopsis.trim() || null,
       synopsis: synopsis.trim() || null,
       status,
     })
@@ -489,13 +523,30 @@ export function CreatePanel({
         </div>
 
         <div className="sm:col-span-2">
-          <Label htmlFor="new-synopsis">Synopsis</Label>
+          <Label htmlFor="new-short-synopsis">Card blurb</Label>
+          <textarea
+            id="new-short-synopsis"
+            value={shortSynopsis}
+            onChange={(event) => setShortSynopsis(event.target.value)}
+            rows={2}
+            placeholder="One line, shown on cards and under the detail banner."
+            className={`${FIELD_CLASS} resize-y`}
+          />
+          {shortTooLong && (
+            <p className="mt-1 text-[11px] text-rose-500">
+              {shortSynopsis.length} characters — the column holds 300.
+            </p>
+          )}
+        </div>
+
+        <div className="sm:col-span-2">
+          <Label htmlFor="new-synopsis">Full synopsis</Label>
           <textarea
             id="new-synopsis"
             value={synopsis}
             onChange={(event) => setSynopsis(event.target.value)}
-            rows={3}
-            placeholder="Optional."
+            rows={4}
+            placeholder="The description shown on the detail page."
             className={`${FIELD_CLASS} resize-y`}
           />
         </div>

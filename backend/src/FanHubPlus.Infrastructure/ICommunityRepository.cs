@@ -29,6 +29,8 @@ public interface ICommunityRepository
     /// How many submissions sit in each status, for the queue's filter chips.
     Task<Dictionary<string, int>> GetSubmissionCountsAsync(CancellationToken ct = default);
 
+    Task<Dictionary<byte, List<string>>> GetCoverPoolsAsync(int perCategory, CancellationToken ct = default);
+
     Task<List<MerchandiseItem>> GetMerchandiseAsync(byte? categoryId = null, CancellationToken ct = default);
     Task<PagedResult<MerchandiseItem>> BrowseMerchandiseAsync(MerchandiseQuery query, CancellationToken ct = default);
     Task<MerchandiseItem?> GetMerchandiseByIdAsync(uint itemId, CancellationToken ct = default);

@@ -6,6 +6,8 @@ import { ArrowRight, CornerDownLeft, Search, X } from 'lucide-react'
 import { useModalLayer } from '../../hooks/useModalLayer'
 import { useDebounce } from '../../hooks/useDebounce'
 import { getContents } from '../../services/content.service'
+import { useCoverPools } from '../../hooks/useCoverPools'
+import { pickCoverFallback } from '../../lib/coverFallback'
 import { CategoryDot } from './CategoryArt'
 import type { ContentSummary } from '../../types/models'
 
@@ -203,15 +205,18 @@ export default function SearchOverlay({
 
 /** CSS background, so a failed path shows the layer beneath, not a broken glyph. */
 function Thumb({ item }: { item: ContentSummary }) {
+  const pools = useCoverPools()
+  const artwork = item.posterPath ?? pickCoverFallback(item.categorySlug, item.id, pools)
+
   return (
     <span
       aria-hidden="true"
       className="relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-md bg-surface-sunken"
     >
-      {item.posterPath ? (
+      {artwork ? (
         <span
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${item.posterPath})` }}
+          style={{ backgroundImage: `url(${artwork})` }}
         />
       ) : (
         <span className="absolute inset-0 accent-wash" />

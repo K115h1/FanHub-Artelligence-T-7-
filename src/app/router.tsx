@@ -22,11 +22,8 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <RootLayout />,
-    // Rendered while the FIRST route's lazy chunk downloads. Without this the
-    // router has nothing to paint on a cold load and the page stays blank until
-    // the chunk lands — it also logs "No HydrateFallback element provided".
-    // Only the initial load uses this; later navigations keep the current page
-    // on screen while the next chunk arrives, which is the behaviour we want.
+    // Paints the cold load while the first lazy chunk downloads; without it a
+    // cold start is a blank page. Later navigations keep the current page up.
     HydrateFallback: RouteFallback,
     // The app had no error boundary at all before this. A failed dynamic import
     // is the most likely thing to throw here — a visitor who left the tab open
@@ -94,8 +91,8 @@ export const router = createBrowserRouter([
             handle: { title: 'Category' },
           },
           { path: 'content/:slug', lazy: async () => ({ Component: (await import('../pages/ContentDetail')).default }), handle: { title: 'Content' } },
-          { path: 'characters', ...placeholder('Characters') },
-          { path: 'characters/:id', ...placeholder('Character Detail') },
+          { path: 'characters', lazy: async () => ({ Component: (await import('../pages/Characters')).default }), handle: { title: 'Characters' } },
+          { path: 'characters/:id', lazy: async () => ({ Component: (await import('../pages/CharacterDetail')).default }), handle: { title: 'Character' } },
           { path: 'articles', lazy: async () => ({ Component: (await import('../pages/Articles')).default }), handle: { title: 'Articles' } },
           { path: 'articles/:id', lazy: async () => ({ Component: (await import('../pages/ArticleDetail')).default }), handle: { title: 'Article' } },
           { path: 'merchandise', lazy: async () => ({ Component: (await import('../pages/Merchandise')).default }), handle: { title: 'Merchandise' } },

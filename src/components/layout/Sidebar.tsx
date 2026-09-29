@@ -7,6 +7,7 @@ import type { IconType } from 'react-icons'
 import {
   FaHome,
   FaCompass,
+  FaUserFriends,
   FaTachometerAlt,
   FaUser,
   FaBookmark,
@@ -46,6 +47,7 @@ const TONE_BY_SLUG: Record<string, string> = {
 const mainNav: SidebarItem[] = [
   { label: 'Home', icon: FaHome, path: '/' },
   { label: 'Explore', icon: FaCompass, path: '/explore' },
+  { label: 'Characters', icon: FaUserFriends, path: '/characters' },
 ]
 
 const categories: CategoryItem[] = CATEGORIES.map((category) => ({

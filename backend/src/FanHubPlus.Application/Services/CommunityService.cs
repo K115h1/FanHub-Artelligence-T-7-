@@ -20,6 +20,8 @@ public interface ICommunityService
     Task SetSubmissionStatusAsync(uint submissionId, SubmissionStatus status, uint adminUserId, string? note = null, CancellationToken ct = default);
     Task<Dictionary<string, int>> GetSubmissionCountsAsync(CancellationToken ct = default);
 
+    Task<Dictionary<string, List<string>>> GetCoverPoolsAsync(int perCategory, CancellationToken ct = default);
+
     Task<List<MerchandiseDto>> GetMerchandiseAsync(byte? categoryId, CancellationToken ct = default);
     Task<PagedResponse<MerchandiseDto>> BrowseMerchandiseAsync(MerchandiseQuery query, CancellationToken ct = default);
     Task<MerchandiseDto?> GetMerchandiseByIdAsync(uint itemId, CancellationToken ct = default);
@@ -215,6 +217,24 @@ public class CommunityService : ICommunityService
         EnumConverter.ToWireString(s.Kind),
         s.Category?.Slug ?? string.Empty, s.User?.Name ?? "Unknown",
         s.ModeratorNote, s.DecidedAt, s.CreatedAt);
+
+    public async Task<Dictionary<string, List<string>>> GetCoverPoolsAsync(
+        int perCategory, CancellationToken ct = default)
+    {
+        var pools = await _community.GetCoverPoolsAsync(perCategory, ct);
+        if (pools.Count == 0) return new Dictionary<string, List<string>>();
+
+        var categories = await _content.GetCategoriesAsync(ct);
+        var slugById = categories.ToDictionary(c => c.CategoryId, c => c.Slug);
+
+        var result = new Dictionary<string, List<string>>();
+        foreach (var (categoryId, paths) in pools)
+        {
+            if (slugById.TryGetValue(categoryId, out var slug)) result[slug] = paths;
+        }
+
+        return result;
+    }
 
     private static MerchandiseDto ToMerchandiseDto(MerchandiseItem m) => new(
         m.ItemId, m.Name, m.Slug, m.Description, m.ImagePath, m.Tag, m.PriceNote,

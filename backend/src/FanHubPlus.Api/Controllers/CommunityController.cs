@@ -92,6 +92,20 @@ public class CommunityController : ApiControllerBase
     public Task<IActionResult> Characters([FromQuery] byte? categoryId) =>
         Guarded(async () => Ok(await _community.GetCharactersAsync(categoryId, HttpContext.RequestAborted)));
 
+    /// GET /api/community/cover-pools?perCategory=24
+    ///
+    /// A small sample of real cover paths per fandom, for titles that have none.
+    /// Manga ships with 449 titles and no cover files, so without something to
+    /// fall back to its whole catalogue renders as placeholder tiles.
+    ///
+    /// Capped rather than returning every cover: this is ample for visual
+    /// variety, and sending all 2,675 paths would be ~100KB of JSON the client
+    /// fetches once per session just to choose one image from.
+    [HttpGet("cover-pools")]
+    [AllowAnonymous]
+    public Task<IActionResult> CoverPools([FromQuery] int perCategory = 24) =>
+        Guarded(async () => Ok(await _community.GetCoverPoolsAsync(perCategory, HttpContext.RequestAborted)));
+
     [HttpGet("upcoming-releases")]
     [AllowAnonymous]
     public Task<IActionResult> UpcomingReleases() =>

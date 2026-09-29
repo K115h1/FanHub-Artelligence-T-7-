@@ -21,6 +21,18 @@ export interface CatalogRow {
   releaseYear: number | null
   genres: string[]
   posterPath: string | null
+  /**
+   * The one-line blurb, from `contents.short_synopsis` — the field every card
+   * and the detail hero render.
+   *
+   * This is what the panel used to call `synopsis`, and the name was wrong in a
+   * way that cost data: the browse endpoint returns ContentSummary, which has
+   * shortSynopsis but not the long synopsis, so the row had nowhere to put it.
+   * Saving then wrote this one line into BOTH columns, replacing the reviewed
+   * paragraph with a truncated version of it.
+   */
+  shortSynopsis: string | null
+  /** The long description, from `contents.synopsis`. Null on a browse row. */
   synopsis: string | null
   status: ContentStatus
 }
@@ -39,7 +51,7 @@ export type ContentStatus = 'released' | 'upcoming' | 'ongoing' | 'ended' | 'can
 /** The fields an admin is allowed to change on an existing row. */
 export type CatalogEdit = Pick<
   CatalogRow,
-  'title' | 'releaseYear' | 'genres' | 'synopsis' | 'status' | 'posterPath'
+  'title' | 'releaseYear' | 'genres' | 'synopsis' | 'shortSynopsis' | 'status' | 'posterPath'
 >
 
 /** A per-row patch layered over the read-only catalogue. */

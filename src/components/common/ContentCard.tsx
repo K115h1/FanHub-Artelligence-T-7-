@@ -13,6 +13,8 @@ import type { ContentSummary } from '../../types/models'
 import { CategoryDot } from './CategoryArt'
 import BookmarkButton from './BookmarkButton'
 import RatingDisplay from './RatingDisplay'
+import { useCoverPools } from '../../hooks/useCoverPools'
+import { pickCoverFallback } from '../../lib/coverFallback'
 
 /** 1,234 -> "1.2K". The API sends a number; the old mock sent a pre-formatted string. */
 function formatViews(count: number): string {
@@ -28,15 +30,17 @@ export default function ContentCard({
   item: ContentSummary
   rank?: number
 }) {
+  const pools = useCoverPools()
+  // Manga ships 449 titles with no cover, so the wash is not a rare edge case —
+  // it is a fifth of the catalogue. Falls back to the fandom's own art.
+  const artwork = item.posterPath ?? pickCoverFallback(item.categorySlug, item.id, pools)
+
   return (
     <article className="surface-card group relative flex flex-col overflow-hidden hover:-translate-y-0.5">
-      {/* Artwork band. A real poster when the database has one, and the
-          generated wash when it does not — so a missing image is a deliberate
-          state rather than a broken icon. */}
       <div className="relative flex h-40 items-center justify-center overflow-hidden bg-surface-sunken">
-        {item.posterPath ? (
+        {artwork ? (
           <img
-            src={item.posterPath}
+            src={artwork}
             alt=""
             loading="lazy"
             decoding="async"

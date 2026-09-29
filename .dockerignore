@@ -1,0 +1,38 @@
+# Build context is the repository root (Render, and the Dockerfiles, need it), so
+# the context is large. public/images alone is 158 MB of poster artwork and none
+# of it is needed to build the API. The frontend image copies it separately.
+
+# Dependencies and build output
+node_modules
+**/node_modules
+**/bin
+**/obj
+**/dist
+.vite
+
+# VCS and editor noise
+.git
+.gitignore
+.vscode
+.idea
+*.swp
+
+# Local secrets — never into an image layer
+.env
+.env.*
+!.env.example
+
+# The one secret that must not ever be committed
+my.ini
+*.pfx
+*.pem
+
+# Render/Azure deployment artefacts
+render.yaml.bak
+Dockerfile.*
+!Dockerfile
+
+# Docs are not needed at runtime
+docs/
+*.md
+!public/images/**/*.md

@@ -29,6 +29,39 @@ export const FANDOMS = {
 };
 
 /**
+ * The slug each fandom's rows carry in `src/data/catalog.json`.
+ *
+ * NOT the same as categorySlug. catalog.json predates the categories table and
+ * uses a camelCase-ish key ("tvshows", "games", "kpop") where the database uses
+ * the URL slug ("tv-shows", "gaming", "k-pop"). The two only coincide for movies,
+ * anime and comics.
+ *
+ * This matters whenever a row in catalog.json has to be matched against a row in
+ * the database. A synopsis UPDATE scoped by `g.slug = <categorySlug>` never
+ * matches a catalog.json value, so every K-Pop and TV Shows synopsis silently
+ * no-ops. buildCatalog.mjs copies the value into catalog.json; applySynopses.mjs
+ * reads it from here to convert back.
+ */
+export const FANDOM_KEYS = {
+  movies: "movies",
+  anime: "anime",
+  games: "gaming",
+  comics: "comics",
+  kpop: "k-pop",
+  tvshows: "tv-shows",
+};
+
+/** Catalog.json's categorySlug for a fandom, i.e. the inverse of FANDOM_KEYS. */
+export function catalogCategorySlug(fandomKey) {
+  return fandomKey;
+}
+
+/** The database category slug for a fandom. */
+export function dbCategorySlug(fandomKey) {
+  return FANDOM_KEYS[fandomKey];
+}
+
+/**
  * Editing notes someone left in the source lists.
  *   "dup"        -> the title is a duplicate, keep one copy
  *   "dup remove" -> the author marked this entry for deletion
